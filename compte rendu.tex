@@ -1,0 +1,213 @@
+
+\documentclass[a4paper,oneside,11pt]{article}
+
+
+
+%% Language %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage[french]{babel} %francais, polish, spanish, ...
+\usepackage[T1]{fontenc}
+\usepackage[ansinew]{inputenc}
+\usepackage{lmodern} %Type1-font for non-english texts and characters
+\usepackage{xcolor}
+
+
+%% Packages for Graphics & Figures %%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{graphicx} %%For loading graphic files
+
+
+%% Math Packages %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amsfonts}
+
+
+\begin{document}
+
+\pagestyle{empty} %No headings for the first pages.
+
+
+
+\title{Compte rendu stage \\
+Simulation parfaite}
+\author{Antonin LAURENT}
+%\date{} %%If commented, the current date is used.
+\maketitle
+
+\newpage
+
+%% Inhaltsverzeichnis %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\tableofcontents %Table of contents
+
+\pagestyle{plain} %Now display headings: headings / fancy / ...
+
+\newpage
+
+
+
+\section{Chapitre 1}
+
+\paragraph{Définition : Fonction calculable / Computable function}
+
+~\\
+
+Une fonction est dite calculable (computable en anglais) si il existe un algorithme capable de retourner le résultat de la fonction.
+
+\paragraph{Définition : Algorithme probabiliste / Randomized algorithm}
+
+~\\
+
+Soient 	$\cal{I}$ un ensemble d'indices tel que pour tout $I \in \cal{I}$, il existe une distribution $\pi_{I}$ sur un espace d'états $\Omega_{I}$. On se donne une suite de variables aléatoires $X_{1},X_{2},\ldots$ où les $X_{I} \in S_{I}$ .\\
+Un algorithme probabiliste est une famille de temps d'arrêts $ \left\{ T_{I} \right\}_{I \in \cal{I}}$ et et de fonctions calculables 
+$ \left\{ f_{I,t} \right\} _{i \in \mathcal{I}, t \in \left\{ 1,2,\ldots \right\} } $. La sortie de l'algorithme est $f_{I,T_{I}}(X_{1},\ldots,X_{T_{I}})$.\\
+
+\paragraph{Définition : Algorithme de simulation parfaite / Perfect simulation algortihm}
+
+~\\
+
+Un algorithme de simulation parfaite est un algorithme probabiliste dont la sortie est une variable aléatoire qui provient d'une distribution cible.\\
+Les algorithmes de simulation parfaite sont une sous-classe des algorithmes de simulation exacte, algorithmes qui tirent d'une distribution ciblée. \\
+Cependant les algorithmes dont le temps d'arrêt 
+$T_{I}$ est déterministe (algorithmes tournant selon un nombre fini de choix aléatoires) sont généralement considérés comme algorithmes de simulation exacte mais pas comme algorithmes de simulation parfaite.
+\paragraph{Théorème fondamental de la simulation parfaite}
+
+~\\
+
+On suppose que pour $U_{1},U_{2},\ldots$ iid tel que $U_{i} \sim$ Unif([0,1]) , il existe des fonctions calculables $b,g$ et $f$ telles que la fonction $b$ aie pour image $ \left\{ 0,1 \right\} $ et $\mathbb{P}(b(U) = 1) < 0$. \\
+Pour une variable aléatoire X qui vérifie : 
+
+\begin{equation}
+ X \sim b(U)g(U) + (1 - b(U))f(X,U),
+ \label{eq1}
+\end{equation}
+
+
+
+
+soit $T =$ inf$\left\{t : b(U_{t}) = 1\right\}$. On a alors que :
+
+$$ Y = f(\ldots f(f(g(U_{T}),U_{T-1}),U_{T-2}),\ldots,U_{1})$$
+
+a la même distribution que $X$ et on a $\mathbb{E}[T] = \frac{1}{\mathbb{P}(b(U) = 1)}$.\\
+~\\
+\underline{\textit{Preuve :}}
+~\\
+
+Soient $X_{0},X_{1},\ldots$ des tirages indépendants chacun distribués selon $X$, et $U_{1},U_{2},\ldots$ iid tel que $U_{i} \sim$ Unif([0,1]). Pour $X_{t}$, fixons $X_{t,t} = X_{t}$ et récursivement, on pose :
+
+$$ X_{t,i} = b(U_{i+1})g(U_{i+1}) + (1 - b(U_{i+1}))f(X_{t,i+1},U_{i+1}),  $$
+pour $i \in \left\{0,\ldots,t-1\right\}$.\\
+
+On a alors d'après la relation \eqref{eq1} : $X_{t,0} \sim X$. On montre ce résultat pour les premiers indices t, les suivants sont prouvés de la même manière.
+
+\paragraph{\underline{t=0}}
+
+\begin{align*}
+X_{0,0} = X_{0} \\
+\intertext{comme on l'a posé précédemment, d'où} 
+X_{0,0} \sim X.
+\end{align*}
+
+\paragraph{\underline{t=1}}
+
+\begin{align*}
+X_{1,0} = b(U_{1})g(U_{1}) + (1 - b(U_{1}))f(X_{1,1},U_{1})\\ 
+\end{align*}
+
+Or, 
+
+\begin{align*}
+X_{1,1} = X_{1} \sim X.\\
+\end{align*}
+
+En remplaçant dans l'équation précédente, on obtient :
+
+\begin{align*}
+X_{1,0} = b(U_{1})g(U_{1}) + (1 - b(U_{1}))f(X_{1},U_{1})\\ 
+\end{align*}
+\qquad D'après la relation \eqref{eq1}, on obtient alors $X_{1,0} = X_{1} \sim X$.\\
+
+\paragraph{\underline{t=2}}
+
+\begin{align*}
+X_{2,0} &= b(U_{1})g(U_{1}) + (1 - b(U_{1}))f(X_{2,1},U_{1})\\ 
+X_{2,1} &= b(U_{2})g(U_{2}) + (1 - b(U_{2}))f(X_{2,2},U_{2})\\
+&= b(U_{2})g(U_{2}) + (1 - b(U_{2}))f(X_{2},U_{2})\\
+\end{align*}
+À nouveau, par la relation \eqref{eq1}, on a : $X_{2,1} = X_{2}$
+On remplace donc par cette valeur dans $X_{2,0}$ et on obtient :
+
+\begin{align*}
+X_{2,0} &= b(U_{1})g(U_{1}) + (1 - b(U_{1}))f(X_{2},U_{1})\\
+\end{align*}
+
+D'après la relation \eqref{eq1}, on obtient alors $X_{2,0} = X_{2} \sim X$.\\
+
+On a donc $X_{0,0},X_{1,0},X_{2,0},\ldots$ de même distribution que $X$ mais pas forcément indépendants. On considère à présent la variable $Y$ énoncée dans le théorème. On a alors la relation suivante : $X_{t,0} = Y$ si $t \geq T$. On illustre ce résultat avec comme exemple $T=2$ et $t=2,3$ : \\
+On a donc : 
+$$ Y = f(g(U_{2}),U_{1}) $$
+
+Montrons que $X_{2,0} = X_{3,0} = Y$. Étant donné que $T=2$, on a $b(U_{1}) = 0$ et $b(U_{2}) = 1$ , d'où :
+
+\begin{align*}
+X_{2,0} &= f(X_{2,1},U_{1})\\
+X_{2,1} &= g(U_{2})\\
+\intertext{on remplace dans la première équation et on obtient}
+X_{2,0} &= f(g(U_{2}),U_{1})\\
+\end{align*}
+
+D'où le résultat pour t=2. Voyons pour t=3.\\
+~\\
+De même, puisque $T=2$, on a $b(U_{1}) = 0$ et $b(U_{2}) = 1$ , d'où :
+
+\begin{align*}
+X_{3,0} &= f(X_{3,1},U_{1})\\
+X_{3,1} &= g(U_{2})\\
+\intertext{on remplace dans la première équation et on obtient}
+X_{3,0} &= f(g(U_{2}),U_{1})\\
+\end{align*}
+
+D'où le résultat.\\
+Ensuite, puisque les $U_{i}$ sont indépendants, on a que : $\mathbb{P}(T > t) = (1 - \mathbb{P}(b(U) = 1))^{t}$ et puisque, par hypothèse, $\mathbb{P}(b(U) = 1) >0$, on a la relation qui tend vers $0$ pour $t$ tendant vers l'infini.
+Il ne reste plus qu'à montrer $Y \sim X$. Pour tout $t$, pour tout ensemble $C$ :
+
+\begin{align*}
+\mathbb{P}(Y \in C) &= \mathbb{P}(Y \in C, t \geq T) + \mathbb{P}(Y \in C, t < T)
+\intertext{puisque $X_{t,0} = Y$ si $t \geq T$, on a}
+&= \mathbb{P}(X_{t,0} \in C, t \geq T) + \mathbb{P}(Y \in C, t < T)\\
+&= \mathbb{P}(X_{t,0} \in C) - \mathbb{P}(X_{t,0} \in C, t < T) + \mathbb{P}(Y \in C, t < T)
+\intertext{puisque $X_{t,0} \sim X$, on a}
+&= \mathbb{P}(X \in C) - \mathbb{P}(X_{t,0} \in C, t < T) + \mathbb{P}(Y \in C, t < T)
+\end{align*}
+
+Les deux derniers termes sont bornés par $\mathbb{P}(T > t) = (1 - \mathbb{P}(b(U) = 1))^{t}$, et puisque l'équation est vraie pour n'importe quel $t$,  on obtient : $\mathbb{P}(Y \in C) = \mathbb{P}(X \in C)$ pour tout ensemble $C$ , donc $Y \sim X$.
+Le fait que $\mathbb{E}[T] = \frac{1}{\mathbb{P}(b(U)=1)}$ provient du fait que $T$ suit une loi géométrique de paramètre $\mathbb{P}(b(U) =1)$
+
+\section{Chapitre 3}
+
+\paragraph{Définition : Fonction de mise à jour / Update function}
+~\\
+\\
+On dit que $\phi : \Omega \times [0,1] \to \Omega$ est une fonction de mise à jour pour une chaîne de Markov $\left\{X_{t} \right\}$ si, pour $U \sim$ Unif[0,1], $[X_{t+1}|X_{t}] \sim \phi (X_{t},U)$.
+\\
+La fonction $\phi$ est déterministe : tout l'aléatoire est contenu dans la variable $U$.\\
+Toute chaîne qui peut-être simulée sur ordinateur est un exemple de fonction de mise à jour.\\
+Une même chaîne de Markov peut-être représentée par plusieurs fonctions de mise à jour : la fonction de mise à jour n'est pas forcément unique.\\
+À l'aide d'une fonction de mise à jour $\phi$, on peut représenter la trajectoire d'une chaîne de Markov $\left\{ X_{t} \right\}$. En effet, soient $U_{0},U_{1},U_{2},\ldots$ iid $\sim$ Unif([0,1]). Pour un état initial $x_{0}$, on a : $X_{1} = \phi (x_{0},U_{0})$ puis pour $i>1$, $X_{i} = \phi (X_{i-1},U_{i-1})$. \\ 
+On notera alors la trajectoire jusqu'au temps t sous la forme :
+$$ \phi_{t}(x_{0},U) = \phi(\phi(\phi(\ldots(\phi(x_{0},U_{0}),U_{1}),\ldots,U_{t-1}))$$
+Ensuite, pour n'importe quels états $x_{0}$ et $y_{0}$ dans $\Omega$, on définit pour une fonction de mise à jour $\phi$ :  $X_{t} = \phi_{t}(x_{0},U)$ et $Y_{t} = \phi_{t}(y_{0},U)$ (en utilisant les mêmes valeurs de U). On appelle ce procédé un couplage. Notons qu'avec ce couplage, si il existe $t \geq 0$ tel que $X_{t} = Y_{t}$, alors on dit que les processus ont fusionné (ou se sont rejoints,etc).
+
+\paragraph{Définition : Couplage / Coupling}
+~\\ 
+\\
+Soit $\mathcal{S}$ un ensemble de processus stochastiques définis sur un même ensemble $\mathcal{I}$ et un même espace d'états $\Omega$. Si il existe un indice $i \in \mathcal{I}$ et un état $x \in \Omega$ tels que pour tout $S \in \mathcal{S}$, on aie $S_{i} = x$, alors on dit que les processus stochastiques ont fusionné (ou se sont rejoints,couplés,etc). 
+
+\paragraph{Exemple}
+~\\
+\\
+Soit $\Omega = \left\{0,1,2\right\}$. Soit une fonction de mise à jour $\phi$ telle que :
+$$ \phi(x,U) = x + \mathbf{1}(x<2,U>\frac{1}{2}) - \mathbf{1}(x>0,U \leq \frac{1}{2}).$$
+Soient $\left\{X_{t}\right\}$ et $\left\{Y_{t}\right\}$ deux chaînes de Markov ayant $\phi$ comme fonction de mise à jour et telles que $X_{0} = 0$ et $Y_{0} = 2$. On suppose que $U_{0} = 0.64 , U_{1} = 0.234$ et $U_{2} = 0.1 $. On a donc les trajectoires suivantes : $(X_{0},X_{1},X_{2},X_{3}) = (0,1,0,0)$ et $(Y_{0},Y_{1},Y_{2},Y_{3}) = (2,2,1,0)$.\\
+Les deux chaînes ont donc fusionné à $t=3$.
+
+\end{document}
