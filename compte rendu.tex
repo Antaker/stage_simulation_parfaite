@@ -9,6 +9,7 @@
 \usepackage[ansinew]{inputenc}
 \usepackage{lmodern} %Type1-font for non-english texts and characters
 \usepackage{xcolor}
+\usepackage{amsmath,amsfonts,amssymb}
 
 
 %% Packages for Graphics & Figures %%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -45,6 +46,8 @@ Simulation parfaite}
 
 
 \section{Chapitre 1}
+
+\subsection{Définitions et théorèmes}
 
 \paragraph{Définition : Fonction calculable / Computable function}
 
@@ -89,7 +92,7 @@ $$ Y = f(\ldots f(f(g(U_{T}),U_{T-1}),U_{T-2}),\ldots,U_{1})$$
 
 a la même distribution que $X$ et on a $\mathbb{E}[T] = \frac{1}{\mathbb{P}(b(U) = 1)}$.\\
 ~\\
-\underline{\textit{Preuve :}}
+\paragraph{\underline{\textit{Preuve :}}}
 ~\\
 
 Soient $X_{0},X_{1},\ldots$ des tirages indépendants chacun distribués selon $X$, et $U_{1},U_{2},\ldots$ iid tel que $U_{i} \sim$ Unif([0,1]). Pour $X_{t}$, fixons $X_{t,t} = X_{t}$ et récursivement, on pose :
@@ -182,6 +185,85 @@ Il ne reste plus qu'à montrer $Y \sim X$. Pour tout $t$, pour tout ensemble $C$ 
 Les deux derniers termes sont bornés par $\mathbb{P}(T > t) = (1 - \mathbb{P}(b(U) = 1))^{t}$, et puisque l'équation est vraie pour n'importe quel $t$,  on obtient : $\mathbb{P}(Y \in C) = \mathbb{P}(X \in C)$ pour tout ensemble $C$ , donc $Y \sim X$.
 Le fait que $\mathbb{E}[T] = \frac{1}{\mathbb{P}(b(U)=1)}$ provient du fait que $T$ suit une loi géométrique de paramètre $\mathbb{P}(b(U) =1)$
 
+\paragraph{Définition : Algorithme arretable / Interruptible algorithm}
+~\\
+~\\
+Dans le théorème fondamental de la simulation parfaite, si $X$ et $T$ sont indépendants, on dit que l'algorithme est arretable, sinon il est non-arretable.
+
+\paragraph{Définition : Algortihme de simulation parfaite à lecture unique / Read once perfect simulation algorithm}
+~\\
+~\\
+Un algorithme de simulation parfaite qui utilise $X \sim b(U)g(U) + (1 - b(U))f(X,U)$ est un algorithme à lecture unique si $f(X,u) = f(X,u')$ pour tout $u$,$u'$. Sinon, c'est un algorithme à lecture double.\\
+~\\
+En général, un algorithme arretable est préférable à un algorithme non-arretable, et un algorithme à lecture unique est préférable à un algorithme à lecture double.\\
+
+\subsection{Modèles étudiés}
+
+\subsubsection{Champs aléatoires de Markov}
+
+On considère un graphe $G = (V,E)$. $V$ est l'ensemble des n\oe{}uds et $E$ est l'ensemble des arêtes. On notera par la suite $\Delta$ le degré du graphe (égal au degré du n\oe{}ud ayant un nombre de voisins maximal). On notera par $\Omega$ l'ensemble des labels des n\oe{}uds.
+
+\paragraph{Définition : Ensemble séparant / Separating set}
+~\\
+~\\
+On dit qu'un sous-ensemble de n\oe{}uds $S$ sépare les n\oe{}uds $i$ et $j$ si tout chemin du graphe menant $i$ à $j$ passe par $S$.
+
+\paragraph{Définition : Champ aléatoire de Markov / Markov random field}
+~\\
+~\\
+Pour un graphe $G = (V,E)$ et un ensemble de labels $\Omega$, on dit que la distribution de $X$ sur $\Omega$ est un champ aléatoire de Markov si, pour tous les n\oe{}uds $i$ et $j$, pour tous les ensembles $S$ séparant $i$ de $j$, on a : $[X(i)|X(j),X(S)] \sim [X(i)|X(S)]$. Un état $x \in \Omega$ est appelé une configuration.
+
+\paragraph{Définition : Clique}
+~\\
+~\\
+Une clique est un sous-ensemble de n\oe{}uds du graphe tel que chaque paire de n\oe{}uds soit connectée par une arête.
+
+
+\paragraph{Théorème de Hammersley Clifford}
+~\\
+~\\
+Pour un graphe fini $G=(V,E)$, la distribution $\pi$ est un champ aléatoire de Markov si elle a pour densité $f_{X}$ et qu'il existe des fonctions $\phi _{C}$ pour toute clique C telles que $f_{X}$ puisse s'écrire : 
+
+$$ f_{X}(x) = \frac{1}{Z} \prod _{C \in cliques(G)} \phi_{C}(x)$$
+
+
+\paragraph{Définition : Auto-modèle / Auto-model}
+~\\
+~\\
+On dit qu'un champ aléatoire de Markov est un auto-modèle, si il existe des fonctions $f_{i}$ et $g_{i}$ telles que la densité de $X \sim \pi$ peut-être écrite sous la forme : 
+$$ f_{X}(x) = \frac{1}{Z} \left[\prod_{i \in V} f_{i}(X(i))\right]\left[ \prod _{ \left\{i,j \right\} \in E} g_{\left\{i,j\right\}}(X(i),X(j))\right]$$
+
+Dans la suite, on définit des exemples bien connus d'auto-modèles que l'on étudiera par la suite.
+
+\paragraph{Exemple 1 : Modèle d'Ising}
+~\\
+~\\
+Le modèle d'Ising est un auto-modèle de paramètres $\mu$ et $\beta$ , où $\Omega = \left\{ -1,1 \right\} ^{V}$, et $f(c) = exp(\mu c)$, $g(c_{1},c_{2}) = exp(\beta \mathbf{1}(c_{1} = c_{2}))$. Dans la littérature, on appelle $\mu$ magnétisation et $\beta$ la température inverse. Lorsque $\beta >0$, on dit que le modèle est ferromagnétique. Lorsque $\mu = 0$, on dit que le modèle est sans champ magnétique.
+
+\paragraph{Exemple 2 : Modèle Hard-core gas}
+~\\
+~\\ 
+Le modèle hard-core gas est un auto-modèle défini sur $\left\{0,1 \right\} ^{V}$ et de paramètre $\lambda >0$ où $f(c) = \lambda ^{c}$ 
+et $g(c_{1},c_{2}) = 1 - c_{1}c_{2}$. Lorsqu'un no\oe{}ud $\nu$ a pour label $1$, on dit que le n\oe{}ud est occupé, sinon, il est inoccupé.
+
+\paragraph{Exemple 3 : Modèle de Strauss}
+~\\
+~\\
+Le modèle de Strauss est un auto-modèle sur $\left\{0,1 \right\} ^{V}$ de paramètres $\lambda >0$ et $\gamma \in [0,1]$ où $f(c) = \lambda ^{c}$ et $g(c_{1},c_{2}) = 1 + (\gamma - 1)c_{1}c_{2}$.Lorsqu'un no\oe{}ud $\nu$ a pour label $1$, on dit que le n\oe{}ud est occupé, sinon, il est inoccupé.
+
+\subsection{Permutations}
+
+Un problème classique de distribution sur les permutations est lié à la recherche du permanent d'une matrice non-négative.
+
+\paragraph{Exemple}
+~\\
+~\\
+Pour une matrice non-négative $w(i,j)$, notons :
+
+$$w(\sigma) = \prod_{i=1}^{n} w(i,\sigma(i))$$
+
+Tant qu'il existe au moins une permutation $\sigma$ telle que $w(i,\sigma(i)) >0$ pour tout $i$, cela donne une densité non normalisée sur l'ensemble des permutations. La constante de normalisation pour cette densité est alors appelée le permanent de la matrice $w(i,j)$. Si aucun $\sigma$ ne vérifie cette relation, le permanent est 0.
+
 \section{Chapitre 3}
 
 \paragraph{Définition : Fonction de mise à jour / Update function}
@@ -208,6 +290,28 @@ Soit $\mathcal{S}$ un ensemble de processus stochastiques définis sur un même en
 Soit $\Omega = \left\{0,1,2\right\}$. Soit une fonction de mise à jour $\phi$ telle que :
 $$ \phi(x,U) = x + \mathbf{1}(x<2,U>\frac{1}{2}) - \mathbf{1}(x>0,U \leq \frac{1}{2}).$$
 Soient $\left\{X_{t}\right\}$ et $\left\{Y_{t}\right\}$ deux chaînes de Markov ayant $\phi$ comme fonction de mise à jour et telles que $X_{0} = 0$ et $Y_{0} = 2$. On suppose que $U_{0} = 0.64 , U_{1} = 0.234$ et $U_{2} = 0.1 $. On a donc les trajectoires suivantes : $(X_{0},X_{1},X_{2},X_{3}) = (0,1,0,0)$ et $(Y_{0},Y_{1},Y_{2},Y_{3}) = (2,2,1,0)$.\\
-Les deux chaînes ont donc fusionné à $t=3$.
+Les deux chaînes ont donc fusionné au temps $t=3$.
 
+\paragraph{Théorème CFTP (Coupling From The Past)}
+~\\
+\\
+On suppose que $\phi$ est une fonction de mise à jour pour une chaîne de Markov définie sur $\Omega$, telle que pour $U = (U_{0},U_{-1},\ldots,U_{-t-1}) \sim$ Unif($[0,1]^{t}$) on ait :\\
+\begin{itemize}
+\item Pour $Y \sim \pi, \phi (Y,U_{0}) \sim \pi$
+\item Il existe un ensemble $A \subseteq [0,1]^{t}$ tel que $\mathbb{P}(U \in A) > 0$ et $\phi_{t}(\Omega,A) = \left\{ x \right\}$ pour un certain $x \in \Omega$
+\end{itemize}
+Posons alors, pour tout $x \in \Omega$,
+
+\begin{align*}
+Y_{0} = \phi_{t}(x_{0},U_{0})\mathbf{1}(U_{0} \in A) + \phi_{t}(\phi_{t}(x_{0},U_{-1}),U_{0})\mathbf{1}(U_{-1} \in A) 
+&+ \\ \phi_{t}(\phi_{t}(\phi_{t}(x_{0},U_{-2}),U_{-1}),U_{0})\mathbf{1}(U_{-2} \in A) + \ldots 
+\end{align*}
+ 
+
+Alors $Y_{0} \sim \pi$.
+
+\paragraph{\underline{\textit{Preuve}}}
+~\\
+\\
+Soit $x_{0} \in \Omega$. Le résultat est immédiat en utilisant le théorème fondamental de la simulation parfaite, en posant $g(U) = \phi_{t}(x_{0},U)$,$b(U) = \mathbf{1}(U \in A)$, et $f(X,U) = \phi_{t}(X,U)$.
 \end{document}
