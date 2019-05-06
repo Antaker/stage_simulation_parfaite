@@ -251,7 +251,7 @@ et $g(c_{1},c_{2}) = 1 - c_{1}c_{2}$. Lorsqu'un no\oe{}ud $\nu$ a pour label $1$
 ~\\
 Le modèle de Strauss est un auto-modèle sur $\left\{0,1 \right\} ^{V}$ de paramètres $\lambda >0$ et $\gamma \in [0,1]$ où $f(c) = \lambda ^{c}$ et $g(c_{1},c_{2}) = 1 + (\gamma - 1)c_{1}c_{2}$.Lorsqu'un no\oe{}ud $\nu$ a pour label $1$, on dit que le n\oe{}ud est occupé, sinon, il est inoccupé.
 
-\subsection{Permutations}
+\subsubsection{Permutations}
 
 Un problème classique de distribution sur les permutations est lié à la recherche du permanent d'une matrice non-négative.
 
@@ -263,6 +263,198 @@ Pour une matrice non-négative $w(i,j)$, notons :
 $$w(\sigma) = \prod_{i=1}^{n} w(i,\sigma(i))$$
 
 Tant qu'il existe au moins une permutation $\sigma$ telle que $w(i,\sigma(i)) >0$ pour tout $i$, cela donne une densité non normalisée sur l'ensemble des permutations. La constante de normalisation pour cette densité est alors appelée le permanent de la matrice $w(i,j)$. Si aucun $\sigma$ ne vérifie cette relation, le permanent est 0.
+~\\
+Une autre distribution importante que l'on va considérer est la distribution uniforme sur les permutations où certains objets doivent avoir une position plus faible que les autres.
+
+\paragraph{Définition : relation d'ordre partiel / partial order}
+~\\
+~\\
+Soit un ensemble $P$. Une relation d'ordre partiel sur $P$ est une relation binaire $\preceq$ telle que pour tout $a,b,c \in P$, la relation est:
+
+\begin{enumerate}
+\item (Réflexive) $a \preceq a$
+\item (Antisymétrique) Si $a \preceq b$ et $b \preceq a$, alors $a = b$
+\item (Transitive) Si $a \preceq b$ et $b \preceq c$, alors $a \preceq c$
+\end{enumerate}
+
+Un ensemble disposant d'une relation d'ordre partiel est parfois appelé poset d'après l'anglais partially ordered set.
+
+\paragraph{Définition : Extension linéaire d'un ordre partiel / Linear extension of a partial order}
+~\\
+~\\
+Une extension linéaire d'un ordre partiel sur $1,\ldots,n$ est une permutation pour laquelle si $i$ et $j$ sont tels que $\sigma(i) \prec \sigma(j)$, alors $i<j$.  
+
+\subsection{Chaînes de Markov et simulation approchée}
+
+Jusqu'au développement des algorithmes de simulation parfaite/exacte, la manière principale d'obtenir une réalisation d'une distribution ciblée était une méthode d'approche. Plusieurs algorithmes et méthodes ont été mis en place et réfère à l'ensemble de ces méthodes sous le nom de Chaîne de Markov Monte Carlo (Markov Chain Monte Carlo, MCMC dans la littérature).
+
+On ne rappellera pas ici les principales définitions pour les chaînes de Markov mais d'autres seront nécessaires pour la suite.
+On s'intéressera notamment aux chaînes de Harris et au théorème ergodique associé.
+
+\paragraph{Définition : Chaîne de Harris / Harris Chain}
+~\\
+~\\
+Une chaîne de Markov $\left\{X_{t} \right\}$ sur un espace d'état $\Omega$ est une chaîne de Harris si il existe des ensembles mesurables $A,B \in \Omega$ et $\epsilon > 0$ pour $x \in A$ et $y \in B$, et une mesure de probabilité $\rho$ où $\rho(B) = 1$ tels que l'on ait :
+
+\begin{enumerate}
+\item Pour $T_{A} = inf\left\{ t \geq 0 : X_{t} \in A \right\}, ( \forall z \in \Omega)(\mathbb{P}(T_{A} < \infty | X_{0} = z) > 0).$
+\item Si $x \in A$ et $C \subseteq B$, alors $\mathbb{P}(X_{1} \in C | X_{0} = x) \geq \epsilon \rho (C)$
+\end{enumerate}  
+
+\paragraph{Définition : Chaîne récurrente / Recurrent chain}
+~\\
+~\\
+Soit $R = inf \left\{ n>0 : X_{n} \in A \right\}$. On dit qu'une chaîne de Harris est une chaîne récurrente si pour tout $x \in A$, $\mathbb{P}(R < \infty | X_{0} = x) = 1$. Une chaîne qui n'est pas récurrente est dite transiente.
+
+\paragraph{Définition : Chaîne apériodique / Aperiodic chain}
+~\\
+~\\
+Une chaîne de Harris récurrente est apériodique si pour tout $x \in \Omega$, il existe $n$ tel que pour tout $n' \geq n$, $\mathbb{P}(X_{n'} \in A | X_{0} = x) >0$
+
+\paragraph{Théorème : Théorème ergodique pour les chaînes de Harris}
+~\\
+~\\
+Soit $X_{n}$ une chaîne de Harris récurrente et apériodique de distribution stationnaire $\pi$. Si $\mathbb{P}(R < \infty | X_{0} = x) = 1$ pour tout $x$, alors, pour $t \to \infty$, pour tout ensemble mesurable $C$ et pour tout $x$ : 
+
+$$ |\mathbb{P}(X_{t} \in C|X_{0} = x) - \pi(C)| \to 0 $$
+
+~\\
+Ce théorème est le c\oe{}ur des méthodes MCMC, puisqu'il "suffit" de construire une chaîne de Harris ayant pour distribution stationnaire la distribution souhaitée et de la faire tourner pendant un nombre infini de pas. Cependant, n'ayant pas un temps infini, les utilisateurs font tourner leurs algorithmes durant un grand nombre de pas et espèrent arriver dans la distribution stationnaire.
+\\
+On peut cependant déterminer à quel point la chaîne est proche de la loi stationnaire à l'aide du concept de couplage (voir chapitre 3 pour une définition et application étendue).
+
+\paragraph{Définition : Couplage / Coupling}
+~\\
+~\\
+Supposons que $\left\{X_{t} \right\} \sim \nu_{X}$ et $\left\{Y_{t} \right\} \sim \nu_{Y}$. Un couplage de $\left\{X_{t} \right\}$ et $\left\{Y_{t} \right\}$ est un processus bivarié $\left\{(X^{'}_{t},Y^{'}_{t})\right\}$ tel que $\left\{X^{'}_{t} \right\} \sim \nu_{X}$ et $\left\{Y^{'}_{t} \right\} \sim \nu_{Y}$.
+
+\paragraph{Théorème : Lemme de Couplage / Coupling Lemma}
+~\\
+~\\
+Soit $Y_{0} \sim \pi$ et $X_{0} = x_{0}$ tels que les deux variables évoluent de manière couplée. Alors, pour tout mesurable $C$ :
+$$ |\mathbb{P}(X_{t} \in C|X_{0}=x) - \pi(C)| \leq \mathbb{P}(X_{t} \ne Y_{t}).$$
+
+\subsection{Création de chaînes de Markov}
+
+Afin d'utiliser les méthodes MCMC, il faut créer des chaînes de Harris qui convergent vers la distribution $\pi$ ciblée.
+Il est généralement mieux de créer des chaînes plus que stationnaire : les chaînes réversibles.\\
+On utilisera la notation suivante pour la définition de réversibilité : $\pi(dx) = f(x)dx$. Et donc, pour tout mesurable $A$, $\pi(A) = \int_{x \in A} \pi(dx) = \int_{x \in A} f(x)dx$.
+On obtient alors la définition de réversibilité suivante : 
+\paragraph{Définition : Chaîne réversible}
+~\\
+~\\
+Une distribution $\pi$ est réversible selon une chaîne de Markov $\left\{ X_{t} \right\}$ si : $\pi(dx)\mathbb{P}(X_{t+1} \in dy | X_{t} = x) = \pi(dy)\mathbb{P}(X_{t+1} \in dx | X_{t} = y).$
+\paragraph{Lemme}
+~\\
+~\\
+Si $\pi$ est réversible, alors $\pi$ est stationnaire.
+\paragraph{\underline{\textit{Preuve}}}
+~\\
+~\\
+Soit $\Omega$ l'espace d'état de la chaîne de Markov $\left\{ X_{t} \right\}$ considérée et $\pi$ réversible pour cette chaîne.
+Pour $X_{t} \sim \pi$, et $C$ un ensemble mesurable, alors on a :
+
+\begin{align*}
+\mathbb{P}(X_{t+1} \in C) &= \mathbb{E}[\mathbf{1}(X_{t+1} \in C)] \\ 
+&= \mathbb{E}[\mathbb{E}[\mathbf{1}(X_{t+1} \in C)|X_{t}]]
+\\
+&= \int_{x \in \Omega} \mathbb{E}[\mathbf{1}(X_{t+1} \in C)|X_{t} = x]\pi(dx)
+\\
+&= \int_{x \in \Omega} \mathbb{P}(X_{t+1} \in C | X_{t} = x)\pi(dx)
+\\
+&= \int_{x \in \Omega} \int_{y \in C} \mathbb{P}(X_{t+1} \in dy|X_{t} = x)\pi(dx)
+\\
+&= \int_{y \in C} \int_{x \in \Omega} \mathbb{P}(X_{t+1} \in dx|X_{t} = y)\pi(dy)
+\\
+&=  \int_{y \in C} \mathbb{P}(X_{t+1} \in \Omega|X_{t} = y)\pi(dy)
+\\
+&= \int_{y \in C} \pi(dy)
+\\
+&= \pi(C)
+\end{align*}
+
+D'où la stationnarité de $\pi$.\\
+
+~\\
+Plusieurs types de chaînes réversibles existent tels que l'échantillonnage de Gibbs (Gibbs sampler), Metropolis-Hastings,etc.
+\\
+Ces chaînes sont présentées dans la suite.
+
+\subsection{Échantillonnage de Gibbs / Gibbs Sampler}
+
+On présente ici l'un des plus simples échantillonneurs de Gibbs, qui agit sur un espace d'états de la forme $C^{V}$. On appelle $\nu \in V$ une dimension du problème. Pour $X_{t} = x$, l'échantillonneur choisit une dimension $\nu$ uniformément sur $V$. Soit $L(x,\nu)$ l'ensemble des états qui sont exactement les n\oe{}uds de la configuration $x$ sauf en $\nu$, écrit de la manière suivante : $L(x,v) = \left\{ y : (\forall w \in V \setminus \left\{v\right\})(y(w) = x(w))\right\}.$ Pour $X_{t} = x$, l'état suivant $X_{t+1}$ est choisi selon $\pi$ à conditionné à être dans $L(x,v)$.
+\\
+On présente comme exemple le modèle d'Ising précédemment vu avec $\mu = 0$. Une dimension est alors un n\oe{}ud de la configuration.
+On choisit donc un n\oe{}ud uniformément dans $V$, et on considère les états qui sont exactement $x$ en tous les autres n\oe{}uds autres que $\nu$. Pour le modèle d'Ising, la valeur en $\nu$ de x  est $1$ ou $-1$. On note ces configurations $x_{\nu \to 1}$ et $x_{\nu \to -1}$. On choisit alors l'état suivant entre $x_{\nu \to 1}$ et $x_{\nu \to -1}$, où le choix est fait proportionnellement à $\pi$. On a donc : 
+
+$$\mathbb{P}(X_{t+1} = x_{\nu \to 1})  = \frac{\pi(\left\{x_{\nu \to 1}\right\})}{\pi(\left\{x_{\nu \to 1}\right\})+\pi(\left\{x_{\nu \to -1}\right\})}$$
+
+Or, pour le modèle d'Ising avec $\mu = 0$,
+
+$$\pi(\left\{x\right\})= \frac{1}{Z} \prod_{\left\{i,j\right\} \in E} exp(\beta \mathbf{1}(x(i)=x(j)).$$
+
+Après simplification, on obtient :
+\begin{align*}
+\mathbb{P}(X_{t+1} = x_{\nu \to 1}) &= \frac{\prod_{\left\{\nu,j\right\} \in E} exp(\beta \mathbf{1}(x(j)=1))}{\prod_{\left\{\nu,j\right\} \in E} exp(\beta \mathbf{1}(x(j)=1)) + \prod_{\left\{\nu,j\right\} \in E} exp(\beta \mathbf{1}(x(j)=-1))}
+\\
+&= \frac{exp(\beta n_{1})}{exp(\beta n_{1}) + exp(\beta n_{-1})}
+\end{align*}
+Où $n_{c}$ est le nombre de voisins de $\nu$ de label c.
+Par exemple, si $\nu$ est adjacent à trois n\oe{}uds de label $1$ et un n\oe{}ud de label $-1$, alors la probabilité que $\nu$ se voit labelliser $1$ est $exp(3\beta)/(exp(3\beta)+exp(\beta))$.
+Mettre ensuite en place cette méthode algorithmiquement est très simple.\\
+Vérifions la réversibilité de la chaîne.
+\begin{itemize}
+\item Premier cas : $X_{t} = x_{\nu \to 1}$ 
+\\
+\begin{itemize}
+\item Premier sous-cas : $X_{t+1} = x_{\nu \to 1}$. Les termes de l'égalité de balance détaillée sont les mêmes, on a donc trivialement l'égalité.
+\\
+\item Deuxième sous-cas : $X_{t+1} = x_{\nu \to -1}$.
+On a alors : $$ \pi(\left\{x_{\nu \to 1 } \right\}) \mathbb{P}(X_{t+1} = x_{\nu \to -1} | X_{t} = x_{\nu \to 1}) = exp(\beta n_{1}) \frac{exp(\beta n_{-1})}{exp(\beta n_{-1})+exp(\beta n_{1})} $$
+D'autre part : 
+$$ \pi(\left\{x_{\nu \to -1 } \right\}) \mathbb{P}(X_{t+1} = x_{\nu \to 1} | X_{t} = x_{\nu \to -1}) = exp(\beta n_{-1}) \frac{exp(\beta n_{1})}{exp(\beta n_{-1})+exp(\beta n_{1})} $$
+
+On a donc l'égalité entre ces termes.
+\end{itemize}
+
+\item Deuxième cas : $X_{t} = x_{\nu \to -1}$
+
+\begin{itemize}
+\item Premier sous-cas : $X_{t+1} = x_{\nu \to -1}$. Les termes de l'égalité de balance détaillée sont les mêmes, on a donc trivialement l'égalité.
+\\
+\item Deuxième sous-cas : $X_{t+1} = x_{\nu \to 1}$.
+On a alors : $$ \pi(\left\{x_{\nu \to -1 } \right\}) \mathbb{P}(X_{t+1} = x_{\nu \to 1} | X_{t} = x_{\nu \to -1}) = exp(\beta n_{-1}) \frac{exp(\beta n_{1})}{exp(\beta n_{-1})+exp(\beta n_{1})} $$
+D'autre part : 
+$$ \pi(\left\{x_{\nu \to 1 } \right\}) \mathbb{P}(X_{t+1} = x_{\nu \to -1} | X_{t} = x_{\nu \to 1}) = exp(\beta n_{1}) \frac{exp(\beta n_{-1})}{exp(\beta n_{-1})+exp(\beta n_{1})} $$
+On a donc bien l'égalité entre ces termes.
+\end{itemize} 
+\end{itemize}
+
+~\\
+Ayant donc vérifié tous les cas possibles, on obtient donc l'équation de balance détaillée qui conduit bien à la réversibilité de la chaîne.
+
+\subsection{Metropolis-Hastings}
+
+Pour la méthode de Metropolis-Hastings, pour chaque configuration $x$ de la chaîne, on a une densité $q_{x}$. On propose ensuite un état suivant y, selon la densité $q_{x}$. L'état suivant sera donc $x$ ou $y$. La probabilité avec laquelle est choisie la configuration $y$ est donnée de telle sorte que la réversibilité s'applique. On la donne ci-dessous. Notez que, pour que cela fonctionne, il est nécessaire que si $q_{x}(y) >0$, alors $q_{y}(x) >0$ aussi. On a alors le changement vers $y$ avec probabilité : 
+$$ min\left\{ 1, \frac{f_{\pi}(y)q_{y}(x)}{f_{\pi}(x)q_{x}(y)} \right\}$$
+
+On notera aussi que $f_{\pi}$ peut-être normalisée ou non.
+\\
+En exemple, on considère à nouveau le modèle d'Ising avec $\mu = 0$. A chaque pas, on choisit un n\oe{}ud uniformément dans $V$ puis un label candidat pour ce n\oe{}ud est choisi uniformément dans $\left\{ -1,1 \right\}$. On a alors $q_{x}(y) = q_{y}(x) = 1/2$. On calcule ensuite, pour $n_{c}$ le nombre de voisins de $\nu$ de label $c$ (où c est le label proposé) et $n_{x(\nu)}$ le nombre de voisins de $\nu$ de même label que $\nu$ : 
+
+$$\frac{f_{\pi}(y)}{f_{\pi}(x)} = \frac{exp(n_{c} \beta)}{exp(n_{x(\nu)}\beta)}$$ 
+
+\subsection{Variables aléatoires auxiliaires / Auxiliary random variables}
+
+Dans la plupart des applications du MCMC, la densité ciblée $X$ a une structure multiplicative. Pour ces densités, il est possible d'ajouter un vecteur $Y$ de variables aléatoires supplémentaires telles que $(X,Y)$ a une distribution jointe plus simple.
+Par exemple, on considère à nouveau le modèle d'Ising avec $\mu = 0$. Pour chaque arête $\left\{ i,j \right\}$, on crée une variable aléatoire auxiliaire $Y(\left\{i,j\right\})$ telle que sa distribution conditionnée sur $X$ soit uniforme sur $[0,1]$ si $X(i) \neq X(j)$ et uniforme sur $[0,exp(\beta)]$ si on a l'égalité.\\
+La densité jointe est alors uniforme sur : 
+$$X \in \left\{0,1\right\}^{V} \text{et } Y \in \left\{ [0, \infty) : (\forall\left\{i,j\right\})(y\left\{i,j\right\}) \leq min(exp(\beta),1))\right\}$$
+La chaîne de Markov est alors la suivante : pour $X$ donné, il suffit de choisir une nouvelle valeur de $Y$ sachant $X$, puis choisir un nouveau $X$ conditionné sur $Y$.\\
+De par la construction de la chaîne, tirer $Y$ sachant $X$ est direct. Cependant, tirer $X$ sachant $Y$ est une autre histoire : prenons pour exemple le modèle d'Ising avec $\beta >0$. On a alors $exp(\beta) >1$. Lorsque $y(\left\{i,j\right\}) \in [0,1]$, alors il est possible que $x(i)=x(j)$ ou que $x(i) \neq x(j)$, mais lorsque $y(\left\{i,j\right\}) > 1$, alors on a forcément que $x(i)=x(j)$. Les arêtes avec  $y(\left\{i,j\right\}) > 1$ séparent le graphe en groupes de composants connectés tels que chacun des composants doivent avoir le même label.\\
+Il suffit donc de séparer le graphe en groupes de composants connectés en se servant des arêtes $y(\left\{i,j\right\}) > 1$, puis il faut choisir un label uniformément sur $\left\{-1,1\right\}$ pour les composantes de ces groupes.
+
+
 
 \section{Chapitre 3}
 
