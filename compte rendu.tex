@@ -20,7 +20,28 @@
 \usepackage{amsmath}
 \usepackage{amsthm}
 \usepackage{amsfonts}
+\usepackage{listings} %%permet l'insertion de code dans le texte%%
+\newtheorem{definition}{Définition}
+\newtheorem{theorem}{Th\'eor\`eme}
 
+\lstset{
+language=R,
+basicstyle=\ttfamily\small, %
+identifierstyle=\color{red}, %
+keywordstyle=\color{blue}, %
+stringstyle=\color{black!60}, %
+columns=flexible, %
+tabsize=2, %
+extendedchars=true, %
+showspaces=false, %
+showstringspaces=false, %
+numbers=left, %
+numberstyle=\tiny, %
+breaklines=true, %
+breakautoindent=true, %
+captionpos=b, %
+rulecolor=\color{black}
+}
 
 \begin{document}
 
@@ -45,37 +66,45 @@ Simulation parfaite}
 
 
 
-\section{Chapitre 1}
+\section{Chapitre 1 : Introduction}
 
 \subsection{Définitions et théorèmes}
 
-\paragraph{Définition : Fonction calculable / Computable function}
+\begin{definition}
+Temps d'arrêt
+\end{definition}
 
-~\\
+On dit que $T$ est un temps d'arrêt pour une suite $X_{1},X_{2},\ldots$ si, connaissant les valeurs de $X_{1},X_{2},\ldots,X_{n}$ on peut déterminer si $T \leq n$.
+
+\begin{definition} 
+Fonction calculable
+\end{definition}
 
 Une fonction est dite calculable (computable en anglais) si il existe un algorithme capable de retourner le résultat de la fonction.
 
-\paragraph{Définition : Algorithme probabiliste / Randomized algorithm}
-
-~\\
+\begin{definition}
+Algorithme probabiliste
+\end{definition}
 
 Soient 	$\cal{I}$ un ensemble d'indices tel que pour tout $I \in \cal{I}$, il existe une distribution $\pi_{I}$ sur un espace d'états $\Omega_{I}$. On se donne une suite de variables aléatoires $X_{1},X_{2},\ldots$ où les $X_{I} \in S_{I}$ .\\
 Un algorithme probabiliste est une famille de temps d'arrêts $ \left\{ T_{I} \right\}_{I \in \cal{I}}$ et et de fonctions calculables 
 $ \left\{ f_{I,t} \right\} _{i \in \mathcal{I}, t \in \left\{ 1,2,\ldots \right\} } $. La sortie de l'algorithme est $f_{I,T_{I}}(X_{1},\ldots,X_{T_{I}})$.\\
 
-\paragraph{Définition : Algorithme de simulation parfaite / Perfect simulation algortihm}
-
-~\\
+\begin{definition}
+Algorithme de simulation parfaite
+\end{definition}
 
 Un algorithme de simulation parfaite est un algorithme probabiliste dont la sortie est une variable aléatoire qui provient d'une distribution cible.\\
 Les algorithmes de simulation parfaite sont une sous-classe des algorithmes de simulation exacte, algorithmes qui tirent d'une distribution ciblée. \\
 Cependant les algorithmes dont le temps d'arrêt 
 $T_{I}$ est déterministe (algorithmes tournant selon un nombre fini de choix aléatoires) sont généralement considérés comme algorithmes de simulation exacte mais pas comme algorithmes de simulation parfaite.
-\paragraph{Théorème fondamental de la simulation parfaite}
 
-~\\
 
-On suppose que pour $U_{1},U_{2},\ldots$ iid tel que $U_{i} \sim$ Unif([0,1]) , il existe des fonctions calculables $b,g$ et $f$ telles que la fonction $b$ aie pour image $ \left\{ 0,1 \right\} $ et $\mathbb{P}(b(U) = 1) < 0$. \\
+\begin{theorem}
+Théorème fondamental de la simulation parfaite
+\end{theorem}
+
+On suppose que pour $U_{1},U_{2},\ldots$ iid tel que $U_{i} \sim$ Unif([0,1]) , il existe des fonctions calculables $b,g$ et $f$ telles que la fonction $b$ aie pour image $ \left\{ 0,1 \right\} $ et $\mathbb{P}(b(U) = 1) > 0$. \\
 Pour une variable aléatoire X qui vérifie : 
 
 \begin{equation}
@@ -92,16 +121,13 @@ $$ Y = f(\ldots f(f(g(U_{T}),U_{T-1}),U_{T-2}),\ldots,U_{1})$$
 
 a la même distribution que $X$ et on a $\mathbb{E}[T] = \frac{1}{\mathbb{P}(b(U) = 1)}$.\\
 ~\\
-\paragraph{\underline{\textit{Preuve :}}}
-~\\
-
+\begin{proof}
 Soient $X_{0},X_{1},\ldots$ des tirages indépendants chacun distribués selon $X$, et $U_{1},U_{2},\ldots$ iid tel que $U_{i} \sim$ Unif([0,1]). Pour $X_{t}$, fixons $X_{t,t} = X_{t}$ et récursivement, on pose :
 
 $$ X_{t,i} = b(U_{i+1})g(U_{i+1}) + (1 - b(U_{i+1}))f(X_{t,i+1},U_{i+1}),  $$
 pour $i \in \left\{0,\ldots,t-1\right\}$.\\
 
 On a alors d'après la relation \eqref{eq1} : $X_{t,0} \sim X$. On montre ce résultat pour les premiers indices t, les suivants sont prouvés de la même manière.
-
 \paragraph{\underline{t=0}}
 
 \begin{align*}
@@ -185,14 +211,19 @@ Il ne reste plus qu'à montrer $Y \sim X$. Pour tout $t$, pour tout ensemble $C$ 
 Les deux derniers termes sont bornés par $\mathbb{P}(T > t) = (1 - \mathbb{P}(b(U) = 1))^{t}$, et puisque l'équation est vraie pour n'importe quel $t$,  on obtient : $\mathbb{P}(Y \in C) = \mathbb{P}(X \in C)$ pour tout ensemble $C$ , donc $Y \sim X$.
 Le fait que $\mathbb{E}[T] = \frac{1}{\mathbb{P}(b(U)=1)}$ provient du fait que $T$ suit une loi géométrique de paramètre $\mathbb{P}(b(U) =1)$
 
-\paragraph{Définition : Algorithme arretable / Interruptible algorithm}
-~\\
-~\\
+\end{proof}
+
+
+
+
+\begin{definition}
+Algorithme arretable
+\end{definition}
 Dans le théorème fondamental de la simulation parfaite, si $X$ et $T$ sont indépendants, on dit que l'algorithme est arretable, sinon il est non-arretable.
 
-\paragraph{Définition : Algortihme de simulation parfaite à lecture unique / Read once perfect simulation algorithm}
-~\\
-~\\
+\begin{definition}
+Algortihme de simulation parfaite à lecture unique
+\end{definition}
 Un algorithme de simulation parfaite qui utilise $X \sim b(U)g(U) + (1 - b(U))f(X,U)$ est un algorithme à lecture unique si $f(X,u) = f(X,u')$ pour tout $u$,$u'$. Sinon, c'est un algorithme à lecture double.\\
 ~\\
 En général, un algorithme arretable est préférable à un algorithme non-arretable, et un algorithme à lecture unique est préférable à un algorithme à lecture double.\\
@@ -203,33 +234,33 @@ En général, un algorithme arretable est préférable à un algorithme non-arretable
 
 On considère un graphe $G = (V,E)$. $V$ est l'ensemble des n\oe{}uds et $E$ est l'ensemble des arêtes. On notera par la suite $\Delta$ le degré du graphe (égal au degré du n\oe{}ud ayant un nombre de voisins maximal). On notera par $\Omega$ l'ensemble des labels des n\oe{}uds.
 
-\paragraph{Définition : Ensemble séparant / Separating set}
-~\\
-~\\
+\begin{definition}
+Ensemble séparant
+\end{definition}
 On dit qu'un sous-ensemble de n\oe{}uds $S$ sépare les n\oe{}uds $i$ et $j$ si tout chemin du graphe menant $i$ à $j$ passe par $S$.
 
-\paragraph{Définition : Champ aléatoire de Markov / Markov random field}
-~\\
-~\\
+\begin{definition}
+Champ aléatoire de Markov
+\end{definition}
 Pour un graphe $G = (V,E)$ et un ensemble de labels $\Omega$, on dit que la distribution de $X$ sur $\Omega$ est un champ aléatoire de Markov si, pour tous les n\oe{}uds $i$ et $j$, pour tous les ensembles $S$ séparant $i$ de $j$, on a : $[X(i)|X(j),X(S)] \sim [X(i)|X(S)]$. Un état $x \in \Omega$ est appelé une configuration.
 
-\paragraph{Définition : Clique}
-~\\
-~\\
+\begin{definition}
+Clique
+\end{definition}
 Une clique est un sous-ensemble de n\oe{}uds du graphe tel que chaque paire de n\oe{}uds soit connectée par une arête.
 
 
-\paragraph{Théorème de Hammersley Clifford}
-~\\
-~\\
+\begin{theorem}
+Théorème de Hammersley Clifford
+\end{theorem}
 Pour un graphe fini $G=(V,E)$, la distribution $\pi$ est un champ aléatoire de Markov si elle a pour densité $f_{X}$ et qu'il existe des fonctions $\phi _{C}$ pour toute clique C telles que $f_{X}$ puisse s'écrire : 
 
 $$ f_{X}(x) = \frac{1}{Z} \prod _{C \in cliques(G)} \phi_{C}(x)$$
 
 
-\paragraph{Définition : Auto-modèle / Auto-model}
-~\\
-~\\
+\begin{definition}
+Auto-modèle
+\end{definition}
 On dit qu'un champ aléatoire de Markov est un auto-modèle, si il existe des fonctions $f_{i}$ et $g_{i}$ telles que la densité de $X \sim \pi$ peut-être écrite sous la forme : 
 $$ f_{X}(x) = \frac{1}{Z} \left[\prod_{i \in V} f_{i}(X(i))\right]\left[ \prod _{ \left\{i,j \right\} \in E} g_{\left\{i,j\right\}}(X(i),X(j))\right]$$
 
@@ -261,14 +292,14 @@ Un problème classique de distribution sur les permutations est lié à la recherch
 Pour une matrice non-négative $w(i,j)$, notons :
 
 $$w(\sigma) = \prod_{i=1}^{n} w(i,\sigma(i))$$
-
-Tant qu'il existe au moins une permutation $\sigma$ telle que $w(i,\sigma(i)) >0$ pour tout $i$, cela donne une densité non normalisée sur l'ensemble des permutations. La constante de normalisation pour cette densité est alors appelée le permanent de la matrice $w(i,j)$. Si aucun $\sigma$ ne vérifie cette relation, le permanent est 0.
+\\
+\nolinebreak Tant qu'il existe au moins une permutation $\sigma$ telle que $w(i,\sigma(i)) >0$ pour tout $i$, cela donne une densité non normalisée sur l'ensemble des permutations. La constante de normalisation pour cette densité est alors appelée le permanent de la matrice $w(i,j)$. Si aucun $\sigma$ ne vérifie cette relation, le permanent est 0.
 ~\\
 Une autre distribution importante que l'on va considérer est la distribution uniforme sur les permutations où certains objets doivent avoir une position plus faible que les autres.
 
-\paragraph{Définition : relation d'ordre partiel / partial order}
-~\\
-~\\
+\begin{definition}
+Relation d'ordre partiel
+\end{definition}
 Soit un ensemble $P$. Une relation d'ordre partiel sur $P$ est une relation binaire $\preceq$ telle que pour tout $a,b,c \in P$, la relation est:
 
 \begin{enumerate}
@@ -279,21 +310,23 @@ Soit un ensemble $P$. Une relation d'ordre partiel sur $P$ est une relation bina
 
 Un ensemble disposant d'une relation d'ordre partiel est parfois appelé poset d'après l'anglais partially ordered set.
 
-\paragraph{Définition : Extension linéaire d'un ordre partiel / Linear extension of a partial order}
-~\\
-~\\
+\begin{definition}
+Extension linéaire d'un ordre partiel
+\end{definition}
+
 Une extension linéaire d'un ordre partiel sur $1,\ldots,n$ est une permutation pour laquelle si $i$ et $j$ sont tels que $\sigma(i) \prec \sigma(j)$, alors $i<j$.  
 
 \subsection{Chaînes de Markov et simulation approchée}
 
-Jusqu'au développement des algorithmes de simulation parfaite/exacte, la manière principale d'obtenir une réalisation d'une distribution ciblée était une méthode d'approche. Plusieurs algorithmes et méthodes ont été mis en place et réfère à l'ensemble de ces méthodes sous le nom de Chaîne de Markov Monte Carlo (Markov Chain Monte Carlo, MCMC dans la littérature).
-
+Jusqu'au développement des algorithmes de simulation parfaite/exacte, la manière principale d'obtenir une réalisation d'une distribution ciblée était une méthode d'approche. Plusieurs algorithmes et méthodes ont été mis en place et l'ensemble de ces méthodes porte le nom de Chaîne de Markov Monte Carlo (Markov Chain Monte Carlo, MCMC dans la littérature).
+~\\
 On ne rappellera pas ici les principales définitions pour les chaînes de Markov mais d'autres seront nécessaires pour la suite.
 On s'intéressera notamment aux chaînes de Harris et au théorème ergodique associé.
 
-\paragraph{Définition : Chaîne de Harris / Harris Chain}
-~\\
-~\\
+\begin{definition}
+Chaîne de Harris
+\end{definition}
+
 Une chaîne de Markov $\left\{X_{t} \right\}$ sur un espace d'état $\Omega$ est une chaîne de Harris si il existe des ensembles mesurables $A,B \in \Omega$ et $\epsilon > 0$ pour $x \in A$ et $y \in B$, et une mesure de probabilité $\rho$ où $\rho(B) = 1$ tels que l'on ait :
 
 \begin{enumerate}
@@ -301,56 +334,59 @@ Une chaîne de Markov $\left\{X_{t} \right\}$ sur un espace d'état $\Omega$ est u
 \item Si $x \in A$ et $C \subseteq B$, alors $\mathbb{P}(X_{1} \in C | X_{0} = x) \geq \epsilon \rho (C)$
 \end{enumerate}  
 
-\paragraph{Définition : Chaîne récurrente / Recurrent chain}
-~\\
-~\\
+\begin{definition}
+Chaîne récurrente
+\end{definition}
+
 Soit $R = inf \left\{ n>0 : X_{n} \in A \right\}$. On dit qu'une chaîne de Harris est une chaîne récurrente si pour tout $x \in A$, $\mathbb{P}(R < \infty | X_{0} = x) = 1$. Une chaîne qui n'est pas récurrente est dite transiente.
 
-\paragraph{Définition : Chaîne apériodique / Aperiodic chain}
-~\\
-~\\
+\begin{definition}
+Chaîne apériodique
+\end{definition}
+
 Une chaîne de Harris récurrente est apériodique si pour tout $x \in \Omega$, il existe $n$ tel que pour tout $n' \geq n$, $\mathbb{P}(X_{n'} \in A | X_{0} = x) >0$
 
-\paragraph{Théorème : Théorème ergodique pour les chaînes de Harris}
-~\\
-~\\
+\begin{theorem}
+Théorème ergodique pour les chaînes de Harris
+\end{theorem} 
+
 Soit $X_{n}$ une chaîne de Harris récurrente et apériodique de distribution stationnaire $\pi$. Si $\mathbb{P}(R < \infty | X_{0} = x) = 1$ pour tout $x$, alors, pour $t \to \infty$, pour tout ensemble mesurable $C$ et pour tout $x$ : 
 
 $$ |\mathbb{P}(X_{t} \in C|X_{0} = x) - \pi(C)| \to 0 $$
 
 ~\\
 Ce théorème est le c\oe{}ur des méthodes MCMC, puisqu'il "suffit" de construire une chaîne de Harris ayant pour distribution stationnaire la distribution souhaitée et de la faire tourner pendant un nombre infini de pas. Cependant, n'ayant pas un temps infini, les utilisateurs font tourner leurs algorithmes durant un grand nombre de pas et espèrent arriver dans la distribution stationnaire.
-\\
-On peut cependant déterminer à quel point la chaîne est proche de la loi stationnaire à l'aide du concept de couplage (voir chapitre 3 pour une définition et application étendue).
+~\\
+\linebreak Nous pourrons cependant déterminer à quel point la chaîne est proche de la loi stationnaire à l'aide du concept de couplage (voir chapitre 3 pour une définition et application étendue).
 
-\paragraph{Définition : Couplage / Coupling}
-~\\
-~\\
+\begin{definition}
+Couplage
+\end{definition}
 Supposons que $\left\{X_{t} \right\} \sim \nu_{X}$ et $\left\{Y_{t} \right\} \sim \nu_{Y}$. Un couplage de $\left\{X_{t} \right\}$ et $\left\{Y_{t} \right\}$ est un processus bivarié $\left\{(X^{'}_{t},Y^{'}_{t})\right\}$ tel que $\left\{X^{'}_{t} \right\} \sim \nu_{X}$ et $\left\{Y^{'}_{t} \right\} \sim \nu_{Y}$.
 
-\paragraph{Théorème : Lemme de Couplage / Coupling Lemma}
-~\\
-~\\
+\begin{theorem}
+Lemme de Couplage
+\end{theorem} 
+
 Soit $Y_{0} \sim \pi$ et $X_{0} = x_{0}$ tels que les deux variables évoluent de manière couplée. Alors, pour tout mesurable $C$ :
 $$ |\mathbb{P}(X_{t} \in C|X_{0}=x) - \pi(C)| \leq \mathbb{P}(X_{t} \ne Y_{t}).$$
 
 \subsection{Création de chaînes de Markov}
 
 Afin d'utiliser les méthodes MCMC, il faut créer des chaînes de Harris qui convergent vers la distribution $\pi$ ciblée.
-Il est généralement mieux de créer des chaînes plus que stationnaire : les chaînes réversibles.\\
-On utilisera la notation suivante pour la définition de réversibilité : $\pi(dx) = f(x)dx$. Et donc, pour tout mesurable $A$, $\pi(A) = \int_{x \in A} \pi(dx) = \int_{x \in A} f(x)dx$.
-On obtient alors la définition de réversibilité suivante : 
-\paragraph{Définition : Chaîne réversible}
-~\\
-~\\
-Une distribution $\pi$ est réversible selon une chaîne de Markov $\left\{ X_{t} \right\}$ si : $\pi(dx)\mathbb{P}(X_{t+1} \in dy | X_{t} = x) = \pi(dy)\mathbb{P}(X_{t+1} \in dx | X_{t} = y).$
-\paragraph{Lemme}
-~\\
-~\\
+Il est généralement mieux de créer des chaînes réversibles plutôt que des chaînes simplement stationnaires.\\
+Nous utiliserons la notation suivante pour la définition de réversibilité : $\pi(dx) = f(x)dx$. Et donc, pour tout mesurable $A$, $\pi(A) = \int_{x \in A} \pi(dx) = \int_{x \in A} f(x)dx$.\\
+Nous utiliserons l'équation de balance détaillée pour en déduire la réversibilité: 
+\begin{definition}
+Équation de balance détaillée
+\end{definition}
+
+Une distribution $\pi$ est réversible selon une chaîne de Markov $\left\{ X_{t} \right\}$ en particulier si : $\pi(dx)\mathbb{P}(X_{t+1} \in dy | X_{t} = x) = \pi(dy)\mathbb{P}(X_{t+1} \in dx | X_{t} = y).$
+\begin{theorem}
+Lemme
+\end{theorem}
 Si $\pi$ est réversible, alors $\pi$ est stationnaire.
-\paragraph{\underline{\textit{Preuve}}}
-~\\
-~\\
+\begin{proof}
 Soit $\Omega$ l'espace d'état de la chaîne de Markov $\left\{ X_{t} \right\}$ considérée et $\pi$ réversible pour cette chaîne.
 Pour $X_{t} \sim \pi$, et $C$ un ensemble mesurable, alors on a :
 
@@ -375,76 +411,356 @@ Pour $X_{t} \sim \pi$, et $C$ un ensemble mesurable, alors on a :
 
 D'où la stationnarité de $\pi$.\\
 
-~\\
-Plusieurs types de chaînes réversibles existent tels que l'échantillonnage de Gibbs (Gibbs sampler), Metropolis-Hastings,etc.
+\end{proof}
+
+Plusieurs types de chaînes réversibles existent telles que l'échantillonnage de Gibbs (Gibbs sampler), Metropolis-Hastings,etc.
 \\
 Ces chaînes sont présentées dans la suite.
 
-\subsection{Échantillonnage de Gibbs / Gibbs Sampler}
+\subsubsection{Échantillonnage de Gibbs}
 
-On présente ici l'un des plus simples échantillonneurs de Gibbs, qui agit sur un espace d'états de la forme $C^{V}$. On appelle $\nu \in V$ une dimension du problème. Pour $X_{t} = x$, l'échantillonneur choisit une dimension $\nu$ uniformément sur $V$. Soit $L(x,\nu)$ l'ensemble des états qui sont exactement les n\oe{}uds de la configuration $x$ sauf en $\nu$, écrit de la manière suivante : $L(x,v) = \left\{ y : (\forall w \in V \setminus \left\{v\right\})(y(w) = x(w))\right\}.$ Pour $X_{t} = x$, l'état suivant $X_{t+1}$ est choisi selon $\pi$ à conditionné à être dans $L(x,v)$.
+On présente ici un échantillonneur de Gibbs, qui agit sur un espace d'états de la forme $C^{V}$. On appelle $\nu \in V$ une dimension du problème. Pour $X_{t} = x$, l'échantillonneur choisit une dimension $\nu$ uniformément sur $V$. Soit $L(x,\nu)$ l'ensemble des états qui sont exactement les n\oe{}uds de la configuration $x$ sauf en $\nu$, écrit de la manière suivante : $L(x,v) = \left\{ y : (\forall w \in V \setminus \left\{v\right\})(y(w) = x(w))\right\}.$ Pour $X_{t} = x$, l'état suivant $X_{t+1}$ est choisi selon $\pi$ à conditionné à être dans $L(x,v)$.
 \\
-On présente comme exemple le modèle d'Ising précédemment vu avec $\mu = 0$. Une dimension est alors un n\oe{}ud de la configuration.
+On présente comme exemple le modèle d'Ising précédemment vu. Une dimension est alors un n\oe{}ud de la configuration.
 On choisit donc un n\oe{}ud uniformément dans $V$, et on considère les états qui sont exactement $x$ en tous les autres n\oe{}uds autres que $\nu$. Pour le modèle d'Ising, la valeur en $\nu$ de x  est $1$ ou $-1$. On note ces configurations $x_{\nu \to 1}$ et $x_{\nu \to -1}$. On choisit alors l'état suivant entre $x_{\nu \to 1}$ et $x_{\nu \to -1}$, où le choix est fait proportionnellement à $\pi$. On a donc : 
 
 $$\mathbb{P}(X_{t+1} = x_{\nu \to 1})  = \frac{\pi(\left\{x_{\nu \to 1}\right\})}{\pi(\left\{x_{\nu \to 1}\right\})+\pi(\left\{x_{\nu \to -1}\right\})}$$
 
-Or, pour le modèle d'Ising avec $\mu = 0$,
+Or, pour le modèle d'Ising,
 
-$$\pi(\left\{x\right\})= \frac{1}{Z} \prod_{\left\{i,j\right\} \in E} exp(\beta \mathbf{1}(x(i)=x(j)).$$
+$$\pi(\left\{x\right\})= \frac{1}{Z}\prod_{i \in V} exp(\mu X(i)) \prod_{\left\{i,j\right\} \in E} exp(\beta \mathbf{1}(x(i)=x(j)).$$
 
 Après simplification, on obtient :
 \begin{align*}
-\mathbb{P}(X_{t+1} = x_{\nu \to 1}) &= \frac{\prod_{\left\{\nu,j\right\} \in E} exp(\beta \mathbf{1}(x(j)=1))}{\prod_{\left\{\nu,j\right\} \in E} exp(\beta \mathbf{1}(x(j)=1)) + \prod_{\left\{\nu,j\right\} \in E} exp(\beta \mathbf{1}(x(j)=-1))}
+\mathbb{P}(X_{t+1} = x_{\nu \to 1}) &= \frac{exp(\mu)\prod_{\left\{\nu,j\right\} \in E} exp(\beta \mathbf{1}(x(j)=1))}{exp(\mu)\prod_{\left\{\nu,j\right\} \in E} exp(\beta \mathbf{1}(x(j)=1)) + exp(-\mu)\prod_{\left\{\nu,j\right\} \in E} exp(\beta \mathbf{1}(x(j)=-1))}
 \\
-&= \frac{exp(\beta n_{1})}{exp(\beta n_{1}) + exp(\beta n_{-1})}
+&= \frac{exp(\beta n_{1} + \mu)}{exp(\beta n_{1} + \mu) + exp(\beta n_{-1} - \mu)}
 \end{align*}
 Où $n_{c}$ est le nombre de voisins de $\nu$ de label c.
-Par exemple, si $\nu$ est adjacent à trois n\oe{}uds de label $1$ et un n\oe{}ud de label $-1$, alors la probabilité que $\nu$ se voit labelliser $1$ est $exp(3\beta)/(exp(3\beta)+exp(\beta))$.
+Par exemple, si $\nu$ est adjacent à trois n\oe{}uds de label $1$ et un n\oe{}ud de label $-1$, alors la probabilité que $\nu$ se voit labelliser $1$ est $exp(3\beta + \mu)/(exp(3\beta + \mu)+exp(\beta - \mu))$.
 Mettre ensuite en place cette méthode algorithmiquement est très simple.\\
 Vérifions la réversibilité de la chaîne.
+\begin{proof}
+Les cas où la chaîne ne change pas d'état après un pas,(ie $X_{t} = x_{\nu \to 1}$  et $X_{t+1} = x_{\nu \to 1}$ ou $X_{t} = x_{\nu \to -1}$ et $X_{t+1} = x_{\nu \to -1}$) nous donnent immédiatement l'équation de balance détaillée, il ne reste alors qu'à traiter deux cas.
 \begin{itemize}
-\item Premier cas : $X_{t} = x_{\nu \to 1}$ 
+\item Premier cas : $X_{t} = x_{\nu \to 1}$ et $X_{t+1} = x_{\nu \to -1}$.
 \\
-\begin{itemize}
-\item Premier sous-cas : $X_{t+1} = x_{\nu \to 1}$. Les termes de l'égalité de balance détaillée sont les mêmes, on a donc trivialement l'égalité.
-\\
-\item Deuxième sous-cas : $X_{t+1} = x_{\nu \to -1}$.
-On a alors : $$ \pi(\left\{x_{\nu \to 1 } \right\}) \mathbb{P}(X_{t+1} = x_{\nu \to -1} | X_{t} = x_{\nu \to 1}) = exp(\beta n_{1}) \frac{exp(\beta n_{-1})}{exp(\beta n_{-1})+exp(\beta n_{1})} $$
-D'autre part : 
-$$ \pi(\left\{x_{\nu \to -1 } \right\}) \mathbb{P}(X_{t+1} = x_{\nu \to 1} | X_{t} = x_{\nu \to -1}) = exp(\beta n_{-1}) \frac{exp(\beta n_{1})}{exp(\beta n_{-1})+exp(\beta n_{1})} $$
 
-On a donc l'égalité entre ces termes.
+On a alors : $$ \pi(\left\{x_{\nu \to 1 } \right\}) \mathbb{P}(X_{t+1} = x_{\nu \to -1} | X_{t} = x_{\nu \to 1}) =\pi(\left\{x_{\nu \to 1 } \right\}) \frac{exp(-\mu + \beta n_{-1})}{exp(-\mu + \beta n_{-1})+exp(\mu + \beta n_{1})} $$
+D'autre part : 
+$$ \pi(\left\{x_{\nu \to -1 } \right\}) \mathbb{P}(X_{t+1} = x_{\nu \to 1} | X_{t} = x_{\nu \to -1}) =\pi(\left\{x_{\nu \to -1 } \right\}) \frac{exp(\mu + \beta n_{1} )}{exp( - \mu + \beta n_{-1})+exp(\mu + \beta n_{1} )} $$
+
+On aura donc l'égalité entre ces termes si et seulement si on a :
+
+$$ \pi(\left\{x_{\nu \to 1 } \right\})exp(-\mu + \beta n_{-1}) = \pi(\left\{x_{\nu \to -1 } \right\})exp(\mu + \beta n_{1} ) $$
+
+Les simplifications suivantes s'opèrent dans les termes en $\pi$ : 
+
+\begin{itemize}
+\item simplification des $\frac{1}{Z}$
+\item simplification des $\prod_{i \in V} exp(\mu X(i))$ sauf au n\oe{}ud $\nu$
+\item simplification des $\prod_{\left\{i,j\right\} \in E} exp(\beta \mathbf{1}(x(i)=x(j))$ sauf aux arêtes ayant $\nu$ comme extrémité
+\end{itemize}
+~\\
+On obtient alors :
+
+$$exp(\mu + \beta n_{1} ) exp(-\mu + \beta n_{-1}) = exp(-\mu + \beta n_{-1})exp(\mu + \beta n_{1} ) $$
+
+On a donc bien vérifié l'égalité et donc l'équation de balance détaillée.
+
+
+
 \end{itemize}
 
-\item Deuxième cas : $X_{t} = x_{\nu \to -1}$
-
-\begin{itemize}
-\item Premier sous-cas : $X_{t+1} = x_{\nu \to -1}$. Les termes de l'égalité de balance détaillée sont les mêmes, on a donc trivialement l'égalité.
-\\
-\item Deuxième sous-cas : $X_{t+1} = x_{\nu \to 1}$.
-On a alors : $$ \pi(\left\{x_{\nu \to -1 } \right\}) \mathbb{P}(X_{t+1} = x_{\nu \to 1} | X_{t} = x_{\nu \to -1}) = exp(\beta n_{-1}) \frac{exp(\beta n_{1})}{exp(\beta n_{-1})+exp(\beta n_{1})} $$
-D'autre part : 
-$$ \pi(\left\{x_{\nu \to 1 } \right\}) \mathbb{P}(X_{t+1} = x_{\nu \to -1} | X_{t} = x_{\nu \to 1}) = exp(\beta n_{1}) \frac{exp(\beta n_{-1})}{exp(\beta n_{-1})+exp(\beta n_{1})} $$
-On a donc bien l'égalité entre ces termes.
-\end{itemize} 
-\end{itemize}
+Le deuxième cas : $X_{t} = x_{\nu \to -1}$ et $X_{t+1} = x_{\nu \to 1}$ se vérifie de la même manière.
 
 ~\\
-Ayant donc vérifié tous les cas possibles, on obtient donc l'équation de balance détaillée qui conduit bien à la réversibilité de la chaîne.
+Ayant vérifié tous les cas possibles, on obtient donc l'équation de balance détaillée qui conduit bien à la réversibilité de la chaîne.
 
-\subsection{Metropolis-Hastings}
+\end{proof}
+
+\newpage
+\paragraph{\underline{\textbf{Programmation sous R}}}
+~\\
+
+
+\begin{lstlisting}
+## X = graphe (rectangulaire ou carré), u = lancer uniforme sur [0,1], v = noeud de X ##
+IsingGibbsUpdate <- function(X,u,v,beta,mu){ ## Permet de faire un pas de la chaîne de Markov associée selon le Gibbs Sampler##
+  
+  ##On entoure la matrice de valeurs aberrantes pour la manipuler plus facilement##
+  ##On change les indices du point considéré pour se conformer à la nouvelle matrice##
+  
+  i = v[1] + 1
+  j = v[2] + 1
+  
+  X = rbind(rep(0,dim(X)[2]),X)
+  X = rbind(X,rep(0,dim(X)[2]))
+  X = cbind(rep(0,dim(X)[1]),X)  
+  X = cbind(X,rep(0,dim(X)[1]))
+
+##Les indicatrices permettent de vérifier quelles valeurs ont les voisins du point considéré ##
+
+  if(u< exp(mu + beta*((X[i+1,j]==1)*1 + (X[i-1,j]==1)*1 +(X[i,j+1]==1)*1 + (X[i,j-1]==1)*1))/((exp(mu + beta*((X[i+1,j]==1)*1 + (X[i-1,j]==1)*1 +(X[i,j+1]==1)*1 + (X[i,j-1]==1)*1))) + exp(-mu + beta*((X[i+1,j]==-1)*1 + (X[i-1,j]==-1)*1 +(X[i,j+1]==-1)*1 + (X[i,j-1]==-1)*1)))){
+    X[i,j] =  1
+  }
+  else{
+    X[i,j] = -1
+  }
+  
+  ##On supprime les valeurs insérées##
+  X=X[,-1]
+  X=X[,-dim(X)[2]]
+  X=X[-1,]
+  X=X[-dim(X)[1],]
+  
+  X
+}
+
+\end{lstlisting}
+
+\newpage
+
+\begin{lstlisting}
+IsingGibbssteps <- function(X,beta,mu,n){ ##effectue n pas de la chaîne de Markov pour le sampler de Gibbs, pour un graphe rectangulaire X##  
+
+  for (i in 1:n){
+  
+  ##choix uniforme du noeud considéré##
+    k = sample(1:dim(X)[1],1)
+    l = sample(1:dim(X)[2],1)
+  ##lancer uniforme sur [0,1]##
+    u = runif(1)
+  ##mise à jour du point##
+    X=IsingGibbsUpdate(X,u,c(k,l),beta,mu)
+    
+  }
+
+  X
+}
+\end{lstlisting}
+
+\newpage
+
+\begin{lstlisting}
+IsingGibbsconditionnalstop <- function(X,beta,epsilon){ ##effectue un nombre aléatoire de pas de la chaîne de Markov pour le sampler de Gibbs, pour un graphe carré X##  
+  
+  ##On créé le vecteur Y qui contiendra les ratios de 1 pour chaque graphe##  
+  Y=c(mean(X==1))
+  bol = TRUE
+  i=1
+  
+  while (bol){
+	
+	##Choix uniforme du noeud considéré##
+    k = sample(1:dim(X)[1],1)
+    l = sample(1:dim(X)[2],1)
+	
+	##lancer uniforme sur [0,1]##    
+    u = runif(1)
+    
+    ##Mise à jour du noeud considéré##
+    X=IsingGibbsUpdate(X,u,c(k,l),beta)
+    
+    ##Mise à jour du vecteur des ratios##
+    Y = c(Y,mean(X==1))
+    
+    ##Si la ligne est décommentée, on obtient une représentation de la configuration X tout les (dim(X)[1]**2)/epsilon pas##
+    ##if ((i%%((dim(X)[1]**2)/epsilon)==0)){image(X)}
+
+	##Si on a effectué un nombre de pas suffisant, et que le nombre de 1 n'a pas varié énormément durant un certain nombre d'itérations, on s'arrête##
+    if ((i>=((log(dim(X)[1]**2)*dim(X)[1]**2)/epsilon)) && ((mean(Y[i+1-floor((dim(X)[1]**(1/2))/epsilon):i])-Y[i])<epsilon)){
+      break()
+    }
+    i=i+1
+  }
+  
+  return(list(X,i))
+  
+}
+\end{lstlisting}
+\newpage
+
+
+
+
+
+\subsubsection{Metropolis-Hastings}
 
 Pour la méthode de Metropolis-Hastings, pour chaque configuration $x$ de la chaîne, on a une densité $q_{x}$. On propose ensuite un état suivant y, selon la densité $q_{x}$. L'état suivant sera donc $x$ ou $y$. La probabilité avec laquelle est choisie la configuration $y$ est donnée de telle sorte que la réversibilité s'applique. On la donne ci-dessous. Notez que, pour que cela fonctionne, il est nécessaire que si $q_{x}(y) >0$, alors $q_{y}(x) >0$ aussi. On a alors le changement vers $y$ avec probabilité : 
 $$ min\left\{ 1, \frac{f_{\pi}(y)q_{y}(x)}{f_{\pi}(x)q_{x}(y)} \right\}$$
 
 On notera aussi que $f_{\pi}$ peut-être normalisée ou non.
 \\
-En exemple, on considère à nouveau le modèle d'Ising avec $\mu = 0$. A chaque pas, on choisit un n\oe{}ud uniformément dans $V$ puis un label candidat pour ce n\oe{}ud est choisi uniformément dans $\left\{ -1,1 \right\}$. On a alors $q_{x}(y) = q_{y}(x) = 1/2$. On calcule ensuite, pour $n_{c}$ le nombre de voisins de $\nu$ de label $c$ (où c est le label proposé) et $n_{x(\nu)}$ le nombre de voisins de $\nu$ de même label que $\nu$ : 
+En exemple, on considère à nouveau le modèle d'Ising. A chaque pas, on choisit un n\oe{}ud uniformément dans $V$ puis un label candidat pour ce n\oe{}ud est choisi uniformément dans $\left\{ -1,1 \right\}$. On a alors $q_{x}(y) = q_{y}(x) = 1/2$. On calcule ensuite, pour $n_{c}$ le nombre de voisins de $\nu$ de label $c$ (où c est le label proposé) et $n_{x(\nu)}$ le nombre de voisins de $\nu$ de même label que $\nu$ : 
 
-$$\frac{f_{\pi}(y)}{f_{\pi}(x)} = \frac{exp(n_{c} \beta)}{exp(n_{x(\nu)}\beta)}$$ 
+$$\frac{f_{\pi}(y)}{f_{\pi}(x)} = \frac{exp(n_{c} \beta + c\mu)}{exp(n_{x(\nu)}\beta + x(\nu)\mu )}$$ 
 
-\subsection{Variables aléatoires auxiliaires / Auxiliary random variables}
+L'algorithme est alors très simple à mettre en place.
+D'abord, vérifions la réversibilité de la chaîne.
+\begin{proof}
+Les cas où la chaîne ne change pas d'état après un pas,(ie $X_{t} = x_{\nu \to 1}$  et $X_{t+1} = x_{\nu \to 1}$ ou $X_{t} = x_{\nu \to -1}$ et $X_{t+1} = x_{\nu \to -1}$) nous donnent immédiatement l'équation de balance détaillée, il ne reste alors qu'à traiter deux cas.
+\begin{itemize}
+\item Premier cas : $X_{t} = x_{\nu \to 1}$ et $X_{t+1} = x_{\nu \to -1}$.
+\\
+
+On a alors : $$ \pi(\left\{x_{\nu \to 1 } \right\}) \mathbb{P}(X_{t+1} = x_{\nu \to -1} | X_{t} = x_{\nu \to 1}) =\pi(\left\{x_{\nu \to 1 } \right\}) min\left\{ 1, \frac{exp(-\mu + \beta n_{-1})}{exp(\mu + \beta n_{1})} \right\} $$
+D'autre part : 
+$$ \pi(\left\{x_{\nu \to -1 } \right\}) \mathbb{P}(X_{t+1} = x_{\nu \to 1} | X_{t} = x_{\nu \to -1}) =\pi(\left\{x_{\nu \to -1 } \right\}) min\left\{ 1, \frac{exp(\mu + \beta n_{1})}{exp(-\mu + \beta n_{-1})} \right\} $$
+
+On aura donc l'égalité entre ces termes si et seulement si on a :
+
+$$ \pi(\left\{x_{\nu \to 1 } \right\}) min\left\{ 1, \frac{exp(-\mu + \beta n_{-1})}{exp(\mu + \beta n_{1})} \right\} = \pi(\left\{x_{\nu \to -1 } \right\}) min\left\{ 1, \frac{exp(\mu + \beta n_{1})}{exp(-\mu + \beta n_{-1})} \right\} $$
+
+Les simplifications suivantes s'opèrent dans les termes en $\pi$ : 
+
+\begin{itemize}
+\item simplification des $\frac{1}{Z}$
+\item simplification des $\prod_{i \in V} exp(\mu X(i))$ sauf au n\oe{}ud $\nu$
+\item simplification des $\prod_{\left\{i,j\right\} \in E} exp(\beta \mathbf{1}(x(i)=x(j))$ sauf aux arêtes ayant $\nu$ comme extrémité
+\end{itemize}
+~\\
+On obtient alors :
+
+$$exp(\mu + \beta n_{1}) min\left\{ 1, \frac{exp(-\mu + \beta n_{-1})}{exp(\mu + \beta n_{1})} \right\} = exp(-\mu + \beta n_{-1}) min\left\{ 1, \frac{exp(\mu + \beta n_{1})}{exp(-\mu + \beta n_{-1})} \right\} $$
+
+Par propriété du min, on obtient alors l'égalité entre les termes, qui conduit à l'équation de balance détaillée. 
+
+\end{itemize}
+
+~\\
+Le deuxième cas : $X_{t} = x_{\nu \to -1}$ et $X_{t+1} = x_{\nu \to 1}$ se vérifie de la même manière.
+
+~\\
+Ayant vérifié tous les cas possibles, on obtient donc l'équation de balance détaillée qui conduit bien à la réversibilité de la chaîne.
+
+\end{proof}
+
+
+\newpage
+\paragraph{\underline{\textbf{Programmation sous R}}}
+~\\
+
+
+\begin{lstlisting}
+## X = graphe (rectangulaire ou carré), u = lancer uniforme sur [0,1], v = noeud de X ##
+
+MetropolisHastingsUpdate <- function(X,u,v,beta){  ## Permet de faire un pas de la chaîne de Markov associée selon Metropolis-Hastings     
+  
+  ##On entoure la matrice de valeurs aberrantes pour la manipuler plus facilement##
+  ##On change les indices du point considéré pour se conformer à la nouvelle matrice##
+  
+  i = v[1] + 1
+  j = v[2] + 1
+  
+  X = rbind(rep(0,dim(X)[2]),X)
+  X = rbind(X,rep(0,dim(X)[2]))
+  X = cbind(rep(0,dim(X)[1]),X)  
+  X = cbind(X,rep(0,dim(X)[1]))
+  
+  ##On choisit une couleur candidate pour le noeud v##
+  
+  c=sample(c(-1,1),1,prob=c(1/2,1/2))
+  
+  ##Les indicatrices permettent de vérifier quelles valeurs ont les voisins du point considéré ##
+  
+  if(u< exp(beta*((X[i+1,j]==c)*1 + (X[i-1,j]==c)*1 +(X[i,j+1]==c)*1 + (X[i,j-1]==c)*1))/exp(beta*((X[i+1,j]==X[i,j])*1 + (X[i-1,j]==X[i,j])*1 +(X[i,j+1]==X[i,j])*1 + (X[i,j-1]==X[i,j])*1))){
+    X[i,j] =  c
+  }
+  
+  ##On supprime les valeurs insérées##
+  X=X[,-1]
+  X=X[,-dim(X)[2]]
+  X=X[-1,]
+  X=X[-dim(X)[1],]
+  
+  X
+} 
+\end{lstlisting}
+
+\newpage
+\begin{lstlisting}
+MetropolisHastingssteps <- function(X,beta,n){ ##effectue n pas de la chaîne de Markov pour Metropolis-Hastings, pour un graphe rectangulaire X##  
+  
+  for (i in 1:n){
+  
+  ##choix uniforme du noeud##
+    k = sample(1:dim(X)[1],1)
+    l = sample(1:dim(X)[2],1)
+    
+  ##lancer uniforme sur [0,1]##
+    u = runif(1)
+    
+  ##mise à jour de la configuration X##
+    X=MetropolisHastingsUpdate(X,u,c(k,l),beta)
+  }
+  
+  X
+  
+}
+
+\end{lstlisting}
+
+\newpage
+\begin{lstlisting}
+
+MetropolisHastingsconditionnalstop <- function(X,beta,epsilon){ ##effectue un nombre aléatoire de pas de la chaîne de Markov pour Metropolis-Hastings, pour un graphe carré X## 
+
+ ##On créé le vecteur Y qui contiendra les ratios de 1 pour chaque graphe##  
+  Y=c(mean(X==1))
+  bol = TRUE
+  i=1
+  
+  
+  while (bol){
+  
+  ##Choix uniforme du noeud considéré##
+    k = sample(1:dim(X)[1],1)
+    l = sample(1:dim(X)[2],1)
+    
+  ##lancer uniforme sur [0,1]##  
+    u = runif(1)
+   
+  ##Mise à jour du noeud considéré##
+    X=MetropolisHastingsUpdate(X,u,c(k,l),beta)
+    
+  ##Mise à jour du vecteur des ratios##
+    Y = c(Y,mean(X==1))
+    
+  ##Si la ligne est décommentée, on obtient une représentation de la configuration X tout les (dim(X)[1]**2)/epsilon pas##
+  ##if ((i%%((dim(X)[1]**2)/epsilon)==0)){image(X)}##
+  
+  ##Si on a effectué un nombre de pas suffisant, et que le nombre de 1 n'a pas varié énormément durant un certain nombre d'itérations, on s'arrête##
+    if ((i>=((log(dim(X)[1]**2)*dim(X)[1]**2)/epsilon)) && ((mean(Y[i+1-floor((dim(X)[1]**(1/2)))/epsilon:i])-Y[i])<epsilon)){
+      break()
+    }
+    i=i+1
+  }
+  
+  return(list(X,i))
+  
+}
+
+
+\end{lstlisting}
+
+\newpage
+\paragraph{\underline{\textbf{Discussion du critère d'arrêt dans "IsingGibbsconditionnalstop"}}}
+\paragraph{\underline{\textbf{et "MetropolisHastingsconditionnalstop"}}}
+~\\
+\\
+Le premier critère pour l'arrêt du programme est si le nombre de pas $i$ vérifie : $i>=((log(n^{2})*n^{2})/\epsilon)$, où $n^{2}$ est la taille du graphe carré considéré et $\epsilon$ est la "précision" que l'utilisateur souhaite. \\
+Le terme en $n^{2}*log(n^{2})$ provient du problème du collectionneur. En effet, on souhaite, pour atteindre un certain équilibre, avoir donné la chance à chacun des n\oe{}uds d'avoir subi un changement. Cela revient à avoir sélectionné chacun des n\oe{}uds au moins une fois, ce qui revient au problème du collectionneur, où en moyenne le temps d'obtention de tous les éléments de la collection se fait en $n*log(n)$ si $n$ est la taille de la collection complète.\\
+Le terme en $\epsilon$ permet de s'assurer d'avoir obtenu la visite complète de tous les n\oe{}uds, mais servira plus amplement dans l'autre condition d'arrêt présentée ci-après.\\
+Le second critère est si le vecteur des ratios de $1$ vérifie :
+$$|Y[i] - \frac{1}{\lfloor \frac{n}{\epsilon}\rfloor}\sum_{k=i+1-\lfloor\frac{n}{\epsilon}\rfloor}^{i}Y[k]|<\epsilon$$
+C'est-à-dire, si le ratio de $1$ n'a pas évolué de plus de $\epsilon$ en moyenne depuis le temps $i+1-\lfloor\frac{n}{\epsilon}\rfloor$.
+On parle donc de "précision" $\epsilon$ puisque plus cette valeur est petite, plus le temps requis pour que peu de changements s'effectuent en moyenne est grand.\\
+Le terme en $n$ (où $n^{2}$ est la taille de la matrice) est ajouté pour obtenir une dépendance à la dimension dans la précision.
+
+
+
+\subsubsection{Variables aléatoires auxiliaires / Auxiliary random variables}
 
 Dans la plupart des applications du MCMC, la densité ciblée $X$ a une structure multiplicative. Pour ces densités, il est possible d'ajouter un vecteur $Y$ de variables aléatoires supplémentaires telles que $(X,Y)$ a une distribution jointe plus simple.
 Par exemple, on considère à nouveau le modèle d'Ising avec $\mu = 0$. Pour chaque arête $\left\{ i,j \right\}$, on crée une variable aléatoire auxiliaire $Y(\left\{i,j\right\})$ telle que sa distribution conditionnée sur $X$ soit uniforme sur $[0,1]$ si $X(i) \neq X(j)$ et uniforme sur $[0,exp(\beta)]$ si on a l'égalité.\\
@@ -452,13 +768,54 @@ La densité jointe est alors uniforme sur :
 $$X \in \left\{0,1\right\}^{V} \text{et } Y \in \left\{ [0, \infty) : (\forall\left\{i,j\right\})(y\left\{i,j\right\}) \leq min(exp(\beta),1))\right\}$$
 La chaîne de Markov est alors la suivante : pour $X$ donné, il suffit de choisir une nouvelle valeur de $Y$ sachant $X$, puis choisir un nouveau $X$ conditionné sur $Y$.\\
 De par la construction de la chaîne, tirer $Y$ sachant $X$ est direct. Cependant, tirer $X$ sachant $Y$ est une autre histoire : prenons pour exemple le modèle d'Ising avec $\beta >0$. On a alors $exp(\beta) >1$. Lorsque $y(\left\{i,j\right\}) \in [0,1]$, alors il est possible que $x(i)=x(j)$ ou que $x(i) \neq x(j)$, mais lorsque $y(\left\{i,j\right\}) > 1$, alors on a forcément que $x(i)=x(j)$. Les arêtes avec  $y(\left\{i,j\right\}) > 1$ séparent le graphe en groupes de composants connectés tels que chacun des composants doivent avoir le même label.\\
-Il suffit donc de séparer le graphe en groupes de composants connectés en se servant des arêtes $y(\left\{i,j\right\}) > 1$, puis il faut choisir un label uniformément sur $\left\{-1,1\right\}$ pour les composantes de ces groupes.
+Il suffit donc de séparer le graphe en groupes de composants connectés en se servant des arêtes $y(\left\{i,j\right\}) > 1$, puis il faut choisir un label uniformément sur $\left\{-1,1\right\}$ pour les composantes de ces groupes.\\
+
+\subsubsection{Shift Chains}
+
+Un autre type de chaîne utile pour les modèles répulsifs est le shift. Pour illustrer le modèle, on considère le modèle hard-core où chaque n\oe{}ud du graphe est soit occupé ($x(\nu) = 1$) soit inoccupé ($x(\nu) = 0$). Chaque n\oe{}ud occupé contribue d'un facteur $\lambda$ à la densité.\\
+Dès lors qu'un des voisins de $\nu$ est occupé, la chaîne ne peut changer la valeur de $\nu$.\\
+Le shift autorise un échange de label entre $\nu$ et son voisin occupé avec une certaine probabilité $p_{shift}$. Lorsque deux voisins de $\nu$ ou plus sont occupés, aucun changement n'est possible et $\nu$ reste inoccupé. 
+
+\newpage
+\section{Chapitre 2 : Procédures de rejet}
+
+\subsection{Théorème et exemple simple}
+
+\begin{theorem}
+\end{theorem}
+Soit $\nu$ une mesure finie sur un ensemble $B$ et soit $A$ un sous-ensemble de $B$ tel que $\nu(A) > 0$. Soit $X_{1},X_{2},\ldots$ des variables aléatoires iid tirées selon $\nu$ sur l'ensemble $B$. Soit enfin $T = inf \left\{t :  X_{t} \in A \right\}.$ Alors : 
+
+$$ X_{T} \sim [ X_{1} | X_{1} \in A ]$$ 
+
+C'est à dire, si on tire successivement des valeurs dans $B$ selon $\nu$ et que l'on rend la première valeur dans $A$, alors on le résultat provient de la mesure $\nu$ conditionnée à être dans $A$.
+
+\begin{proof}
+Cela suit du théorème fondamental de la simulation parfaite en ayant $U_{1},U_{2},\dots$ des tirages dans $B$ selon $\nu$, $b(U) = \mathbf{1}(U \in A)$,$g(U) = U$ et $f(X,U) = X$.
+\end{proof}
+
+Le nombre moyen de pas nécessaire pour obtenir un tirage dans $A$ dépend de la taille de $A$ par rapport à la taille de $B$.
+
+\begin{theorem}
+\end{theorem}
+La probabilité qu'un tirage $X$ dans $B$ selon $\nu$ soit dans $A$ est $\nu(A)/\nu(B)$. Le nombre moyen de tirages nécessaires est $\nu(B)/\nu(A)$.
+
+\begin{proof}
+La première moitié du théorème découle simplement de la définition de mesure de probabilité. La seconde provient du fait que $T$ soit une loi géométrique de paramètre $\nu(A)/\nu(B)$, et donc sa moyenne est $\nu(B)/\nu(A)$.
+\end{proof} 
+
+\paragraph{Exemple : tirage uniforme sur le cercle unité}
+~\\
+~\\
+On choisit $B = [-1,1] \times [-1,1]$ et $A = \left\{ (x,y) \in \mathbb{R}^{2} | x^{2} + y^{2} \leq 1 \right\}$.\\
+L'aire de $B$ est 4 tandis que l'aire du cercle unité est $\pi$. Le nombre moyen de lancers est alors $2 * (4/\pi) = 2*1.273$, où le facteur $2$ provient du nombre d'uniformes nécessaires pour obtenir un tirage dans $B$.
 
 
 
+
+\newpage
 \section{Chapitre 3}
 
-\paragraph{Définition : Fonction de mise à jour / Update function}
+\paragraph{Définition : Fonction de mise à jour}
 ~\\
 \\
 On dit que $\phi : \Omega \times [0,1] \to \Omega$ est une fonction de mise à jour pour une chaîne de Markov $\left\{X_{t} \right\}$ si, pour $U \sim$ Unif[0,1], $[X_{t+1}|X_{t}] \sim \phi (X_{t},U)$.
@@ -471,7 +828,7 @@ On notera alors la trajectoire jusqu'au temps t sous la forme :
 $$ \phi_{t}(x_{0},U) = \phi(\phi(\phi(\ldots(\phi(x_{0},U_{0}),U_{1}),\ldots,U_{t-1}))$$
 Ensuite, pour n'importe quels états $x_{0}$ et $y_{0}$ dans $\Omega$, on définit pour une fonction de mise à jour $\phi$ :  $X_{t} = \phi_{t}(x_{0},U)$ et $Y_{t} = \phi_{t}(y_{0},U)$ (en utilisant les mêmes valeurs de U). On appelle ce procédé un couplage. Notons qu'avec ce couplage, si il existe $t \geq 0$ tel que $X_{t} = Y_{t}$, alors on dit que les processus ont fusionné (ou se sont rejoints,etc).
 
-\paragraph{Définition : Couplage / Coupling}
+\paragraph{Définition : Couplage}
 ~\\ 
 \\
 Soit $\mathcal{S}$ un ensemble de processus stochastiques définis sur un même ensemble $\mathcal{I}$ et un même espace d'états $\Omega$. Si il existe un indice $i \in \mathcal{I}$ et un état $x \in \Omega$ tels que pour tout $S \in \mathcal{S}$, on aie $S_{i} = x$, alors on dit que les processus stochastiques ont fusionné (ou se sont rejoints,couplés,etc). 
