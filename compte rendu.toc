@@ -24,9 +24,15 @@
 \contentsline {section}{\numberline {2}Chapitre 2 : Proc\'edures de rejet}{24}% 
 \contentsline {subsection}{\numberline {2.1}Th\'eor\`eme et exemple simple}{24}% 
 \contentsline {paragraph}{Exemple : tirage uniforme sur le cercle unit\'e}{24}% 
-\contentsline {section}{\numberline {3}Chapitre 3}{25}% 
-\contentsline {paragraph}{D\'efinition : Fonction de mise \`a jour}{25}% 
-\contentsline {paragraph}{D\'efinition : Couplage}{25}% 
-\contentsline {paragraph}{Exemple}{25}% 
-\contentsline {paragraph}{Th\'eor\`eme CFTP (Coupling From The Past)}{26}% 
-\contentsline {paragraph}{\relax $\@@underline {\hbox {\textit {Preuve}}}\mathsurround \z@ $\relax }{26}% 
+\contentsline {subsection}{\numberline {2.2}M\'ethode de rejet pour variables al\'eatoires \`a densit\'e}{24}% 
+\contentsline {subsubsection}{\numberline {2.2.1}Exemple : D'une Cauchy vers une Normale}{26}% 
+\contentsline {subsection}{\numberline {2.3}Union d'ensembles}{28}% 
+\contentsline {subsection}{\numberline {2.4}Simulation \`a l'aide des in\'egalit\'es de Markov et Chernoff}{29}% 
+\contentsline {subsubsection}{\numberline {2.4.1}L'in\'egalit\'e de Markov en tant que proc\'edure de rejet}{29}% 
+\contentsline {subsubsection}{\numberline {2.4.2}Les in\'egalit\'es de Chernoff en tant que proc\'edure de rejet}{30}% 
+\contentsline {section}{\numberline {3}Chapitre 3}{32}% 
+\contentsline {paragraph}{D\'efinition : Fonction de mise \`a jour}{32}% 
+\contentsline {paragraph}{D\'efinition : Couplage}{32}% 
+\contentsline {paragraph}{Exemple}{32}% 
+\contentsline {paragraph}{Th\'eor\`eme CFTP (Coupling From The Past)}{33}% 
+\contentsline {paragraph}{\relax $\@@underline {\hbox {\textit {Preuve}}}\mathsurround \z@ $\relax }{33}% 

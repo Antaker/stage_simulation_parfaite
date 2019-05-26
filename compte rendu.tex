@@ -20,9 +20,19 @@
 \usepackage{amsmath}
 \usepackage{amsthm}
 \usepackage{amsfonts}
-\usepackage{listings} %%permet l'insertion de code dans le texte%%
 \newtheorem{definition}{Définition}
 \newtheorem{theorem}{Th\'eor\`eme}
+\newtheorem{lemme}{Lemme}
+
+%%inclusion de code et pseudo-code%%
+\usepackage{listings} %%permet l'insertion de code dans le texte%%
+\usepackage{algorithm}
+\usepackage{algorithmic} 
+
+\makeatletter
+\renewcommand{\fnum@algorithm}{\fname@algorithm}
+\makeatother
+
 
 \lstset{
 language=R,
@@ -43,7 +53,10 @@ captionpos=b, %
 rulecolor=\color{black}
 }
 
+
+
 \begin{document}
+
 
 \pagestyle{empty} %No headings for the first pages.
 
@@ -382,9 +395,8 @@ Nous utiliserons l'équation de balance détaillée pour en déduire la réversibilit
 \end{definition}
 
 Une distribution $\pi$ est réversible selon une chaîne de Markov $\left\{ X_{t} \right\}$ en particulier si : $\pi(dx)\mathbb{P}(X_{t+1} \in dy | X_{t} = x) = \pi(dy)\mathbb{P}(X_{t+1} \in dx | X_{t} = y).$
-\begin{theorem}
-Lemme
-\end{theorem}
+\begin{lemme}
+\end{lemme}
 Si $\pi$ est réversible, alors $\pi$ est stationnaire.
 \begin{proof}
 Soit $\Omega$ l'espace d'état de la chaîne de Markov $\left\{ X_{t} \right\}$ considérée et $\pi$ réversible pour cette chaîne.
@@ -809,8 +821,236 @@ La première moitié du théorème découle simplement de la définition de mesure de 
 On choisit $B = [-1,1] \times [-1,1]$ et $A = \left\{ (x,y) \in \mathbb{R}^{2} | x^{2} + y^{2} \leq 1 \right\}$.\\
 L'aire de $B$ est 4 tandis que l'aire du cercle unité est $\pi$. Le nombre moyen de lancers est alors $2 * (4/\pi) = 2*1.273$, où le facteur $2$ provient du nombre d'uniformes nécessaires pour obtenir un tirage dans $B$.
 
+\subsection{Méthode de rejet pour variables aléatoires à densité}
+
+La méthode de rejet de base n'inclut pas les variables aléatoires à densité. Cependant, celles-ci sont traitées aisément à l'aide des variables aléatoires auxiliaires. Pour cela, on considère le théorème suivant, provenant de la théorie de la mesure.
+
+\begin{theorem}
+Théorème fondamental de la simulation de Monte Carlo
+\end{theorem}
+
+Soit $X$ variable aléatoire de densité (possiblement non-normalisée) $f_{X}$ par rapport à une mesure $\nu$ sur $\Omega$. Si on a $[Y|X] \sim Unif([0,f_{X}])$, alors $(X,Y)$ est un lancer provenant de la mesure produit $\nu ~ \times$ Unif sur l'ensemble $\left\{(x,y) : x\in \Omega, 0 \leq y \leq f_{x} \right\}$.\\
+~\\
+Essentiellement, ce théorème nous dit que pour obtenir un lancer selon une certaine densité, il suffit de tirer selon une loi uniforme sur un espace plus grand. De plus, la densité de $X$ n'est pas forcément normalisée, ce qui sera essentiel dans les applications qui suivent. 
+\\
+~\\
+Pour comprendre comment cela fonctionne, nous allons traiter un exemple en toute généralité, puis un exemple concret. \\
+Soit $\mu$ une mesure sur un ensemble $\Omega$. On suppose que, pour une densité $g$, il est possible de générer un lancer provenant de la densité produit $\mu ~\times$ Unif sur $\Omega_{g} = \left\{ (x,y) : x \in \Omega, 0 \leq y \leq g \right\}$.\\
+Une fois que ce lancer est obtenu, $X$ provient alors de la densité $g$. Mais supposons ici que le but est d'obtenir un lancer selon une densité $f$.\\
+Notons d'abord que, si $(X,Y)$ est de mesure $\mu ~ \times$ Unif sur $\Omega_{g}$, alors $(X,2Y)$ est de mesure $\mu ~ \times$ Unif sur $\Omega_{2g} = \left\{ (x,y) : x \in \Omega, 0 \leq y \leq 2g \right\}$. On peut même généraliser : pour toute constante $c > 0$, $(X,cY)$ est de mesure $\mu ~ \times$ Unif sur $\Omega_{cg}$.\\
+Supposons alors que $c \geq sup_{x \in \Omega} f(x)/g(x)$. Alors : 
+
+$$ \Omega_{f} \subseteq \Omega_{cg}$$
+
+On peut alors utiliser une méthode de rejet pour obtenir une réalisation provenant de la densité $f$. Il suffit de générer $X$ selon la densité $g$, puis de tirer uniformément $Y$ sur $[0,c*g(X)]$. Si $Y$ est aussi dans $[0,f(X)]$ (de sorte que $(X,Y) \in \Omega_{f})$ alors on accepte $(X,y)$, ce qui signifie que $X$ est un lancer selon la densité $f$. \\
+Pour tester si le lancer uniforme de $[0,c*g(X)]$ est dans $[0,f(X)]$, il n'est pas nécessaire de vérifier si l'uniforme tombe effectivement dedans : on peut simplement tirer une variable aléatoire $C$ suivant une loi de Bernouilli de paramètre $f(X)/[c*g(X)]$. Si $C = 1$, on considère que $X$ est un lancer provenant de la densité $f$.\\
+La probabilité d'acceptation varie inversement avec $c$, le meilleur choix possible pour $c$ est alors $sup_{x \in \Omega} f(x)/g(x)$. La valeur de $c$ n'est pas toujours évidente à calculer. Dans ce cas, une majoration suffit : l'algorithme fera simplement plus de lancers en moyenne.\\
+Nous allons maintenant calculer la probabilité d'acceptation d'un lancer.
+
+\begin{lemme}
+\end{lemme}
+
+Soit $Z_{f} = \int_{x \in \Omega} f(x) \nu(dx)$ et $Z_{g} = \int_{x \in \Omega} g(x) \nu(dx)$, les constantes de normalisation pour les densités (possiblement) non-normalisées $f$ et $g$.
+Alors, pour la méthode par rejet présentée précédemment, la probabilité d'acceptation est $Z_{f}/[c*Z_{g}]$ et le nombre moyen de lancers est $c*Z_{g}/Z_{f}$.
+
+\begin{proof}
+Pour $C$, la loi de Bernouilli présentée précédemment, le problème est de calculer $\mathbb{P}(C=1)$. 
+
+\begin{align*}
+\mathbb{P}(C=1) &= \mathbb{E}[\mathbb{E}[\mathbf{1}(C=1)|X]] \\
+&= \int_{x \in \Omega} \mathbb{P}(C=1|X=x)\mathbb{P}(X \in dx) \\
+&= \int_{x \in \Omega} f(x)/[cg(x)](g(x)/Z_{g})\nu(dx) \\
+&= [cZ_{g}]^{-1}\int_{x \in \Omega} f(x)\nu(dx) \\
+&= Z_{f}/[c*Z_{g}]
+\end{align*}
+
+\end{proof}
+
+\subsubsection{Exemple : D'une Cauchy vers une Normale}
+
+Un exemple simple est la situation suivante : on suppose qu'un utilisateur peut générer une réalisation d'une loi de Cauchy standard de densité $g(x) = [\pi(1+x^{2})]^{-1}$. Cet utilisateur souhaite générer une réalisation d'une loi Normale standard de densité $f(x) = \frac{1}{\sqrt{2\pi}} \exp(-x^{2}/2)$.
+D'abord, la normalisation n'est pas nécessaire, donc soit $g_{1}(x) = (1+x^{2})^{-1}$ et $f_{1}(x) = \exp(-x^{2}/2)$. On a que $f_{1}(x)/g_{1}(x) \leq 2 , \forall x$. On implémente alors sous R l'algorithme : 
+
+\begin{lstlisting}
+normalfromcauchy <- function(){ #changer le return pour obtenir une réalisation ou le temps mis à l'obtenir#
+  C=0
+  x=0
+  n=0
+  while(C!=1){
+  
+  #lancer aléatoire selon la loi de Cauchy standard## 
+    x = rcauchy(1)
+    
+  #lancer aléatoire selon la loi de Bernouilli exprimée précédemment##
+    C = rbinom(1,1,(1/2)*(1+x^2)*exp(-(1/2)*x^2)))
+    
+    n=n+1
+  }
+  return(x)
+}
+
+s=0
+for (i in 1:10^6) {   #changer le return pour obtenir le nombre moyen de lancers nécessaires
+  s=s+normalfromcauchy()
+}
+
+#s contiendra le nombre de lancers moyens
+s = s/10^6
+
+t = matrix(0,1,10^5)
+for (i in 1:10^5) {   #changer le return pour obtenir des réalisations
+  t[i]=normalfromcauchy()
+
+}
+
+#t contiendra tous les lancers effectués, on construit ensuite un histogramme##
+hist(t)
 
 
+\end{lstlisting}
+
+L'histogramme rendu après un lancer du programme est le suivant : 
+
+\includegraphics[scale=1]{graphiques/normaltocauchy.jpeg}
+
+On obtient bien la densité d'une loi normale standard.
+
+On récupère aussi le nombre moyen de lancers requis afin d'obtenir une réalisation : 2.50588. On peut retrouver ce résultat de manière théorique en calculant la probabilité d'acceptation : 
+
+\begin{align*}
+\mathbb{P}(C=1) &= \int_{x \in \mathbb{R}} \mathbb{P}(X \in dx, C = 1) \\
+&= \int_{x \in \mathbb{R}} g(x) \frac{1}{2}(1+x^{2})\exp(-x^{2}/2)dx \\
+&= (2\pi)^{-1/2}
+\end{align*}
+
+Le nombre moyen de lancers est donc $\sqrt{2\pi} = 2.506\ldots$\\
+Il est possible d'accélérer l'algorithme : on a en fait $sup_{x} (1+x^{2})\exp(-x^{2}/2) = 2/\sqrt{e}$. En remplaçant dans l'algorithme (mais aussi en calculant exactement l'intégrale), le nombre moyen de lancers devient $\sqrt{2\pi/e} = 1.520 \ldots$
+
+\subsection{Union d'ensembles}
+
+Une autre manière d'utiliser les méthodes de rejet est de prendre en compte les multiples manières d'obtenir une réalisation. Par exemple, on considère le problème de génération selon une mesure $\nu$ sur $S_{1} \cup \ldots \cup S_{n}$, où les ensembles $S_{i}$ sont de mesure finie $\nu(S_{i})$.\\
+On considère l'algorithme suivant : on tire $I$ dans $\left\{1,2,\ldots,n\right\}$ de telle sorte que $\mathbb{P}(I=i) \propto \nu(S_{i})$. Puis, conditionnellement sur $I$, on tire $X$ dans $S_{I}$ selon la mesure $\nu$.\\
+Le problème est que $X$ n'est pas tiré selon $\nu$ sur $S_{1} \cup \ldots \cup S_{n}$, car il y a plusieurs manières pour lesquelles $X$ aurait pu être choisi. Par exemple, si $X \in S_{1}$ et $X \in S_{2}$ mais $X \notin S_{3} \ldots S_{n}$, alors $I$ aurait pu être $1$ ou $2$ lors du choix de $X$.\\
+
+\begin{lemme}
+\end{lemme}
+Pour l'algorithme précédent, $X$ est un tirage selon $\nu$ sur $S_{1} \cup \ldots \cup S_{n}$ avec densité $f(x) = \#\left\{i : x \in S_{i} \right\}/\nu(S_{1} \cup \ldots \cup S_{n})$
+
+\begin{proof}
+Soit $x \in S_{1} \cup \ldots \cup S_{n}$ et $C = \nu(S_{1} \cup \ldots \cup S_{n})$ Alors :
+
+\begin{align*}
+\mathbb{P}(X \in dx) &= \sum_{i=1}^{n} \mathbb{P}(X \in dx, I=i) \\
+&= \sum_{i=1}^{n} \mathbb{P}(I=i)\mathbb{P}(X \in dx|I=i)\\
+&= \sum_{i=1}^{n} C^{-1}\nu(S_{i}) \mathbf{1}(x \in S_{i}) \nu(dx)\nu(S_{i})^{-1}\\
+&= C^{-1}\#\left\{i : x \in S_{i} \right\}
+\end{align*}
+
+\end{proof}
+
+Par exemple, supposons que l'on veuille tirer uniformément sur les 3 cercles unités respectivement centrés en $(0,0)$,$(1/2,0)$ et $(1/2,1/2)$.\\
+On tire alors $I \sim Unif(\{1,2,3\})$. Si $I=1$, on tire $X$ sur le cercle unité centré en $(0,0)$. Pour $I=2$ ou $I=3$, on tire $X$ sur le cercle centré en $(1/2,0)$ et $(1/2,1/2)$ respectivement. Après, avoir tiré $I$ puis $X$ conditionnellement à $I$, on accepte $X$ avec probabilité égale à l'inverse du nombre de cercles où se situe $X$.
+
+\subsection{Simulation à l'aide des inégalités de Markov et Chernoff}
+
+\subsubsection{L'inégalité de Markov en tant que procédure de rejet}
+
+\begin{lemme}
+Inégalité de Markov
+\end{lemme}
+
+On considère une variable aléatoire $X$ non-négative avec probabilité $1$ et d'espérance finie $\mathbb{E}[X]$. Alors, pour tout $a >0$ :
+
+$$ \mathbb{P}(X \geq a) \leq \mathbb{E}[X]/a$$
+
+Du point de vue simulation, l'inégalité de Markov nous permet de tirer depuis $[X|X \geq a]$. C'est à dire, si $X$ à pour densité $f_{X}(x)$ alors le but est de tirer depuis la densité non-normalisée $f_{X}(x)\mathbf{1}(x>a)$. Pour pouvoir appliquer une méthode de rejet, on utilise la densité non-normalisée $xf_{X}(x)$. On a alors que $f_{X}(x)\mathbf{1}(x \geq a)/[xf_{X}(x)]$ vaut $0$ lorsque $x<a$, et $1/x$ lorsque $x \geq a$. Le produit n'est donc jamais supérieur à $1/a$ ce qui permet d'utiliser la méthode de rejet suivante : 
+
+\floatname{algorithm}{Méthode rejet Inégalité de Markov}
+\begin{algorithm}
+\caption{Entrées : $f$,$a$ Sortie : $X \sim f$ sachant $X > a$ }
+\begin{algorithmic} 
+\WHILE{$C \neq 1$}
+
+\STATE Tirer $X$ selon la densité non-normalisée $xf(x)$
+\STATE Tirer $C \sim Bern(a\mathbf{1}(X \geq a)/x)$ 
+
+\ENDWHILE
+\end{algorithmic}
+\end{algorithm}
+
+On remarque que la constante de normalisation pour la densité $xf(x)$ est simplement : $\int xf(x)\nu(dx) = \mathbb{E}[X]$. On a alors :
+
+\begin{align*}
+\mathbb{P}(C=1) &= \int_{x \geq 0} \frac{xf_{X}(x)}{\mathbb{E}[X]} \frac{a\mathbf{1}( X > a)}{x} = \int_{x \geq a} \frac{af_{X}(x)}{\mathbb{E}[X]} = \frac{a \mathbb{P}(X > a)}{\mathbb{E}[X]}\\
+\end{align*}
+
+Puisque la chance d'accepter est au plus $1$, cette fraction est aussi au plus $1$, ce qui montre l'inégalité de Markov.
+
+\subsubsection{Les inégalités de Chernoff en tant que procédure de rejet}
+Les inégalités de Chernoff donnent des limites supérieures sur la probabilité qu'un somme de variables aléatoires est supérieure (ou inférieure) à une certaine valeur. Soit $S_{n} = X_{1} + \ldots + X_{n}$, où $X_{1},\ldots,X_{n}$ sont iid; alors le but est de générer un tirage selon $S_{n}$ tel que $S_{n} \geq a$ ou $S_{n} \leq a$.\\
+L'inégalité de Markov peut aussi être appliquée à une somme de variables aléatoires, mais la borne donnée n'est pas aussi précise que celle obtenue avec les inégalités de Chernoff.
+
+\begin{lemme}
+Inégalités de Chernoff
+\end{lemme}
+Soit une variable aléatoire $X$ telle que $\mathbb{E}[e^{tX}]$ soit finie pour $t \in [a,b]$, où $a$ est négatif et $b$ positif. Alors pour un certain $c \in \mathbb{R}$, et en notant par $mgf_{X}(t)$ la fonction génératrice des moments pour la variable aléatoire $X$, 
+
+\begin{align*}
+\mathbb{P}(X \geq c) \leq mgf_{X}(t)/\exp(tc), ~\forall t \in [0,b] \\
+\mathbb{P}(X \leq c) \leq mgf_{X}(t)/\exp(tc), ~\forall t \in [a,0] 
+\end{align*}
+
+\begin{proof}
+Tout d'abord : $\mathbb{P}(X \geq c) = \mathbb{P}(tX \geq tc)$ pour tout $t$ positif. De plus, $\mathbb{P}(tX \geq tc) = \mathbb{P}(\exp(tX) \geq \exp(tc))$. Enfin, on applique l'inégalité de Markov pour obtenir $\mathbb{P}(\exp(tX) \geq \exp(tc)) \leq \mathbb{E}[\exp(tX)]/\exp(tc)$. Le résultat pour l'autre inégalité est démontré de la même manière.
+\end{proof}
+
+Nous considérons à présent ce qu'il se passe lorsque l'on considère les inégalités de Chernoff pour une somme de variables aléatoires indépendante. On rappelle d'abord un résultat sur les fonctions génératrices des moments.\\
+
+\begin{lemme}
+\end{lemme}
+Soit $S_{n} = X_{1} + \ldots + X_{n}$, où les$\{X_{i}\}$ sont iid de fonction génératrice des moments finie. Alors on a : $\mathbb{E}[\exp(tS_{n})] = [\mathbb{E}[\exp(tX_{i})]]^{n}$
+
+On applique ce lemme aux inégalité de Chernoff pour obtenir : 
+
+\begin{lemme}
+\end{lemme}
+Soit $S_{n} = X_{1} + \ldots + X_{n}$, où les$\{X_{i}\}$ sont iid de fonction génératrice des moments $mgf_{X_{i}}(t)$ finie pour $t \in [a,b]$, où $a$ est négatif et $b$ positif. Alors on a : 
+
+\begin{align*}
+\mathbb{P}(S_{n} \geq \alpha n) \leq  \left(\frac{mgf_{X_{i}}(t)}{\exp(t \alpha)}\right)^{n}, ~\forall t \in [0,b]\\
+\mathbb{P}(S_{n} \leq \alpha n) \leq  \left(\frac{mgf_{X_{i}}(t)}{\exp(t \alpha)}\right)^{n}, ~\forall t \in [a,0]
+\end{align*}
+
+Supposons que $X_{i} \sim f_{X}$. Le but est d'utiliser la fonction génératrice des moments pour obtenir un meilleur algorithme de rejet. Pour cela, il doit être possible de générer une réalisation selon la densité $g_{t}(x) \propto e^{tx}f_{x}(x)$. Lorsque $t$ est grand, cette densité aura tendance à prendre de plus grandes valeurs. Lorsque $t$ est grand dans les négatifs, $g_{t}$ tendra à prendre des valeurs plus faibles.\\
+Soit $t>0$. Pour $x \geq a$, alors $g_{t}(x) = e^{tx} f_{X}(x) \geq e^{ta}f_{X}(x)$. Alors une réalisation de $g_{t}$ peut être acceptée comme réalisation de $f_{X}$ avec probabilité $e^{ta}/e^{tx}$. Si la probabilité que $x$ soit bien plus grand que $a$ est faible, alors la probabilité d'acceptation sera très proche de $1$. Une méthode similaire s'applique lorsque $t<0$. On en déduit alors l'algorithme suivant :
+
+\floatname{algorithm}{Méthode rejet Inégalités de Chernoff}
+\begin{algorithm}[]
+\caption{\newline Entrées : $f_{X}$,$a$,$t$ \newline  Sortie : $S_{n} = X_{1} + \ldots + X_{n} $sachant $S_{n} \geq a$ (lorsque $t >0$) ou sachant $S_{n} \leq a$ (lorsque $t<0$)}
+
+\begin{algorithmic}
+\STATE Si $t>0$, alors $A \leftarrow [a,\infty)$, sinon $(-\infty,a]$ 
+\WHILE{$C \neq 1$}
+
+\STATE Tirer $X_{1},\ldots,X_{n}$ iid selon la densité non-normalisée $e^{tx}f(x)$
+\STATE $S_{n} \leftarrow X_{1} + \ldots + X_{n}$
+\STATE Tirer $C \sim Bern(\exp(t(a-S_{n}))\mathbf{1}(S_{n}\in A))$ 
+
+\ENDWHILE
+\end{algorithmic}
+\end{algorithm}
+
+\begin{lemme}
+\end{lemme}
+Supposons que $mgf_{X_{i}}(t)\exp(-ta/n)<1$. Alors l'algorithme précédent génère une réalisation de $[S_{n}|S_{n}>a]$ lorsque $t>0$ ou de $[S_{n}|S_{n}<a]$ lorsque $t<0$.
+
+\begin{proof}
+On considère tout vecteur $(x_{1},\ldots,x_{n})$ tel que $\sum x_{i} = s$. On considère $X_{1},\ldots,X_{n}$ iid de densité $f_{X}(x)$ et $X_{1}',\ldots,X_{n}'$ iid de densité $\exp(tx)f_{X}(x)$. Alors la densité de $S_{n}'  = X_{1}' + \ldots + X_{n}'$ est simplement la densité de $S_{n} = X_{1} + \ldots + X_{n}$ avec un facteur $\exp(tx_{1})\exp(tx_{2})\ldots\exp(tx_{n}) = \exp(ts)$.\\
+On génère dans l'algorithme une variable aléatoire de densité $g(s) = \exp(ts)f_{S_{n}}(s)$ et la densité ciblée est $f(s) = f_{S_{n}}(s)\mathbf{1}(s \in A)$. On a alors $f(s)/g(s)$ qui est soit $0$ lorsque $s \notin A$ soit $\exp(-ts)$ lorsque $s \in A$.\\
+Si $A = [a, \infty)$, alors $t>0$ et $\exp(-ts) \leq \exp(-ta)$. De même, lorsque $A = (-\infty, a]$, alors $t<0$  et $\exp(-ts) \leq \exp(-ta)$. On choisit donc $c = \exp(-ta)$ et on obtient $f(s)/[cg(s)] = \exp(ta)\exp(-ts)\mathbf{1}(s \in A)$ de même que dans l'algorithme. 
+\end{proof}
+
+\paragraph*{}
 
 \newpage
 \section{Chapitre 3}
