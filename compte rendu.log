@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (MiKTeX 2.9.7000 64-bit) (preloaded format=pdflatex 2019.4.30)  26 MAY 2019 15:26
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (MiKTeX 2.9.7000 64-bit) (preloaded format=pdflatex 2019.4.30)  4 JUN 2019 09:59
 entering extended mode
 **"./compte rendu.tex"
 ("compte rendu.tex"
@@ -667,29 +667,44 @@ Underfull \hbox (badness 10000) in paragraph at lines 780--784
  []
 
 [22] [23]
-Underfull \hbox (badness 10000) in paragraph at lines 819--823
+Underfull \hbox (badness 10000) in paragraph at lines 819--824
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 832--842
+Underfull \hbox (badness 10000) in paragraph at lines 833--843
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 832--842
+Underfull \hbox (badness 10000) in paragraph at lines 833--843
 
  []
 
 [24] [25] [26]
-<graphiques/normaltocauchy.jpeg, id=104, 306.39468pt x 291.33844pt>
+Overfull \hbox (74.48674pt too wide) in paragraph at lines 879--880
+ $[]$[]
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 879--880
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 879--880
+
+ []
+
+[27] [28]
+<graphiques/normaltocauchy.jpeg, id=110, 306.39468pt x 291.33844pt>
 File: graphiques/normaltocauchy.jpeg Graphic file (type jpg)
 <use graphiques/normaltocauchy.jpeg>
-Package pdftex.def Info: graphiques/normaltocauchy.jpeg  used on input line 914
+Package pdftex.def Info: graphiques/normaltocauchy.jpeg  used on input line 945
 .
 (pdftex.def)             Requested size: 306.39394pt x 291.33772pt.
- [27 <./graphiques/normaltocauchy.jpeg>]
-Overfull \hbox (2.03973pt too wide) in paragraph at lines 926--928
+
+Overfull \hbox (2.03973pt too wide) in paragraph at lines 957--959
 \T1/lmr/m/n/10.95 Il est pos-sible d'ac-cé-lé-rer l'al-go-rithme : on a en fait
  $\OML/lmm/m/it/10.95 sup[]\OT1/lmr/m/n/10.95 (1 + \OML/lmm/m/it/10.95 x[]\OT1/
 lmr/m/n/10.95 ) [](\OMS/lmsy/m/n/10.95  \OML/lmm/m/it/10.95 x[]=\OT1/lmr/m/n/10
@@ -697,64 +712,68 @@ lmr/m/n/10.95 ) [](\OMS/lmsy/m/n/10.95  \OML/lmm/m/it/10.95 x[]=\OT1/lmr/m/n/10
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 931--934
+Underfull \hbox (badness 10000) in paragraph at lines 962--965
 
  []
 
-[28] [29]
-Underfull \hbox (badness 10000) in paragraph at lines 1007--1008
+[29 <./graphiques/normaltocauchy.jpeg>] [30] [31]
+Underfull \hbox (badness 10000) in paragraph at lines 1038--1039
 
  []
 
-[30]
 
 LaTeX Warning: No positions in optional float specifier.
-               Default added (so using `htbp') on input line 1028.
+               Default added (so using `htbp') on input line 1059.
 
 
-Overfull \hbox (23.85277pt too wide) in paragraph at lines 1048--1051
+Overfull \hbox (23.85277pt too wide) in paragraph at lines 1079--1082
 \T1/lmr/m/n/10.95 On gé-nère dans l'al-go-rithme une va-riable aléa-toire de de
 n-sité $\OML/lmm/m/it/10.95 g\OT1/lmr/m/n/10.95 (\OML/lmm/m/it/10.95 s\OT1/lmr/
 m/n/10.95 ) = [](\OML/lmm/m/it/10.95 ts\OT1/lmr/m/n/10.95 )\OML/lmm/m/it/10.95 
 f[]\OT1/lmr/m/n/10.95 (\OML/lmm/m/it/10.95 s\OT1/lmr/m/n/10.95 )$
  []
 
-[31]
-Underfull \hbox (badness 10000) in paragraph at lines 1059--1068
+[32] [33]
+Underfull \hbox (badness 10000) in paragraph at lines 1087--1088
+
+ []
+
+[34] [35] [36] [37]
+Underfull \hbox (badness 10000) in paragraph at lines 1195--1204
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1072--1075
+Underfull \hbox (badness 10000) in paragraph at lines 1208--1211
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1077--1080
+Underfull \hbox (badness 10000) in paragraph at lines 1213--1216
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1085--1088
+Underfull \hbox (badness 10000) in paragraph at lines 1221--1224
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1085--1088
+Underfull \hbox (badness 10000) in paragraph at lines 1221--1224
 
  []
 
-[32]
-Underfull \hbox (badness 10000) in paragraph at lines 1103--1106
+[38]
+Underfull \hbox (badness 10000) in paragraph at lines 1239--1242
 
  []
 
-[33] ("compte rendu.aux") ) 
+[39] ("compte rendu.aux") ) 
 Here is how much of TeX's memory you used:
- 7217 strings out of 492945
- 97069 string characters out of 3125364
+ 7229 strings out of 492945
+ 97170 string characters out of 3125364
  461311 words of memory out of 3000000
- 10966 multiletter control sequences out of 15000+200000
+ 10978 multiletter control sequences out of 15000+200000
  69265 words of font info for 55 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
  41i,11n,40p,605b,1767s stack positions out of 5000i,500n,10000p,200000b,50000s
@@ -785,9 +804,9 @@ ta/Local/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmtt10.pfb><C:/Users/Antaker
 /AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmtti10.pfb><C:/Users/
 Antaker/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/symbols/m
 sbm10.pfb>
-Output written on "compte rendu.pdf" (33 pages, 453505 bytes).
+Output written on "compte rendu.pdf" (39 pages, 471832 bytes).
 PDF statistics:
- 194 PDF objects out of 1000 (max. 8388607)
+ 215 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
  6 words of extra memory for PDF output out of 10000 (max. 10000000)
 

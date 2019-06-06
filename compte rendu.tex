@@ -819,7 +819,8 @@ La première moitié du théorème découle simplement de la définition de mesure de 
 ~\\
 ~\\
 On choisit $B = [-1,1] \times [-1,1]$ et $A = \left\{ (x,y) \in \mathbb{R}^{2} | x^{2} + y^{2} \leq 1 \right\}$.\\
-L'aire de $B$ est 4 tandis que l'aire du cercle unité est $\pi$. Le nombre moyen de lancers est alors $2 * (4/\pi) = 2*1.273$, où le facteur $2$ provient du nombre d'uniformes nécessaires pour obtenir un tirage dans $B$.
+L'aire de $B$ est 4 tandis que l'aire du cercle unité est $\pi$. Le nombre moyen de lancers est alors $2 * (4/\pi) = 2*1.273$, où le facteur $2$ provient du nombre d'uniformes nécessaires pour obtenir un tirage dans $B$.\\
+On propose une mise en place sous R en fin de chapitre.
 
 \subsection{Méthode de rejet pour variables aléatoires à densité}
 
@@ -871,49 +872,79 @@ Pour $C$, la loi de Bernouilli présentée précédemment, le problème est de calcul
 Un exemple simple est la situation suivante : on suppose qu'un utilisateur peut générer une réalisation d'une loi de Cauchy standard de densité $g(x) = [\pi(1+x^{2})]^{-1}$. Cet utilisateur souhaite générer une réalisation d'une loi Normale standard de densité $f(x) = \frac{1}{\sqrt{2\pi}} \exp(-x^{2}/2)$.
 D'abord, la normalisation n'est pas nécessaire, donc soit $g_{1}(x) = (1+x^{2})^{-1}$ et $f_{1}(x) = \exp(-x^{2}/2)$. On a que $f_{1}(x)/g_{1}(x) \leq 2 , \forall x$. On implémente alors sous R l'algorithme : 
 
+
+\newpage
+
+\paragraph{\underline{\textbf{Mise en place de la méthode de rejet sous R : d'une Cauchy vers une Normale}}}
+~\\
 \begin{lstlisting}
-normalfromcauchy <- function(){ #changer le return pour obtenir une réalisation ou le temps mis à l'obtenir#
+normalfromcauchy <- function(){## Fonction permettant de générer une réalisation de la loi normale standard à partir de la loi de Cauchy standard par méthode de rejet ##
+
+##penser à changer le return pour obtenir une réalisation (return(x)) ou le temps mis à l'obtenir (return(n))##
+  
+  ##On initialise les valeurs ##
   C=0
   x=0
   n=0
-  while(C!=1){
   
-  #lancer aléatoire selon la loi de Cauchy standard## 
+  ##Tant que la bernouilli n'est pas 1##
+  while(C!=1){
+    
+    ##On génère une Cauchy standard##
     x = rcauchy(1)
     
-  #lancer aléatoire selon la loi de Bernouilli exprimée précédemment##
-    C = rbinom(1,1,(1/2)*(1+x^2)*exp(-(1/2)*x^2)))
+    ##On génère une Bernouilli du paramètre indiqué##
+    C = rbinom(1,1,((sqrt(exp(1))/2)*(1+x^2)*exp(-(1/2)*x^2)))
     
+    ##mise à jour du nombre de lancers##
     n=n+1
   }
   return(x)
 }
 
+
+
+##On calcule le nombre moyen de lancers nécessaires pour atteindre la sortie de l'algorithme précédent##
+
+##On initialise le nombre moyen##
 s=0
-for (i in 1:10^6) {   #changer le return pour obtenir le nombre moyen de lancers nécessaires
+
+##On lance 10^6 fois l'algorithme qui retourne le nombre de lancers effectué ##
+for (i in 1:10^6) {
   s=s+normalfromcauchy()
 }
 
-#s contiendra le nombre de lancers moyens
+##On moyenne sur les 10^6 lancers
 s = s/10^6
 
+
+
+##On créé un histogramme illustrant 10^5 lancers de l'algorithme rendant une réalisation de la normale standard##
+
+##On initialise le tableau qui contiendra les 10^5 lancers
 t = matrix(0,1,10^5)
+
+##On remplit le tableau en lançant 10^5 fois l'algorithme##
 for (i in 1:10^5) {   #changer le return pour obtenir des réalisations
   t[i]=normalfromcauchy()
 
 }
 
-#t contiendra tous les lancers effectués, on construit ensuite un histogramme##
-hist(t)
+##On produit l'histogramme du tableau t et on rajoute la courbe de la densité de la loi normale standard##
+hist(t,prob=T)
+
+curve(dnorm(x, 0, 1), col="red",xlim=c(-4,4),add=T)
 
 
 \end{lstlisting}
+
+\newpage
 
 L'histogramme rendu après un lancer du programme est le suivant : 
 
 \includegraphics[scale=1]{graphiques/normaltocauchy.jpeg}
 
-On obtient bien la densité d'une loi normale standard.
+On obtient bien l'allure de la densité d'une loi normale standard.
 
 On récupère aussi le nombre moyen de lancers requis afin d'obtenir une réalisation : 2.50588. On peut retrouver ce résultat de manière théorique en calculant la probabilité d'acceptation : 
 
@@ -1050,7 +1081,113 @@ On génère dans l'algorithme une variable aléatoire de densité $g(s) = \exp(ts)f_
 Si $A = [a, \infty)$, alors $t>0$ et $\exp(-ts) \leq \exp(-ta)$. De même, lorsque $A = (-\infty, a]$, alors $t<0$  et $\exp(-ts) \leq \exp(-ta)$. On choisit donc $c = \exp(-ta)$ et on obtient $f(s)/[cg(s)] = \exp(ta)\exp(-ts)\mathbf{1}(s \in A)$ de même que dans l'algorithme. 
 \end{proof}
 
-\paragraph*{}
+\newpage
+\paragraph{\underline{\textbf{Mise en place de la méthode de rejet sour R :}}}
+\paragraph{\underline{\textbf{Inégalités de Chernoff et queue de loi binomiale}}}
+~\\
+
+\begin{lstlisting}
+AR_chernoffs <- function(n,p,a){ ##fonction permettant de générer une réalisation de la loi binomiale de paramètres n et p, conditionnellement à être supérieure où égale à a en utilisant les inégalités de Chernoff##
+  
+  
+  ##On initialise la Bernouilli##
+  C=0
+  
+  ##On créé la valeur gamma présentée précédemment##
+  gam = (a/n)*(1-p)/(p*(1-(a/n)))
+  
+  ##On initialise la Binomiale de paramètres n et p
+  t = 0
+  
+  ##On initialise le nombre de lancers##
+  k = 0
+  
+  ##Tant que la Bernouilli n'est pas 1##
+  while (C != 1){
+    
+    ##On génère n Bernouillis de paramètres a/n## 
+    t = rbinom(n,1,a/n)
+    
+    ##On effectue la somme pour obtenir la binomiale considérée##
+    x = sum(t)
+    
+    ##On génère une réalisation de la Bernouilli du paramètre indiqué
+    C = rbinom(1,1,(x>=a)*1*gam**(a-x))
+    
+    ##On met à jour le nombre de lancers effectués##
+    k=k+1
+  }
+  
+  ##On rend soit le nombre de lancers, soit la réalisation de la loi demandée (ie, k ou x))##
+  return(k)
+  
+}
+
+
+##On calcule ici le nombre moyen de lancers nécessaires pour sortir de l'algorithme précédent
+
+s2=0
+for (i in 1:10^5) {   #changer le return pour obtenir le nombre moyen de lancers nécessaires
+  s2=s2 + AR_chernoffs(10,0.1,5)
+}
+s2 = s2/10^5
+\end{lstlisting}
+
+\newpage
+\begin{lstlisting}
+AR_basic <- function(n,p,a){##fonction permettant de générer une réalisation de la loi binomiale de paramètres n et p, conditionnellement à être supérieure où égale à a en utilisant la méthode de rejet basique##
+  
+  ##On initialise le critère d'arrêt##
+  C=0
+  
+  ##On initialise la Binomiale de paramètres n et p##
+  t = 0
+  
+  ##On initialise le nombre de lancers##
+  k = 0
+  
+  ##Tant que le critère d'arrêt n'est pas 1##
+  while (C != 1){
+    
+    ##On génère une réalisation de la Binomiale de paramètres n et p##
+    t = rbinom(1,n,p)
+    
+    ##On met à jour le critère d'arrêt selon que la binomiale soit supérieure à a ou non##
+    C = (t>=a)*1
+    
+    ##On met à jour le nombre de lancers##
+    k=k+1
+  }
+  
+  ##On rend soit le nombre de lancers, soit la réalisation de la loi demandée (ie, k ou t))##
+  return(k)
+  
+}
+
+
+##On calcule ici le nombre moyen de lancers nécessaires pour sortir de l'algorithme précédent
+s1=0
+for (i in 1:10^6) {   #changer le return pour obtenir le nombre moyen de lancers nécessaires
+  s1=s1+ AR_basic(10,0.1,5)
+}
+s1= s1/10^6
+\end{lstlisting}
+
+
+
+\newpage
+On utilise l'exemple suivant pour tester nos algorithmes : pour $n=10$ et $p=0.1$, pour $X$ la binomiale de paramètres précisés précédemment, on veut générer une réalisation de $[X|X>=5]$. \\
+La méthode de base nous donne un nombre moyen de lancers de $610.9838$ tandis que la méthode à l'aide des inégalités de Chernoff nous donne un nombre moyen de lancers de $3.698136$.\\
+D'où l'efficacité de cette méthode.
+
+\subsection{Défaut des méthodes de rejet}
+
+Le principal défaut des méthodes de rejet concerne la dimension des problèmes considérés. On prend pour exemple la génération de la variable aléatoire uniforme dans la boule de dimension $n$.\\
+La méthode présentée précédemment dans le cas $n=2$ nécessite de tirer uniformément sur le carré $[-1,1] \times [-1,1]$. La probabilité d'acceptation $p$ est alors l'aire du cercle sur l'aire du carré, ie, $p = \pi /4$.\\
+On peut généraliser cette méthode aux dimensions supérieures : on tire uniformément dans l'hypercube de dimension $n$ : $[-1,1]^{n}$, le but étant d'obtenir un tirage uniforme dans la boule unité de même dimension. \\
+La probabilité d'acceptation est le volume de la boule sur le volume du carré soit : 
+
+$$ p = \frac{\pi^{n/2}}{2^{n}*\Gamma(\frac{n}{2} +1)} $$
 
 \newpage
 \section{Chapitre 3}
