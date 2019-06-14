@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (MiKTeX 2.9.7000 64-bit) (preloaded format=pdflatex 2019.4.30)  4 JUN 2019 09:59
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (MiKTeX 2.9.7000 64-bit) (preloaded format=pdflatex 2019.4.30)  13 JUN 2019 14:58
 entering extended mode
 **"./compte rendu.tex"
 ("compte rendu.tex"
@@ -667,44 +667,44 @@ Underfull \hbox (badness 10000) in paragraph at lines 780--784
  []
 
 [22] [23]
-Underfull \hbox (badness 10000) in paragraph at lines 819--824
+Underfull \hbox (badness 10000) in paragraph at lines 819--825
+
+ []
+
+[24]
+Underfull \hbox (badness 10000) in paragraph at lines 860--870
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 833--843
+Underfull \hbox (badness 10000) in paragraph at lines 860--870
 
  []
 
-
-Underfull \hbox (badness 10000) in paragraph at lines 833--843
-
- []
-
-[24] [25] [26]
-Overfull \hbox (74.48674pt too wide) in paragraph at lines 879--880
+[25] [26] [27]
+Overfull \hbox (74.48674pt too wide) in paragraph at lines 906--907
  $[]$[]
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 879--880
+Underfull \hbox (badness 10000) in paragraph at lines 906--907
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 879--880
+Underfull \hbox (badness 10000) in paragraph at lines 906--907
 
  []
 
-[27] [28]
-<graphiques/normaltocauchy.jpeg, id=110, 306.39468pt x 291.33844pt>
+[28] [29]
+<graphiques/normaltocauchy.jpeg, id=114, 306.39468pt x 291.33844pt>
 File: graphiques/normaltocauchy.jpeg Graphic file (type jpg)
 <use graphiques/normaltocauchy.jpeg>
-Package pdftex.def Info: graphiques/normaltocauchy.jpeg  used on input line 945
+Package pdftex.def Info: graphiques/normaltocauchy.jpeg  used on input line 972
 .
 (pdftex.def)             Requested size: 306.39394pt x 291.33772pt.
 
-Overfull \hbox (2.03973pt too wide) in paragraph at lines 957--959
+Overfull \hbox (2.03973pt too wide) in paragraph at lines 984--986
 \T1/lmr/m/n/10.95 Il est pos-sible d'ac-cé-lé-rer l'al-go-rithme : on a en fait
  $\OML/lmm/m/it/10.95 sup[]\OT1/lmr/m/n/10.95 (1 + \OML/lmm/m/it/10.95 x[]\OT1/
 lmr/m/n/10.95 ) [](\OMS/lmsy/m/n/10.95  \OML/lmm/m/it/10.95 x[]=\OT1/lmr/m/n/10
@@ -712,101 +712,120 @@ lmr/m/n/10.95 ) [](\OMS/lmsy/m/n/10.95  \OML/lmm/m/it/10.95 x[]=\OT1/lmr/m/n/10
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 962--965
+Underfull \hbox (badness 10000) in paragraph at lines 989--992
 
  []
 
-[29 <./graphiques/normaltocauchy.jpeg>] [30] [31]
-Underfull \hbox (badness 10000) in paragraph at lines 1038--1039
+[30 <./graphiques/normaltocauchy.jpeg>] [31] [32]
+Underfull \hbox (badness 10000) in paragraph at lines 1065--1066
 
  []
 
 
 LaTeX Warning: No positions in optional float specifier.
-               Default added (so using `htbp') on input line 1059.
+               Default added (so using `htbp') on input line 1086.
 
 
-Overfull \hbox (23.85277pt too wide) in paragraph at lines 1079--1082
+Overfull \hbox (23.85277pt too wide) in paragraph at lines 1106--1109
 \T1/lmr/m/n/10.95 On gé-nère dans l'al-go-rithme une va-riable aléa-toire de de
 n-sité $\OML/lmm/m/it/10.95 g\OT1/lmr/m/n/10.95 (\OML/lmm/m/it/10.95 s\OT1/lmr/
 m/n/10.95 ) = [](\OML/lmm/m/it/10.95 ts\OT1/lmr/m/n/10.95 )\OML/lmm/m/it/10.95 
 f[]\OT1/lmr/m/n/10.95 (\OML/lmm/m/it/10.95 s\OT1/lmr/m/n/10.95 )$
  []
 
-[32] [33]
-Underfull \hbox (badness 10000) in paragraph at lines 1087--1088
+[33] [34]
+Underfull \hbox (badness 10000) in paragraph at lines 1114--1115
 
  []
 
-[34] [35] [36] [37]
-Underfull \hbox (badness 10000) in paragraph at lines 1195--1204
+[35] [36] [37]
+Underfull \hbox (badness 10000) in paragraph at lines 1212--1215
 
  []
 
-
-Underfull \hbox (badness 10000) in paragraph at lines 1208--1211
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 1213--1216
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 1221--1224
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 1221--1224
-
- []
-
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <14.4> on input line 1217.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <10> on input line 1217.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <7> on input line 1217.
 [38]
-Underfull \hbox (badness 10000) in paragraph at lines 1239--1242
+<graphiques/boule_vitesse.jpeg, id=146, 306.39468pt x 291.33844pt>
+File: graphiques/boule_vitesse.jpeg Graphic file (type jpg)
+<use graphiques/boule_vitesse.jpeg>
+Package pdftex.def Info: graphiques/boule_vitesse.jpeg  used on input line 1253
+.
+(pdftex.def)             Requested size: 284.9441pt x 270.94194pt.
+ [39 <./graphiques/boule_vitesse.jpeg>] [40]
+Underfull \hbox (badness 10000) in paragraph at lines 1262--1271
 
  []
 
-[39] ("compte rendu.aux") ) 
+
+Underfull \hbox (badness 10000) in paragraph at lines 1275--1278
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1280--1283
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1291--1292
+
+ []
+
+[41]
+Overfull \hbox (10.29439pt too wide) in paragraph at lines 1307--1308
+\T1/lmr/m/n/10.95 rème fon-da-men-tal de la si-mu-la-tion par-faite, en po-sant
+ $\OML/lmm/m/it/10.95 g\OT1/lmr/m/n/10.95 (\OML/lmm/m/it/10.95 U\OT1/lmr/m/n/10
+.95 ) = \OML/lmm/m/it/10.95 []\OT1/lmr/m/n/10.95 (\OML/lmm/m/it/10.95 x[]; U\O
+T1/lmr/m/n/10.95 )$\T1/lmr/m/n/10.95 ,$\OML/lmm/m/it/10.95 b\OT1/lmr/m/n/10.95 
+(\OML/lmm/m/it/10.95 U\OT1/lmr/m/n/10.95 ) =
+ []
+
+[42] ("compte rendu.aux") ) 
 Here is how much of TeX's memory you used:
- 7229 strings out of 492945
- 97170 string characters out of 3125364
+ 7259 strings out of 492945
+ 97644 string characters out of 3125364
  461311 words of memory out of 3000000
- 10978 multiletter control sequences out of 15000+200000
- 69265 words of font info for 55 fonts, out of 3000000 for 9000
+ 11003 multiletter control sequences out of 15000+200000
+ 88823 words of font info for 73 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
  41i,11n,40p,605b,1767s stack positions out of 5000i,500n,10000p,200000b,50000s
 {C:/Users/Antaker/AppData/Local/Programs/MiKTeX 2.9/
-fonts/enc/dvips/lm/lm-ec.enc}{C:/Users/Antaker/AppData/Local/Programs/MiKTeX 2.
-9/fonts/enc/dvips/lm/lm-mathsy.enc}{C:/Users/Antaker/AppData/Local/Programs/MiK
-TeX 2.9/fonts/enc/dvips/lm/lm-rm.enc}{C:/Users/Antaker/AppData/Local/Programs/M
-iKTeX 2.9/fonts/enc/dvips/lm/lm-mathex.enc}{C:/Users/Antaker/AppData/Local/Prog
-rams/MiKTeX 2.9/fonts/enc/dvips/lm/lm-mathit.enc}<C:/Users/Antaker/AppData/Loca
+fonts/enc/dvips/lm/lm-rm.enc}{C:/Users/Antaker/AppData/Local/Programs/MiKTeX 2.
+9/fonts/enc/dvips/lm/lm-mathit.enc}{C:/Users/Antaker/AppData/Local/Programs/MiK
+TeX 2.9/fonts/enc/dvips/lm/lm-ec.enc}{C:/Users/Antaker/AppData/Local/Programs/M
+iKTeX 2.9/fonts/enc/dvips/lm/lm-mathsy.enc}{C:/Users/Antaker/AppData/Local/Prog
+rams/MiKTeX 2.9/fonts/enc/dvips/lm/lm-mathex.enc}<C:/Users/Antaker/AppData/Loca
 l/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmbx10.pfb><C:/Users/Antaker/AppDat
 a/Local/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmbx12.pfb><C:/Users/Antaker/
-AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmbxi10.pfb><C:/Users/A
-ntaker/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmex10.pfb><C:/U
-sers/Antaker/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmmi10.pfb
-><C:/Users/Antaker/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmmi
-6.pfb><C:/Users/Antaker/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/lm
-/lmmi8.pfb><C:/Users/Antaker/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/publ
-ic/lm/lmr10.pfb><C:/Users/Antaker/AppData/Local/Programs/MiKTeX 2.9/fonts/type1
-/public/lm/lmr12.pfb><C:/Users/Antaker/AppData/Local/Programs/MiKTeX 2.9/fonts/
-type1/public/lm/lmr17.pfb><C:/Users/Antaker/AppData/Local/Programs/MiKTeX 2.9/f
-onts/type1/public/lm/lmr6.pfb><C:/Users/Antaker/AppData/Local/Programs/MiKTeX 2
-.9/fonts/type1/public/lm/lmr8.pfb><C:/Users/Antaker/AppData/Local/Programs/MiKT
-eX 2.9/fonts/type1/public/lm/lmri10.pfb><C:/Users/Antaker/AppData/Local/Program
-s/MiKTeX 2.9/fonts/type1/public/lm/lmsy10.pfb><C:/Users/Antaker/AppData/Local/P
-rograms/MiKTeX 2.9/fonts/type1/public/lm/lmsy6.pfb><C:/Users/Antaker/AppData/Lo
-cal/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmsy8.pfb><C:/Users/Antaker/AppDa
-ta/Local/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmtt10.pfb><C:/Users/Antaker
-/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmtti10.pfb><C:/Users/
-Antaker/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/symbols/m
-sbm10.pfb>
-Output written on "compte rendu.pdf" (39 pages, 471832 bytes).
+AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmex10.pfb><C:/Users/An
+taker/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmmi10.pfb><C:/Us
+ers/Antaker/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmmi12.pfb>
+<C:/Users/Antaker/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmmi6
+.pfb><C:/Users/Antaker/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/lm/
+lmmi7.pfb><C:/Users/Antaker/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/publi
+c/lm/lmmi8.pfb><C:/Users/Antaker/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/
+public/lm/lmr10.pfb><C:/Users/Antaker/AppData/Local/Programs/MiKTeX 2.9/fonts/t
+ype1/public/lm/lmr12.pfb><C:/Users/Antaker/AppData/Local/Programs/MiKTeX 2.9/fo
+nts/type1/public/lm/lmr17.pfb><C:/Users/Antaker/AppData/Local/Programs/MiKTeX 2
+.9/fonts/type1/public/lm/lmr6.pfb><C:/Users/Antaker/AppData/Local/Programs/MiKT
+eX 2.9/fonts/type1/public/lm/lmr7.pfb><C:/Users/Antaker/AppData/Local/Programs/
+MiKTeX 2.9/fonts/type1/public/lm/lmr8.pfb><C:/Users/Antaker/AppData/Local/Progr
+ams/MiKTeX 2.9/fonts/type1/public/lm/lmri10.pfb><C:/Users/Antaker/AppData/Local
+/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmsy10.pfb><C:/Users/Antaker/AppData
+/Local/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmsy6.pfb><C:/Users/Antaker/Ap
+pData/Local/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmsy8.pfb><C:/Users/Antak
+er/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmtt10.pfb><C:/Users
+/Antaker/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmtti10.pfb><C
+:/Users/Antaker/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/s
+ymbols/msbm10.pfb>
+Output written on "compte rendu.pdf" (42 pages, 530233 bytes).
 PDF statistics:
- 215 PDF objects out of 1000 (max. 8388607)
+ 237 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
- 6 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 11 words of extra memory for PDF output out of 10000 (max. 10000000)
 

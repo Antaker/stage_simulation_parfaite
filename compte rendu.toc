@@ -24,19 +24,17 @@
 \contentsline {section}{\numberline {2}Chapitre 2 : Proc\'edures de rejet}{24}% 
 \contentsline {subsection}{\numberline {2.1}Th\'eor\`eme et exemple simple}{24}% 
 \contentsline {paragraph}{Exemple : tirage uniforme sur le cercle unit\'e}{24}% 
-\contentsline {subsection}{\numberline {2.2}M\'ethode de rejet pour variables al\'eatoires \`a densit\'e}{24}% 
-\contentsline {subsubsection}{\numberline {2.2.1}Exemple : D'une Cauchy vers une Normale}{26}% 
-\contentsline {paragraph}{\relax $\@@underline {\hbox {\textbf {Mise en place de la m\'ethode de rejet sous R : d'une Cauchy vers une Normale}}}\mathsurround \z@ $\relax }{27}% 
-\contentsline {subsection}{\numberline {2.3}Union d'ensembles}{29}% 
-\contentsline {subsection}{\numberline {2.4}Simulation \`a l'aide des in\'egalit\'es de Markov et Chernoff}{30}% 
-\contentsline {subsubsection}{\numberline {2.4.1}L'in\'egalit\'e de Markov en tant que proc\'edure de rejet}{30}% 
-\contentsline {subsubsection}{\numberline {2.4.2}Les in\'egalit\'es de Chernoff en tant que proc\'edure de rejet}{31}% 
-\contentsline {paragraph}{\relax $\@@underline {\hbox {\textbf {Mise en place de la m\'ethode de rejet sour R :}}}\mathsurround \z@ $\relax }{34}% 
-\contentsline {paragraph}{\relax $\@@underline {\hbox {\textbf {In\'egalit\'es de Chernoff et queue de loi binomiale}}}\mathsurround \z@ $\relax }{34}% 
-\contentsline {subsection}{\numberline {2.5}D\'efaut des m\'ethodes de rejet}{37}% 
-\contentsline {section}{\numberline {3}Chapitre 3}{38}% 
-\contentsline {paragraph}{D\'efinition : Fonction de mise \`a jour}{38}% 
-\contentsline {paragraph}{D\'efinition : Couplage}{38}% 
-\contentsline {paragraph}{Exemple}{38}% 
-\contentsline {paragraph}{Th\'eor\`eme CFTP (Coupling From The Past)}{39}% 
-\contentsline {paragraph}{\relax $\@@underline {\hbox {\textit {Preuve}}}\mathsurround \z@ $\relax }{39}% 
+\contentsline {subsection}{\numberline {2.2}M\'ethode de rejet pour variables al\'eatoires \`a densit\'e}{25}% 
+\contentsline {subsubsection}{\numberline {2.2.1}Exemple : D'une Cauchy vers une Normale}{27}% 
+\contentsline {paragraph}{\relax $\@@underline {\hbox {\textbf {Mise en place de la m\'ethode de rejet sous R : d'une Cauchy vers une Normale}}}\mathsurround \z@ $\relax }{28}% 
+\contentsline {subsection}{\numberline {2.3}Union d'ensembles}{30}% 
+\contentsline {subsection}{\numberline {2.4}Simulation \`a l'aide des in\'egalit\'es de Markov et Chernoff}{31}% 
+\contentsline {subsubsection}{\numberline {2.4.1}L'in\'egalit\'e de Markov en tant que proc\'edure de rejet}{31}% 
+\contentsline {subsubsection}{\numberline {2.4.2}Les in\'egalit\'es de Chernoff en tant que proc\'edure de rejet}{32}% 
+\contentsline {paragraph}{\relax $\@@underline {\hbox {\textbf {Mise en place de la m\'ethode de rejet sour R :}}}\mathsurround \z@ $\relax }{35}% 
+\contentsline {paragraph}{\relax $\@@underline {\hbox {\textbf {In\'egalit\'es de Chernoff et queue de loi binomiale}}}\mathsurround \z@ $\relax }{35}% 
+\contentsline {subsection}{\numberline {2.5}D\'efaut des m\'ethodes de rejet}{38}% 
+\contentsline {section}{\numberline {3}Chapitre 3 : Coupling From The Past}{41}% 
+\contentsline {paragraph}{D\'efinition : Fonction de mise \`a jour}{41}% 
+\contentsline {paragraph}{D\'efinition : Couplage}{41}% 
+\contentsline {paragraph}{Exemple}{41}% 

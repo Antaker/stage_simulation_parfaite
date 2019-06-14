@@ -820,7 +820,34 @@ La première moitié du théorème découle simplement de la définition de mesure de 
 ~\\
 On choisit $B = [-1,1] \times [-1,1]$ et $A = \left\{ (x,y) \in \mathbb{R}^{2} | x^{2} + y^{2} \leq 1 \right\}$.\\
 L'aire de $B$ est 4 tandis que l'aire du cercle unité est $\pi$. Le nombre moyen de lancers est alors $2 * (4/\pi) = 2*1.273$, où le facteur $2$ provient du nombre d'uniformes nécessaires pour obtenir un tirage dans $B$.\\
-On propose une mise en place sous R en fin de chapitre.
+On propose une mise en place sous R en fin de chapitre.\\
+On déduit de cette méthode un moyen de générer une réalisation de Cauchy standard : 
+
+\begin{theorem}
+\end{theorem}
+Si $(X,Y)$ est un tirage aléatoire sur le cercle unité de $\mathbb{R}^{2}$, alors $X/Y$ est un tirage aléatoire selon la loi de Cauchy standard.
+
+\begin{proof}
+Soit $\phi$ une fonction borélienne bornée sur $\mathbb{R}$. On a, pour $(X,Y)$ variable aléatoire uniforme sur le disque unité : 
+
+$$ \mathbb{E}\left[\phi\left(\frac{Y}{X} \right)\right] = \frac{1}{\pi} \int_{\mathbb{R}^{2}} \phi\left( \frac{y}{x}\right)\mathbf{1}_{\left\{ x^{2} + y^{2} \leq 1 \right\}}dxdy$$
+
+On passe en coordonnées polaires : $y = r\sin(\theta)$, $x = r\cos(\theta)$. On a alors $dxdy = rdrd\theta$ et on passe d'une intégrale sur $\mathbb{R}^{2}$ vers une intégrale sur $\mathbb{R}^{+} \times [0 , 2\pi]$, d'où : 
+
+\begin{align*}
+\mathbb{E}\left[\phi\left(\frac{Y}{X} \right)\right] &= \frac{1}{\pi} \int_{\mathbb{R}^{+} \times [0 , 2\pi]} \phi(\tan(\theta))\mathbf{1}_{\left\{r \leq 1\right\}} rdrd\theta \\
+&= \frac{1}{2\pi} \int_{0}^{2\pi} \phi(\tan(\theta))d\theta \\
+&= 2 * \frac{1}{2\pi} \int_{-\pi/2}^{\pi/2} \phi(\tan(\theta))d\theta
+\end{align*}
+On pose ensuite le changement de variables $u = \tan(\theta)$ pour enfin obtenir : 
+
+$$ \mathbb{E}\left[\phi\left(\frac{Y}{X} \right)\right] = \int_{\mathbb{R}^{+}}\phi(u)\frac{1}{\pi (1+u^{2})}du$$
+
+Ce qui donne bien la densité d'une loi de Cauchy standard.
+On obtient aussi le résultat pour $X/Y$ puisque l'inverse de la loi de Cauchy standard reste la loi de Cauchy standard.
+
+\end{proof}
+
 
 \subsection{Méthode de rejet pour variables aléatoires à densité}
 
@@ -1182,15 +1209,54 @@ D'où l'efficacité de cette méthode.
 
 \subsection{Défaut des méthodes de rejet}
 
-Le principal défaut des méthodes de rejet concerne la dimension des problèmes considérés. On prend pour exemple la génération de la variable aléatoire uniforme dans la boule de dimension $n$.\\
+Le principal défaut des méthodes de rejet concerne l'approche des problèmes considérés. On prend pour exemple la génération de la variable aléatoire uniforme dans la boule de dimension $n$.\\
 La méthode présentée précédemment dans le cas $n=2$ nécessite de tirer uniformément sur le carré $[-1,1] \times [-1,1]$. La probabilité d'acceptation $p$ est alors l'aire du cercle sur l'aire du carré, ie, $p = \pi /4$.\\
-On peut généraliser cette méthode aux dimensions supérieures : on tire uniformément dans l'hypercube de dimension $n$ : $[-1,1]^{n}$, le but étant d'obtenir un tirage uniforme dans la boule unité de même dimension. \\
-La probabilité d'acceptation est le volume de la boule sur le volume du carré soit : 
+On peut généraliser cette méthode aux dimensions supérieures : on tire uniformément dans l'hypercube unité de dimension $n$ : $[-1,1]^{n}$, le but étant d'obtenir un tirage uniforme dans la boule unité de même dimension. \\
+\begin{theorem}
+\end{theorem}
+Le volume de la boule unité en dimension $n$ est  \Large{$ \frac{\pi^{\frac{n}{2}}}{\Gamma(\frac{n}{2} + 1)} $}\normalsize{, où $\Gamma$ désigne la fonction Gamma.}
 
-$$ p = \frac{\pi^{n/2}}{2^{n}*\Gamma(\frac{n}{2} +1)} $$
+\begin{proof}
+Notons par $V^{(n)}[1]$ le volume la boule unité de dimension $n$ et de rayon $1$. On a d'abord $V^{(1)}[1] = 2$, puis pour tout $n \geq 1$, on a par récurrence, en utilisant le théorème de Fubini :
+
+$$ V^{(n+1)}[1] =  \int_{-1}^{1}V^{(n)}[1]\left(\sqrt{1-x^{2}}\right)^{n}dx = V^{(n)}[1]*2\int_{0}^{1}\left(1-x^{2}\right)^{n/2}dx$$
+
+On effectue ensuite le changement de variables $u=x^{2}$ ce qui nous donne $x = \sqrt{u}$ et $dx = \frac{du}{2\sqrt{u}}$ pour obtenir :
+
+$$V^{(n+1)}[1] = V^{(n)}[1]*2\int_{0}^{1}\left(1-x^{2}\right)^{n/2}dx = V^{(n)}[1]\int_{0}^{1}\left(1-u\right)^{n/2} u^{-1/2}du$$
+
+L'intégrale à droite est connue comme la fonction bêta, d'où : 
+
+$$V^{(n+1)}(1) = V^{(n)}[1]B\left(\frac{n}{2}+1,\frac{1}{2}\right)$$
+
+Or on peut exprimer la fonction bêta par rapport à la fonction gamma pour obtenir :
+
+$$V^{(n+1)}(1) = V^{(n)}[1] \frac{\Gamma(\frac{n}{2}+1)\Gamma(\frac{1}{2})}{\Gamma(\frac{n}{2} + \frac{3}{2})}$$
+
+Enfin, en utilisant le fait que $\Gamma(\frac{1}{2}) = \sqrt{\pi}$, et à l'aide d'une simple récurrence, on a enfin que :
+
+\large{}$$V^{(n)}[1]=  \frac{\pi^{\frac{n}{2}}}{\Gamma(\frac{n}{2} + 1)} $$
+\normalsize{}
+
+\end{proof}
+
+La probabilité d'acceptation $p$ d'un tirage aléatoire dans l'hypercube unité de dimension $n$ en tant que tirage dans la boule unité de même dimension est donc le volume de la boule sur le volume de l'hypercube, soit encore : 
+
+$$ p = \frac{V^{(n)}[1]}{2^{n}} =  \frac{\pi^{\frac{n}{2}}}{2^{n}\Gamma(\frac{n}{2} + 1)} $$
+
+On en déduit le nombre moyen $k$ de lancers nécessaires à l'acceptation (par simple étude de loi géométrique) : 
+
+$$ k(n) = \frac{1}{p} = \frac{2^{n}\Gamma(\frac{n}{2} + 1)}{\pi^{\frac{n}{2}}}$$
+
+On trace ci-dessous $k$ en fonction de $n$ pour $n \leq 12$ :
+
+\includegraphics[scale=0.93]{graphiques/boule_vitesse.jpeg}
+
+On remarque une augmentation très rapide du nombre de lancers nécessaires à l'obtention d'une réalisation selon que la dimension croît. \\
+La méthode de rejet n'est donc plus efficace pour des problèmes dont l'approche n'est pas connue, une étude approfondie étant nécessaire.
 
 \newpage
-\section{Chapitre 3}
+\section{Chapitre 3 : Coupling From The Past}
 
 \paragraph{Définition : Fonction de mise à jour}
 ~\\
@@ -1208,7 +1274,7 @@ Ensuite, pour n'importe quels états $x_{0}$ et $y_{0}$ dans $\Omega$, on définit
 \paragraph{Définition : Couplage}
 ~\\ 
 \\
-Soit $\mathcal{S}$ un ensemble de processus stochastiques définis sur un même ensemble $\mathcal{I}$ et un même espace d'états $\Omega$. Si il existe un indice $i \in \mathcal{I}$ et un état $x \in \Omega$ tels que pour tout $S \in \mathcal{S}$, on aie $S_{i} = x$, alors on dit que les processus stochastiques ont fusionné (ou se sont rejoints,couplés,etc). 
+Soit $\mathcal{S}$ un ensemble de processus stochastiques définis sur un même ensemble d'indices $\mathcal{I}$ et un même espace d'états $\Omega$. Si il existe un indice $i \in \mathcal{I}$ et un état $x \in \Omega$ tels que pour tout $S \in \mathcal{S}$, on aie $S_{i} = x$, alors on dit que les processus stochastiques ont coalescé (ou se sont rejoints,couplés,etc). 
 
 \paragraph{Exemple}
 ~\\
@@ -1218,9 +1284,10 @@ $$ \phi(x,U) = x + \mathbf{1}(x<2,U>\frac{1}{2}) - \mathbf{1}(x>0,U \leq \frac{1
 Soient $\left\{X_{t}\right\}$ et $\left\{Y_{t}\right\}$ deux chaînes de Markov ayant $\phi$ comme fonction de mise à jour et telles que $X_{0} = 0$ et $Y_{0} = 2$. On suppose que $U_{0} = 0.64 , U_{1} = 0.234$ et $U_{2} = 0.1 $. On a donc les trajectoires suivantes : $(X_{0},X_{1},X_{2},X_{3}) = (0,1,0,0)$ et $(Y_{0},Y_{1},Y_{2},Y_{3}) = (2,2,1,0)$.\\
 Les deux chaînes ont donc fusionné au temps $t=3$.
 
-\paragraph{Théorème CFTP (Coupling From The Past)}
-~\\
-\\
+\begin{theorem}
+Théorème CFTP (Coupling From The Past)
+\end{theorem}
+
 On suppose que $\phi$ est une fonction de mise à jour pour une chaîne de Markov définie sur $\Omega$, telle que pour $U = (U_{0},U_{-1},\ldots,U_{-t-1}) \sim$ Unif($[0,1]^{t}$) on ait :\\
 \begin{itemize}
 \item Pour $Y \sim \pi, \phi (Y,U_{0}) \sim \pi$
@@ -1236,8 +1303,8 @@ Y_{0} = \phi_{t}(x_{0},U_{0})\mathbf{1}(U_{0} \in A) + \phi_{t}(\phi_{t}(x_{0},U
 
 Alors $Y_{0} \sim \pi$.
 
-\paragraph{\underline{\textit{Preuve}}}
-~\\
-\\
+\begin{proof}
 Soit $x_{0} \in \Omega$. Le résultat est immédiat en utilisant le théorème fondamental de la simulation parfaite, en posant $g(U) = \phi_{t}(x_{0},U)$,$b(U) = \mathbf{1}(U \in A)$, et $f(X,U) = \phi_{t}(X,U)$.
+\end{proof}
+
 \end{document}

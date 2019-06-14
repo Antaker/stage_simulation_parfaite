@@ -149,7 +149,7 @@ AR_boule_unite <- function(n){
     s = sum(s)
     i=i+1
   }
-  return(i)
+  return(u)
   
   
 }
@@ -167,3 +167,21 @@ for(i in 1:100){
   t = c(t, (gamma(1+i/2)*2**i)/(pi**(i/2)))
   
 }
+
+
+u=c()
+for(i in 1:10^5){
+  
+  u = rbind(u,AR_boule_unite(2))
+  
+}
+u = u[,2]/u[,1]
+u=as.matrix(u)
+hist(u,breaks = 15)
+curve((gamma(1+x/2)*2**x)/(pi**(x/2)),0,12, xlab = NULL)
+
+
+
+
+
+
