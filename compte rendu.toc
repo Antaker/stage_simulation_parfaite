@@ -37,4 +37,8 @@
 \contentsline {section}{\numberline {3}Chapitre 3 : Coupling From The Past}{41}% 
 \contentsline {paragraph}{D\'efinition : Fonction de mise \`a jour}{41}% 
 \contentsline {paragraph}{D\'efinition : Couplage}{41}% 
-\contentsline {paragraph}{Exemple}{41}% 
+\contentsline {subsection}{\numberline {3.1}CFTP : approche trajectorielle (Baccelli / Br\'emaud)}{41}% 
+\contentsline {paragraph}{Exemple : distribution stationnaire et temps de coalescence forwards}{46}% 
+\contentsline {subsection}{\numberline {3.2}CFTP : approche par blocs (Huber)}{48}% 
+\contentsline {paragraph}{Exemple}{48}% 
+\contentsline {subsubsection}{\numberline {3.2.1}Variation de la taille des blocs}{51}% 

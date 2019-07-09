@@ -14,6 +14,7 @@
 
 %% Packages for Graphics & Figures %%%%%%%%%%%%%%%%%%%%%%%%%%
 \usepackage{graphicx} %%For loading graphic files
+\usepackage{caption} 
 
 
 %% Math Packages %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -113,10 +114,7 @@ Cependant les algorithmes dont le temps d'arrêt
 $T_{I}$ est déterministe (algorithmes tournant selon un nombre fini de choix aléatoires) sont généralement considérés comme algorithmes de simulation exacte mais pas comme algorithmes de simulation parfaite.
 
 
-\begin{theorem}
-Théorème fondamental de la simulation parfaite
-\end{theorem}
-
+\begin{theorem}[Théorème fondamental de la simulation parfaite]
 On suppose que pour $U_{1},U_{2},\ldots$ iid tel que $U_{i} \sim$ Unif([0,1]) , il existe des fonctions calculables $b,g$ et $f$ telles que la fonction $b$ aie pour image $ \left\{ 0,1 \right\} $ et $\mathbb{P}(b(U) = 1) > 0$. \\
 Pour une variable aléatoire X qui vérifie : 
 
@@ -132,8 +130,9 @@ soit $T =$ inf$\left\{t : b(U_{t}) = 1\right\}$. On a alors que :
 
 $$ Y = f(\ldots f(f(g(U_{T}),U_{T-1}),U_{T-2}),\ldots,U_{1})$$
 
-a la même distribution que $X$ et on a $\mathbb{E}[T] = \frac{1}{\mathbb{P}(b(U) = 1)}$.\\
-~\\
+a la même distribution que $X$ et on a $\mathbb{E}[T] = \frac{1}{\mathbb{P}(b(U) = 1)}$.
+\end{theorem}
+
 \begin{proof}
 Soient $X_{0},X_{1},\ldots$ des tirages indépendants chacun distribués selon $X$, et $U_{1},U_{2},\ldots$ iid tel que $U_{i} \sim$ Unif([0,1]). Pour $X_{t}$, fixons $X_{t,t} = X_{t}$ et récursivement, on pose :
 
@@ -263,12 +262,12 @@ Clique
 Une clique est un sous-ensemble de n\oe{}uds du graphe tel que chaque paire de n\oe{}uds soit connectée par une arête.
 
 
-\begin{theorem}
-Théorème de Hammersley Clifford
-\end{theorem}
+\begin{theorem}[Théorème de Hammersley-Clifford]
 Pour un graphe fini $G=(V,E)$, la distribution $\pi$ est un champ aléatoire de Markov si elle a pour densité $f_{X}$ et qu'il existe des fonctions $\phi _{C}$ pour toute clique C telles que $f_{X}$ puisse s'écrire : 
 
 $$ f_{X}(x) = \frac{1}{Z} \prod _{C \in cliques(G)} \phi_{C}(x)$$
+\end{theorem}
+
 
 
 \begin{definition}
@@ -351,7 +350,7 @@ Une chaîne de Markov $\left\{X_{t} \right\}$ sur un espace d'état $\Omega$ est u
 Chaîne récurrente
 \end{definition}
 
-Soit $R = inf \left\{ n>0 : X_{n} \in A \right\}$. On dit qu'une chaîne de Harris est une chaîne récurrente si pour tout $x \in A$, $\mathbb{P}(R < \infty | X_{0} = x) = 1$. Une chaîne qui n'est pas récurrente est dite transiente.
+Soit $R = \inf \left\{ n>0 : X_{n} \in A \right\}$. On dit qu'une chaîne de Harris est une chaîne récurrente si pour tout $x \in A$, $\mathbb{P}(R < \infty | X_{0} = x) = 1$. Une chaîne qui n'est pas récurrente est dite transiente.
 
 \begin{definition}
 Chaîne apériodique
@@ -359,15 +358,12 @@ Chaîne apériodique
 
 Une chaîne de Harris récurrente est apériodique si pour tout $x \in \Omega$, il existe $n$ tel que pour tout $n' \geq n$, $\mathbb{P}(X_{n'} \in A | X_{0} = x) >0$
 
-\begin{theorem}
-Théorème ergodique pour les chaînes de Harris
-\end{theorem} 
-
+\begin{theorem}[Théorème ergodique pour les chaînes de Harris]
 Soit $X_{n}$ une chaîne de Harris récurrente et apériodique de distribution stationnaire $\pi$. Si $\mathbb{P}(R < \infty | X_{0} = x) = 1$ pour tout $x$, alors, pour $t \to \infty$, pour tout ensemble mesurable $C$ et pour tout $x$ : 
 
 $$ |\mathbb{P}(X_{t} \in C|X_{0} = x) - \pi(C)| \to 0 $$
+\end{theorem} 
 
-~\\
 Ce théorème est le c\oe{}ur des méthodes MCMC, puisqu'il "suffit" de construire une chaîne de Harris ayant pour distribution stationnaire la distribution souhaitée et de la faire tourner pendant un nombre infini de pas. Cependant, n'ayant pas un temps infini, les utilisateurs font tourner leurs algorithmes durant un grand nombre de pas et espèrent arriver dans la distribution stationnaire.
 ~\\
 \linebreak Nous pourrons cependant déterminer à quel point la chaîne est proche de la loi stationnaire à l'aide du concept de couplage (voir chapitre 3 pour une définition et application étendue).
@@ -377,12 +373,12 @@ Couplage
 \end{definition}
 Supposons que $\left\{X_{t} \right\} \sim \nu_{X}$ et $\left\{Y_{t} \right\} \sim \nu_{Y}$. Un couplage de $\left\{X_{t} \right\}$ et $\left\{Y_{t} \right\}$ est un processus bivarié $\left\{(X^{'}_{t},Y^{'}_{t})\right\}$ tel que $\left\{X^{'}_{t} \right\} \sim \nu_{X}$ et $\left\{Y^{'}_{t} \right\} \sim \nu_{Y}$.
 
-\begin{theorem}
-Lemme de Couplage
-\end{theorem} 
-
+\begin{theorem}[Lemme de Couplage]
 Soit $Y_{0} \sim \pi$ et $X_{0} = x_{0}$ tels que les deux variables évoluent de manière couplée. Alors, pour tout mesurable $C$ :
 $$ |\mathbb{P}(X_{t} \in C|X_{0}=x) - \pi(C)| \leq \mathbb{P}(X_{t} \ne Y_{t}).$$
+\end{theorem} 
+
+
 
 \subsection{Création de chaînes de Markov}
 
@@ -396,8 +392,9 @@ Nous utiliserons l'équation de balance détaillée pour en déduire la réversibilit
 
 Une distribution $\pi$ est réversible selon une chaîne de Markov $\left\{ X_{t} \right\}$ en particulier si : $\pi(dx)\mathbb{P}(X_{t+1} \in dy | X_{t} = x) = \pi(dy)\mathbb{P}(X_{t+1} \in dx | X_{t} = y).$
 \begin{lemme}
-\end{lemme}
 Si $\pi$ est réversible, alors $\pi$ est stationnaire.
+\end{lemme}
+
 \begin{proof}
 Soit $\Omega$ l'espace d'état de la chaîne de Markov $\left\{ X_{t} \right\}$ considérée et $\pi$ réversible pour cette chaîne.
 Pour $X_{t} \sim \pi$, et $C$ un ensemble mesurable, alors on a :
@@ -794,12 +791,13 @@ Le shift autorise un échange de label entre $\nu$ et son voisin occupé avec une 
 \subsection{Théorème et exemple simple}
 
 \begin{theorem}
-\end{theorem}
 Soit $\nu$ une mesure finie sur un ensemble $B$ et soit $A$ un sous-ensemble de $B$ tel que $\nu(A) > 0$. Soit $X_{1},X_{2},\ldots$ des variables aléatoires iid tirées selon $\nu$ sur l'ensemble $B$. Soit enfin $T = inf \left\{t :  X_{t} \in A \right\}.$ Alors : 
 
 $$ X_{T} \sim [ X_{1} | X_{1} \in A ]$$ 
+\end{theorem}
 
-C'est à dire, si on tire successivement des valeurs dans $B$ selon $\nu$ et que l'on rend la première valeur dans $A$, alors on le résultat provient de la mesure $\nu$ conditionnée à être dans $A$.
+
+C'est à dire, si on tire successivement des valeurs dans $B$ selon $\nu$ et que l'on rend la première valeur dans $A$, alors le résultat provient de la mesure $\nu$ conditionnée à être dans $A$.
 
 \begin{proof}
 Cela suit du théorème fondamental de la simulation parfaite en ayant $U_{1},U_{2},\dots$ des tirages dans $B$ selon $\nu$, $b(U) = \mathbf{1}(U \in A)$,$g(U) = U$ et $f(X,U) = X$.
@@ -808,8 +806,9 @@ Cela suit du théorème fondamental de la simulation parfaite en ayant $U_{1},U_{2
 Le nombre moyen de pas nécessaire pour obtenir un tirage dans $A$ dépend de la taille de $A$ par rapport à la taille de $B$.
 
 \begin{theorem}
-\end{theorem}
 La probabilité qu'un tirage $X$ dans $B$ selon $\nu$ soit dans $A$ est $\nu(A)/\nu(B)$. Le nombre moyen de tirages nécessaires est $\nu(B)/\nu(A)$.
+\end{theorem}
+
 
 \begin{proof}
 La première moitié du théorème découle simplement de la définition de mesure de probabilité. La seconde provient du fait que $T$ soit une loi géométrique de paramètre $\nu(A)/\nu(B)$, et donc sa moyenne est $\nu(B)/\nu(A)$.
@@ -824,8 +823,9 @@ On propose une mise en place sous R en fin de chapitre.\\
 On déduit de cette méthode un moyen de générer une réalisation de Cauchy standard : 
 
 \begin{theorem}
-\end{theorem}
 Si $(X,Y)$ est un tirage aléatoire sur le cercle unité de $\mathbb{R}^{2}$, alors $X/Y$ est un tirage aléatoire selon la loi de Cauchy standard.
+\end{theorem}
+
 
 \begin{proof}
 Soit $\phi$ une fonction borélienne bornée sur $\mathbb{R}$. On a, pour $(X,Y)$ variable aléatoire uniforme sur le disque unité : 
@@ -853,12 +853,11 @@ On obtient aussi le résultat pour $X/Y$ puisque l'inverse de la loi de Cauchy st
 
 La méthode de rejet de base n'inclut pas les variables aléatoires à densité. Cependant, celles-ci sont traitées aisément à l'aide des variables aléatoires auxiliaires. Pour cela, on considère le théorème suivant, provenant de la théorie de la mesure.
 
-\begin{theorem}
-Théorème fondamental de la simulation de Monte Carlo
+\begin{theorem}[Théorème fondamental de la simulation de Monte Carlo]
+Soit $X$ variable aléatoire de densité (possiblement non-normalisée) $f_{X}$ par rapport à une mesure $\nu$ sur $\Omega$. Si on a $[Y|X] \sim Unif([0,f_{X}])$, alors $(X,Y)$ est un lancer provenant de la mesure produit $\nu ~ \times$ Unif sur l'ensemble \\ $\left\{(x,y) : x\in \Omega, 0 \leq y \leq f_{x} \right\}$.
 \end{theorem}
 
-Soit $X$ variable aléatoire de densité (possiblement non-normalisée) $f_{X}$ par rapport à une mesure $\nu$ sur $\Omega$. Si on a $[Y|X] \sim Unif([0,f_{X}])$, alors $(X,Y)$ est un lancer provenant de la mesure produit $\nu ~ \times$ Unif sur l'ensemble $\left\{(x,y) : x\in \Omega, 0 \leq y \leq f_{x} \right\}$.\\
-~\\
+
 Essentiellement, ce théorème nous dit que pour obtenir un lancer selon une certaine densité, il suffit de tirer selon une loi uniforme sur un espace plus grand. De plus, la densité de $X$ n'est pas forcément normalisée, ce qui sera essentiel dans les applications qui suivent. 
 \\
 ~\\
@@ -876,10 +875,11 @@ La probabilité d'acceptation varie inversement avec $c$, le meilleur choix possi
 Nous allons maintenant calculer la probabilité d'acceptation d'un lancer.
 
 \begin{lemme}
-\end{lemme}
-
 Soit $Z_{f} = \int_{x \in \Omega} f(x) \nu(dx)$ et $Z_{g} = \int_{x \in \Omega} g(x) \nu(dx)$, les constantes de normalisation pour les densités (possiblement) non-normalisées $f$ et $g$.
 Alors, pour la méthode par rejet présentée précédemment, la probabilité d'acceptation est $Z_{f}/[c*Z_{g}]$ et le nombre moyen de lancers est $c*Z_{g}/Z_{f}$.
+\end{lemme}
+
+
 
 \begin{proof}
 Pour $C$, la loi de Bernouilli présentée précédemment, le problème est de calculer $\mathbb{P}(C=1)$. 
@@ -991,8 +991,9 @@ On considère l'algorithme suivant : on tire $I$ dans $\left\{1,2,\ldots,n\right\
 Le problème est que $X$ n'est pas tiré selon $\nu$ sur $S_{1} \cup \ldots \cup S_{n}$, car il y a plusieurs manières pour lesquelles $X$ aurait pu être choisi. Par exemple, si $X \in S_{1}$ et $X \in S_{2}$ mais $X \notin S_{3} \ldots S_{n}$, alors $I$ aurait pu être $1$ ou $2$ lors du choix de $X$.\\
 
 \begin{lemme}
+Pour la procédure précédente, $X$ est un tirage selon $\nu$ sur $S_{1} \cup \ldots \cup S_{n}$ avec densité $f(x) = \#\left\{i : x \in S_{i} \right\}/\nu(S_{1} \cup \ldots \cup S_{n})$
 \end{lemme}
-Pour l'algorithme précédent, $X$ est un tirage selon $\nu$ sur $S_{1} \cup \ldots \cup S_{n}$ avec densité $f(x) = \#\left\{i : x \in S_{i} \right\}/\nu(S_{1} \cup \ldots \cup S_{n})$
+
 
 \begin{proof}
 Soit $x \in S_{1} \cup \ldots \cup S_{n}$ et $C = \nu(S_{1} \cup \ldots \cup S_{n})$ Alors :
@@ -1013,13 +1014,13 @@ On tire alors $I \sim Unif(\{1,2,3\})$. Si $I=1$, on tire $X$ sur le cercle unit
 
 \subsubsection{L'inégalité de Markov en tant que procédure de rejet}
 
-\begin{lemme}
-Inégalité de Markov
-\end{lemme}
-
+\begin{lemme}[Inégalité de Markov]
 On considère une variable aléatoire $X$ non-négative avec probabilité $1$ et d'espérance finie $\mathbb{E}[X]$. Alors, pour tout $a >0$ :
 
-$$ \mathbb{P}(X \geq a) \leq \mathbb{E}[X]/a$$
+$$ \mathbb{P}(X \geq a) \leq \frac{\mathbb{E}[X]}{a}$$
+\end{lemme}
+
+
 
 Du point de vue simulation, l'inégalité de Markov nous permet de tirer depuis $[X|X \geq a]$. C'est à dire, si $X$ à pour densité $f_{X}(x)$ alors le but est de tirer depuis la densité non-normalisée $f_{X}(x)\mathbf{1}(x>a)$. Pour pouvoir appliquer une méthode de rejet, on utilise la densité non-normalisée $xf_{X}(x)$. On a alors que $f_{X}(x)\mathbf{1}(x \geq a)/[xf_{X}(x)]$ vaut $0$ lorsque $x<a$, et $1/x$ lorsque $x \geq a$. Le produit n'est donc jamais supérieur à $1/a$ ce qui permet d'utiliser la méthode de rejet suivante : 
 
@@ -1048,15 +1049,15 @@ Puisque la chance d'accepter est au plus $1$, cette fraction est aussi au plus $
 Les inégalités de Chernoff donnent des limites supérieures sur la probabilité qu'un somme de variables aléatoires est supérieure (ou inférieure) à une certaine valeur. Soit $S_{n} = X_{1} + \ldots + X_{n}$, où $X_{1},\ldots,X_{n}$ sont iid; alors le but est de générer un tirage selon $S_{n}$ tel que $S_{n} \geq a$ ou $S_{n} \leq a$.\\
 L'inégalité de Markov peut aussi être appliquée à une somme de variables aléatoires, mais la borne donnée n'est pas aussi précise que celle obtenue avec les inégalités de Chernoff.
 
-\begin{lemme}
-Inégalités de Chernoff
-\end{lemme}
+\begin{lemme}[Inégalités de Chernoff]
 Soit une variable aléatoire $X$ telle que $\mathbb{E}[e^{tX}]$ soit finie pour $t \in [a,b]$, où $a$ est négatif et $b$ positif. Alors pour un certain $c \in \mathbb{R}$, et en notant par $mgf_{X}(t)$ la fonction génératrice des moments pour la variable aléatoire $X$, 
 
 \begin{align*}
 \mathbb{P}(X \geq c) \leq mgf_{X}(t)/\exp(tc), ~\forall t \in [0,b] \\
 \mathbb{P}(X \leq c) \leq mgf_{X}(t)/\exp(tc), ~\forall t \in [a,0] 
 \end{align*}
+\end{lemme}
+
 
 \begin{proof}
 Tout d'abord : $\mathbb{P}(X \geq c) = \mathbb{P}(tX \geq tc)$ pour tout $t$ positif. De plus, $\mathbb{P}(tX \geq tc) = \mathbb{P}(\exp(tX) \geq \exp(tc))$. Enfin, on applique l'inégalité de Markov pour obtenir $\mathbb{P}(\exp(tX) \geq \exp(tc)) \leq \mathbb{E}[\exp(tX)]/\exp(tc)$. Le résultat pour l'autre inégalité est démontré de la même manière.
@@ -1065,19 +1066,21 @@ Tout d'abord : $\mathbb{P}(X \geq c) = \mathbb{P}(tX \geq tc)$ pour tout $t$ pos
 Nous considérons à présent ce qu'il se passe lorsque l'on considère les inégalités de Chernoff pour une somme de variables aléatoires indépendante. On rappelle d'abord un résultat sur les fonctions génératrices des moments.\\
 
 \begin{lemme}
+Soit $S_{n} = X_{1} + \ldots + X_{n}$, où les $\{X_{i}\}$ sont iid de fonction génératrice des moments finie. Alors on a : $\mathbb{E}[\exp(tS_{n})] = [\mathbb{E}[\exp(tX_{i})]]^{n}$
 \end{lemme}
-Soit $S_{n} = X_{1} + \ldots + X_{n}$, où les$\{X_{i}\}$ sont iid de fonction génératrice des moments finie. Alors on a : $\mathbb{E}[\exp(tS_{n})] = [\mathbb{E}[\exp(tX_{i})]]^{n}$
 
-On applique ce lemme aux inégalité de Chernoff pour obtenir : 
+
+On applique ce lemme aux inégalités de Chernoff pour obtenir : 
 
 \begin{lemme}
-\end{lemme}
-Soit $S_{n} = X_{1} + \ldots + X_{n}$, où les$\{X_{i}\}$ sont iid de fonction génératrice des moments $mgf_{X_{i}}(t)$ finie pour $t \in [a,b]$, où $a$ est négatif et $b$ positif. Alors on a : 
+Soit $S_{n} = X_{1} + \ldots + X_{n}$, où les $\{X_{i}\}$ sont iid de fonction génératrice des moments $mgf_{X_{i}}(t)$ finie pour $t \in [a,b]$, où $a$ est négatif et $b$ positif. Alors on a : 
 
 \begin{align*}
 \mathbb{P}(S_{n} \geq \alpha n) \leq  \left(\frac{mgf_{X_{i}}(t)}{\exp(t \alpha)}\right)^{n}, ~\forall t \in [0,b]\\
 \mathbb{P}(S_{n} \leq \alpha n) \leq  \left(\frac{mgf_{X_{i}}(t)}{\exp(t \alpha)}\right)^{n}, ~\forall t \in [a,0]
 \end{align*}
+\end{lemme}
+
 
 Supposons que $X_{i} \sim f_{X}$. Le but est d'utiliser la fonction génératrice des moments pour obtenir un meilleur algorithme de rejet. Pour cela, il doit être possible de générer une réalisation selon la densité $g_{t}(x) \propto e^{tx}f_{x}(x)$. Lorsque $t$ est grand, cette densité aura tendance à prendre de plus grandes valeurs. Lorsque $t$ est grand dans les négatifs, $g_{t}$ tendra à prendre des valeurs plus faibles.\\
 Soit $t>0$. Pour $x \geq a$, alors $g_{t}(x) = e^{tx} f_{X}(x) \geq e^{ta}f_{X}(x)$. Alors une réalisation de $g_{t}$ peut être acceptée comme réalisation de $f_{X}$ avec probabilité $e^{ta}/e^{tx}$. Si la probabilité que $x$ soit bien plus grand que $a$ est faible, alors la probabilité d'acceptation sera très proche de $1$. Une méthode similaire s'applique lorsque $t<0$. On en déduit alors l'algorithme suivant :
@@ -1098,9 +1101,12 @@ Soit $t>0$. Pour $x \geq a$, alors $g_{t}(x) = e^{tx} f_{X}(x) \geq e^{ta}f_{X}(
 \end{algorithmic}
 \end{algorithm}
 
+
+\newpage
 \begin{lemme}
-\end{lemme}
 Supposons que $mgf_{X_{i}}(t)\exp(-ta/n)<1$. Alors l'algorithme précédent génère une réalisation de $[S_{n}|S_{n}>a]$ lorsque $t>0$ ou de $[S_{n}|S_{n}<a]$ lorsque $t<0$.
+\end{lemme}
+
 
 \begin{proof}
 On considère tout vecteur $(x_{1},\ldots,x_{n})$ tel que $\sum x_{i} = s$. On considère $X_{1},\ldots,X_{n}$ iid de densité $f_{X}(x)$ et $X_{1}',\ldots,X_{n}'$ iid de densité $\exp(tx)f_{X}(x)$. Alors la densité de $S_{n}'  = X_{1}' + \ldots + X_{n}'$ est simplement la densité de $S_{n} = X_{1} + \ldots + X_{n}$ avec un facteur $\exp(tx_{1})\exp(tx_{2})\ldots\exp(tx_{n}) = \exp(ts)$.\\
@@ -1212,12 +1218,17 @@ D'où l'efficacité de cette méthode.
 Le principal défaut des méthodes de rejet concerne l'approche des problèmes considérés. On prend pour exemple la génération de la variable aléatoire uniforme dans la boule de dimension $n$.\\
 La méthode présentée précédemment dans le cas $n=2$ nécessite de tirer uniformément sur le carré $[-1,1] \times [-1,1]$. La probabilité d'acceptation $p$ est alors l'aire du cercle sur l'aire du carré, ie, $p = \pi /4$.\\
 On peut généraliser cette méthode aux dimensions supérieures : on tire uniformément dans l'hypercube unité de dimension $n$ : $[-1,1]^{n}$, le but étant d'obtenir un tirage uniforme dans la boule unité de même dimension. \\
-\begin{theorem}
-\end{theorem}
+\begin{theorem}[Volume de la boule unité]
 Le volume de la boule unité en dimension $n$ est  \Large{$ \frac{\pi^{\frac{n}{2}}}{\Gamma(\frac{n}{2} + 1)} $}\normalsize{, où $\Gamma$ désigne la fonction Gamma.}
+\end{theorem}
+
 
 \begin{proof}
-Notons par $V^{(n)}[1]$ le volume la boule unité de dimension $n$ et de rayon $1$. On a d'abord $V^{(1)}[1] = 2$, puis pour tout $n \geq 1$, on a par récurrence, en utilisant le théorème de Fubini :
+Notons par $V^{(n)}[1]$ le volume la boule unité de dimension $n$ et de rayon $1$. On a d'abord $V^{(1)}[1] = 2$, puis pour tout $n \geq 1$, on a par récurrence, en utilisant la relation suivante : pour $B_{d}(0,1)$ la boule unité de dimension $d$, 
+
+$$B_{d}(0,1) = \left\{ (x_{1}, \ldots, x_{d-1},h) | h \in [-1,1] , (x_{1}, \ldots, x_{d-1}) \in B_{d-1}(0,\sqrt{1 - h^{2}}) \right\}$$ 
+
+Et en utilisant le théorème de Fubini, 
 
 $$ V^{(n+1)}[1] =  \int_{-1}^{1}V^{(n)}[1]\left(\sqrt{1-x^{2}}\right)^{n}dx = V^{(n)}[1]*2\int_{0}^{1}\left(1-x^{2}\right)^{n/2}dx$$
 
@@ -1276,6 +1287,177 @@ Ensuite, pour n'importe quels états $x_{0}$ et $y_{0}$ dans $\Omega$, on définit
 \\
 Soit $\mathcal{S}$ un ensemble de processus stochastiques définis sur un même ensemble d'indices $\mathcal{I}$ et un même espace d'états $\Omega$. Si il existe un indice $i \in \mathcal{I}$ et un état $x \in \Omega$ tels que pour tout $S \in \mathcal{S}$, on aie $S_{i} = x$, alors on dit que les processus stochastiques ont coalescé (ou se sont rejoints,couplés,etc). 
 
+\subsection{CFTP : approche trajectorielle (Baccelli / Brémaud)}
+
+Soit $P$ une matrice de transition ergodique sur l'espace d'état fini $E = \left\{ 1,\ldots,r\right\}$, de distribution stationnaire. Comme définie précédemment, à l'aide d'une fonction de mise à jour $h$, on peut implémenter la chaîne de Markov de la manière suivante : 
+
+$$X_{n+1} = h(X_{n},\xi_{n})$$
+
+pour une suite de variables aléatoires $\left\{ \xi_{n} \right\}_{n \geq 1}$ iid uniformes sur $[0,1]$ et indépendantes de l'état initial.\\
+On considère à présent un tableau de choix aléatoires $\left\{ \xi_{k}(i) \right\}_{k \in \mathbb{Z}, i \in E}$ iid uniformes sur $[0,1]$. Pour tout $k \in \mathbb{Z}$ et tout $i \in E$, soit $\left\{X_{n}^{k}(i)\right\}_{n \geq k}$ définie par récurrence : 
+
+$$X_{n+1}^{k}(i) = h(X_{n}^{k}(i),\xi_{n}(X_{n}^{k}(i)),~ n \geq k,$$
+
+avec pour condition initiale $X_{k}^{k}(i) = i$, et $h$ comme définie précédemment.\\
+Pour tout $k$ et $i$, $\left\{ X_{n}^{k}(i) \right\}_{n \geq k}$ est une chaîne de Markov homogène de matrice de transition $P$. Par la structure de récurrence stochastique sous-jacente, les chaînes de la famille définie précédemment sont telles que : pour tout $k \in \mathbb{Z}$, $X_{n}^{k}(i) = X_{n}^{k}(j)$ implique que $X_{m}^{k}(i) = X_{m}^{k}(j)$, pour tout $m \geq n$.\\
+On note par : 
+
+$$ N^{+} = \inf \left\{n \geq 0 | X_{n}^{0}(1) = X_{n}^{0}(2) = \ldots = X_{n}^{0}(r) \right\}$$ 
+
+($= + \infty$ si la condition n'est jamais satisfaite) le temps de coalescence forwards de la chaîne. On notera le temps de coalescence backwards de la chaîne par : 
+
+$$ N^{-} = \inf \left\{n \geq 1 | X_{0}^{-n}(1) = X_{0}^{-n}(2) = \ldots = X_{0}^{-n}(r)\right\} $$
+
+($= + \infty$ si la condition n'est jamais satisfaite)
+
+\begin{center}
+\includegraphics[scale=0.9]{graphiques/backwards_coalescence_1.png}
+\captionof{figure}{Exemple de temps de coalescence backwards, $N^{-} = 7$}
+\end{center}
+
+\begin{center}
+\includegraphics[scale=1]{graphiques/forwards_coalescence_1.png}
+\captionof{figure}{Exemple de temps de coalescence forwards, $N^{+} = 4$}
+\end{center}
+
+\begin{theorem}
+Le temps de coalescence forwards $N^{+}$ est presque sûrement fini.
+\end{theorem}
+
+\begin{proof}
+Il suffit de prouver le résultat dans le cas de $r$ chaînes de Markov homogènes, complètement indépendantes les unes des autres, de même matrice de transition. Nous n'avons pas l'hypothèse d'indépendance dans la construction des chaînes de Markov donnée précédemment. Cependant, la probabilité de coalescence (probabilité que $N^{+}$ soit fini) dans notre situation est bornée inférieurement par la probabilité de coalescence dans le cas complètement indépendant. Pour mieux le comprendre, on construit d'abord le modèle de chaînes indépendantes : 
+
+$$ \overline{X}_{n+1}(i) = h(\overline{X}_{n+1}(i),\overline{\xi}_{n,i}), ~ n \geq 0, $$
+
+(avec pour condition initiale $\overline{X}_{0}(i) = i)$, qui utilise $r$ composantes de mise à jour iid $\left\{ \overline{\xi}_{n,i} \right\}$.
+
+La différence entre ce modèle et celui que l'on a introduit réside dans le nombre de mise à jour trop élevé de notre modèle. Afin de construire un ensemble de $r$ chaînes semblable à celui de notre modèle, il suffit d'utiliser les mêmes mise à jour pour deux chaînes dès lors qu'elles se rencontrent. Il est alors clair que le temps de coalescence forwards du modèle ainsi modifié est plus petit ou égal à celui du modèle complètement indépendant.\\
+Il reste alors à prouver que pour un nombre fini de chaînes de Markov homogènes, ergodiques et indépendantes, elles finiront par se rencontrer. Cela suit du fait que le produit de chaînes ergodiques indépendantes est une chaîne ergodique.
+
+\end{proof}
+
+\begin{theorem}
+Les variables aléatoires $N^{+}$ et $N^{-}$ ont la même distribution.
+\end{theorem}
+
+\begin{proof}
+Soit $k \in \mathbb{N}$. On considère le modèle modifié obtenu en remplaçant $\xi_{-k+l}(i)$ par $\xi_{l}(i)$ ,pour tout $l$ tel que $0 \leq l \leq k$ ,et pour $i \in E$.
+Notons par $N^{'}$ le temps de coalescence backwards du modèle modifié. Clairement $N^{-}$ et $N^{'}$ ont la même distribution.
+\\
+
+\begin{center}
+\includegraphics[scale=0.8]{graphiques/forwards_coalescence_2_1}
+\includegraphics[scale=0.8]{graphiques/forwards_coalescence_2_2}
+\captionof{figure}{$N^{+} \leq k$ implique $N^{'} \leq k$}
+\end{center}
+
+On suppose maintenant que $N^{+} \leq k$. Alors, dans le modèle modifié, les chaînes commençant au temps $-k$ depuis les états $1,\ldots,r$ coalescent au temps $-k + N^{+} \leq 0$ (voir figure précédente), et par conséquent $N^{'} \leq k$. Donc, $N^{+} \leq k$ implique $N^{'} \leq k$, puis :
+
+$$\mathbb{P}(N^{+} \leq k) \leq \mathbb{P}(N^{'} \leq k) = \mathbb{P}(N^{-} \leq k)$$
+
+D'autre part, on suppose que $N^{'} \leq k$. Alors, dans le modèle original, les chaînes commençant depuis les états $1, \ldots, r$ au temps $k-N^{'}$ coalesceront au temps $k$. On en déduit donc $N^{+} \leq k$ (voir figure suivante). On a alors que $N^{'} \leq k$ implique $N^{+} \leq k$, puis :
+
+$$\mathbb{P}(N^{-} \leq k) = \mathbb{P}(N^{'} \leq k) \leq \mathbb{P}(N^{+} \leq k)$$
+
+Grâce aux deux inégalités démontrées précédemment, on en déduit le résultat.
+
+\end{proof}
+
+\begin{center}
+\includegraphics[scale=0.8]{graphiques/forwards_coalescence_2_4}
+\includegraphics[scale=0.8]{graphiques/forwards_coalescence_2_3}
+\captionof{figure}{$N^{'} \leq k$ implique $N^{+} \leq k$}
+\end{center}
+
+On définit à présent la variable aléatoire suivante : 
+
+$$Z = Z(i) = X_{0}^{-N^{-}}(i)$$
+
+(la variable aléatoire $Z$ est indépendante de $i \in E$; dans la figure 1, on a $Z = 2$).
+
+On a le théorème suivant : 
+
+\begin{theorem}
+Le temps de coalescence backwards $N^{-}$ est presque sûrement fini. De plus, la variable aléatoire $Z$ admet $\pi$ comme distribution. 
+\end{theorem}
+
+\begin{proof}
+Puisque, pour tout $k \in \mathbb{N}$, $\mathbb{P}(N^{-} \leq k) = \mathbb{P}(N^{+} \leq k)$ (d'après le résultat précédent), le fait que $N^{-}$ soit fini provient directement du fait que $N^{+}$ soit fini (théorème 10).\\
+D'autre part, puisque pour $n \geq N^{-}$, on a $X_{0}^{-n}(i) = Z$, 
+
+$$\mathbb{P}(Z = j) = \lim_{n \rightarrow \infty } \mathbb{P}(X_{0}^{-n}(i) = j) = \lim_{n \rightarrow \infty } p_{ij}(n) = \pi(j),$$
+
+où la dernière égalité provient du théorème ergodique pour les chaînes de Markov.
+\end{proof}
+
+\paragraph{Exemple : distribution stationnaire et temps de coalescence forwards}~\\
+
+Le théorème précédent montre qu'en utilisant le temps de coalescence backwards, on obtient une réalisation de la loi stationnaire par la méthode CFTP. La question est alors la suivante : pourquoi ne pas utiliser le temps de coalescence forwards ? La réponse à cette question s'obtient en étudiant l'exemple simple suivant :\\
+On considère $\left\{X_{n}\right\}$ la chaîne de Markov à deux états de matrice de transition 
+$P = \left( \begin{matrix}
+0 ~~ 1 \\
+\frac{1}{2} ~~  \frac{1}{2} 
+\end{matrix}\right) $.\\ 
+On remarque que cette chaîne a pour loi stationnaire $\pi = (\frac{1}{3} ~ \frac{2}{3})$.\\
+ On remarque ensuite que, pour $N^{+}$ le temps de coalescence forwards, on a $X_{0}^{N^{+}}(1)= X_{0}^{N^{+}}(2) = 2$ presque sûrement. En effet, par l'absurde, si les deux chaînes issues des états $1$ et $2$ s'étaient rejointes au temps $N^{+}$ à l'état $1$, alors on aurait deux cas possibles : \\
+
+\begin{itemize}
+\item Au temps $N^{+}-1$, la chaîne issue de l'état $1$ se déplace à l'état $1$ au temps suivant : une absurdité par la structure de la chaîne ($P_{1,1} = 0$)
+\item Au temps $N^{+}-1$, les deux chaînes ont déjà coalescé, d'où la coalescence au temps $N^{+}$ : une absurdité par la définition de $N^{+}$\\
+\end{itemize}
+
+Cependant le temps de coalescence forwards n'est pas une cause perdue : certains modèles permettent d'utiliser la méthode CFTP en conjugaison avec celui-ci pour obtenir une réalisation de la loi stationnaire, comme le montre l'exemple suivant :\\ 
+
+On considère $\left\{X_{n}\right\}$ la chaîne de Markov à deux états de matrice de transition 
+$P = \left( \begin{matrix}
+\frac{1}{2} ~~  \frac{1}{2}\\
+\frac{1}{2} ~~  \frac{1}{2} 
+\end{matrix}\right) $.\\ 
+
+On remarque facilement que la loi stationnaire est $\pi = (\frac{1}{2} ~ \frac{1}{2})$, puis que, au temps $N^{+}$ :
+
+$$ \mathbb{P}(X_{0}^{N^{+}}(1) = X_{0}^{N^{+}}(2) = 1) = \mathbb{P}(X_{0}^{N^{+}}(1) = X_{0}^{N^{+}}(2) = 2) = \frac{1}{2}$$
+
+car les deux évènements sont équiprobables et que l'on sait que l'on coalesce forcément pour la première fois au temps $N^{+}$.\\
+\newline
+La méthode présentée précédemment est particulièrement coûteuse lorsque l'espace d'états est grand (puisqu'il faut faire évoluer des trajectoires à partir de chaque état). Cependant, si la méthode ne requerrait la coalescence que de $2$ chaînes et non plus $r$, celle-ci serait bien plus efficace. Propp et Wilson ont montré comment utiliser cela dans le cas monotone suivant.\\
+On suppose qu'il existe une relation d'ordre partiel sur l'espace d'état $E$ que l'on notera par $\preceq$.\\
+On suppose ensuite que la fonction de mise à jour préserve cette relation d'ordre, ie, 
+
+$$ i \preceq j \Rightarrow h(i,\xi) \preceq h(j,\xi) ~~ \forall \xi $$
+
+On suppose ensuite que $1  \preceq 2 \preceq \ldots \preceq r$ et on considère le modèle avec une seule mise à jour commune (ie, $\xi_{n}(i) = \xi_{n}$ pour tout $n$ et tout $i$). On définit à présent le temps de coalescence backwards monotone :
+
+$$ M = \inf \left\{n\geq 1 | X_{0}^{-n}(1) = X_{0}^{-n}(r) \right\} $$
+
+($ = + \infty$ si, pour tout $n \geq 1$ la condition n'est pas satisfaite). La procédure de samplage correspondant est appelée algorithme monotone de Propp-Wilson.
+
+\begin{center}
+\includegraphics[scale=1]{graphiques/monotonic}
+\captionof{figure}{Algorithme monotone de Propp-Wilson; ici $M = 6$}
+\end{center}
+
+\begin{theorem}
+Le temps de coalescence backwards monotone $M$ est presque sûrement fini. De plus, les variables aléatoires $X_{0}^{-M}(1) = X_{0}^{-M}(r)$ sont de distribution $\pi$.
+\end{theorem}	 
+
+\begin{proof}
+On appelle $N^{+}$ le temps de couplage forwards des deux chaînes $\left\{ X_{n}^{0}(1) \right\}$ et $\left\{ X_{n}^{0}(r) \right\}$. La preuve que $N^{+}$ est fini est immédiate dans notre cas puisque $N^{+}$ est majoré par le premier temps $n \geq 0$ tel que $X_{n}^{0}(r) = 1$ qui est fini. Ayant cela, la preuve se déroule comme dans celle du théorème $12$ grâce à la propriété de funneling de la chaîne, ie, pour tout $n \in \mathbb{Z}$, pour tout $i \in E$, $X^{k}_{n}(1) \preceq X^{k}_{n}(i) \preceq X^{k}_{n}(r)$ (voir notamment la figure précédente).
+\end{proof}
+
+\newpage
+
+\subsection{CFTP : approche par blocs (Huber)}
+On considère un état stationnaire $X$. Puis, pour $t$ fixé, soit $Y = \phi_{t}(X,U)$, où $\phi$ est la fonction de mise à jour de la chaîne considérée et $U \in [0,1]^{t}$ sont les choix aléatoires effectués. Alors $Y$ est aussi stationnaire, car c'est la composition de $t$ états stationnaires. \\
+La sortie de l'algorithme de CFTP sera toujours $Y$. On considère ensuite $W = (U_{1}, U_{2}, \ldots, U_{t})$ uniforme sur $[0,1]^{t}$ puis un ensemble mesurable $A \subset [0,1]^{t}$. Alors soit $W \in A$, soit $W \notin A$. D'où :
+\begin{align}
+Y = \phi_{t}(X,W)\mathbf{1}(W \in A) + \phi_{t}(X,W)\mathbf{1}(W \notin A)
+\end{align}
+
+
+Supposons qu'on puisse trouver un ensemble $A$ tel que lorsque $W \in A$, $\phi(X,W)$ ne dépende pas de $X$. C'est à dire, dès lors que $W \in A$, on ait $\phi(x,w) = \phi(x',w)$ pour tout $x,x' \in \Omega$. Une telle chaîne à "oublié" son point de départ lors de son déplacement. Si cela arrive, il n'y a alors pas besoin de connaître la valeur de $X$ pour obtenir $Y$ dans la formule précédente.\\
+Pour voir cela, on considère l'exemple suivant :  
+
 \paragraph{Exemple}
 ~\\
 \\
@@ -1283,6 +1465,31 @@ Soit $\Omega = \left\{0,1,2\right\}$. Soit une fonction de mise à jour $\phi$ te
 $$ \phi(x,U) = x + \mathbf{1}(x<2,U>\frac{1}{2}) - \mathbf{1}(x>0,U \leq \frac{1}{2}).$$
 Soient $\left\{X_{t}\right\}$ et $\left\{Y_{t}\right\}$ deux chaînes de Markov ayant $\phi$ comme fonction de mise à jour et telles que $X_{0} = 0$ et $Y_{0} = 2$. On suppose que $U_{0} = 0.64 , U_{1} = 0.234$ et $U_{2} = 0.1 $. On a donc les trajectoires suivantes : $(X_{0},X_{1},X_{2},X_{3}) = (0,1,0,0)$ et $(Y_{0},Y_{1},Y_{2},Y_{3}) = (2,2,1,0)$.\\
 Les deux chaînes ont donc fusionné au temps $t=3$.
+
+Pour cet exemple, on a donc :
+
+$$\phi_{3}(0,W) = \phi_{3}(1,W) = \phi_{3}(2,W) = 0$$
+
+D'où : $\phi_{3}(\left\{0,1,2\right\},W) = \left\{0\right\}$\\
+Supposons que les 3 premiers pas étaient (haut,bas,bas). Cette suite de mouvements correspond à l'ensemble des valeurs appartenant à $A_{1} = (\frac{1}{2},1] \times [0,\frac{1}{2}] \times [0,\frac{1}{2}]$. Si $W \in A_{1}$, alors $\phi_{3}(\left\{0,1,2\right\},W) = \left\{ 0 \right\}$.\\
+Une autre suite de mouvements valide est (bas,bas,bas) ce qui correspond à $A_{2} = [0,\frac{1}{2}] \times [0,\frac{1}{2}] \times [0,\frac{1}{2}]$. Bien sûr, si $A_{1}$ et $A_{2}$ fonctionnent, alors $A_{3} = A_{1} \cup A_{2}$ fonctionne aussi. D'où $\phi_{3}(\left\{0,1,2\right\},W) = \left\{0\right\}$ pour tout $W \in A_{3}$. \\
+Le but ici est de montrer que $A$ n'a pas besoin d'être exactement l'ensemble de tous les mouvements qui coalesceront en un point. Cependant, plus $A$ sera grand, plus la probabilité que $W$ soit dans $A$ sera grande.\\ 	 
+Retour à l'équation (2). Dans le premier terme, la valeur de $X$ n'est pas importante, alors on peut écrire : $\phi_{t}(X,W)\mathbf{1}(W \in A) = \phi_{t}(x_{0},W)\mathbf{1}(W \in A)$, où $x_{0}$ est un élément arbitraire de l'espace d'états. On a alors :
+
+$$Y = \phi_{t}(x_{0},W)\mathbf{1}(W \in A) + \phi_{t}(X,W)\mathbf{1}(W \notin A)$$
+
+Donc lorsque $W \in A$, il n'y a pas besoin de connaître la valeur de $X$ afin de calculer $Y$. Cependant, lorsque $W \notin A$, on doit évaluer $\phi_{t}(X,W)$ pour obtenir $Y$. L'idée principale du CFTP est de trouver $X \sim \pi$ en appelant récursivement le CFTP (c'est la partie "from the past" de l'algorithme) puis en calculant $Y$ comme précédemment. Alors par définition de $Y$, on générera éventuellement un $W \in A$ tel qu'on ait pas besoin de connaître $X$, et il ne restera plus qu'à dérouler tous les appels récursifs effectués. \\
+Pour comprendre cela en pratique, on altère légèrement notre notation en ajoutant un indice de temps. Soit $Y_{0} = Y$, $W_{0} = W$, et $Y_{-1} = W$. Avec cette notation : 
+
+$$ Y_{0} = \phi_{t}(x_{0}, W_{0})\mathbf{1}(W_{0} \in A) + \phi_{t}(Y_{-1},W_{0})\mathbf{1}(W_{0} \notin A)$$
+
+Donc si $W_{0} \in A$, on est bon, sinon, on doit générer $Y_{-1}$. Ce sera fait de la même manière que lorsque l'on à généré $Y_{0}$ : 
+
+$$ Y_{-1} = \phi_{t}(x_{0}, W_{-1})\mathbf{1}(W_{-1} \in A) + \phi_{t}(Y_{-2},W_{1})\mathbf{1}(W_{1} \notin A)$$
+
+où $W_{-1} \sim Unif([0,1])^{t}$ et est indépendant de $W_{0}$.\\
+En général, 
+$$ Y_{-1} = \phi_{t}(x_{0}, W_{-i})\mathbf{1}(W_{-i} \in A) + \phi_{t}(Y_{-i-1},W_{-i})\mathbf{1}(W_{-i} \notin A)$$
 
 \begin{theorem}
 Théorème CFTP (Coupling From The Past)
@@ -1306,5 +1513,75 @@ Alors $Y_{0} \sim \pi$.
 \begin{proof}
 Soit $x_{0} \in \Omega$. Le résultat est immédiat en utilisant le théorème fondamental de la simulation parfaite, en posant $g(U) = \phi_{t}(x_{0},U)$,$b(U) = \mathbf{1}(U \in A)$, et $f(X,U) = \phi_{t}(X,U)$.
 \end{proof}
+
+L'idée clé qu'ont eu Propp et Wilson est qu'il n'est pas nécessaire de connaître tous les termes de la suite pour trouver $Y_{0}$. Il suffit en effet de connaître $U_{0},\ldots,U_{-T}$, où $U_{T} \in A$. Tant que $\mathbb{P}(U \in A) > 0$, alors $T$ suivra une loi géométrique de paramètre $\mathbb{P}(U \in A)$. Le pseudo-code suivant accomplit alors cette tâche : 
+
+
+\floatname{algorithm}{Coupling-from-the-past}
+\begin{algorithm}
+\caption{Sortie : $Y \sim \pi$ }
+\begin{algorithmic}[1]
+\STATE Tirer $U \sim Unif([0,1]^{t})$
+\IF{$U \in A$}
+\STATE Rendre $\phi_{t}(x_{0},U)$ (où $x_{0}$ est un élément arbitraire de $\Omega$)
+\ELSE
+\STATE $X \leftarrow $ Coupling-from-the-past
+\STATE Rendre $\phi_{t}(X,U)$
+\ENDIF
+\end{algorithmic}
+\end{algorithm}
+
+Cet algorithme est un algorithme récursif, autorisé à s'appeler à nouveau en ligne $5$. Lorsque cela arrive, les valeurs de $U$ ne sont pas passées en paramètre : le nouvel appel génère en ligne $1$ ses propres valeurs de $U$ indépendantes des précédentes. C'est une étape importante, car sinon le théorème fondamental de la simulation parfaite  ne s'appliquerait pas.\\
+On considère à présent le temps d'exécution de l'algorithme mesuré par le nombre d'appels à $\phi$.
+
+\begin{lemme}
+Le nombre d'appels à $\phi$ dans l'algorithme Coupling-from-the-past est en moyenne \large{}$\frac{t}{\mathbb{P}(U \in A)}$.\normalsize{}
+\end{lemme}
+
+\begin{proof}
+Soit $T = \inf\left\{\tau \geq 1 | U_{\tau}^{t} \in A\right\}$. $T$ suit par définition la loi géométrique de paramètre $\mathbb{P}(U \in A)$
+
+Alors, l'algorithme s'arrête au temps $T$ après être passé $T-1$ fois dans la partie ELSE puis une fois dans la première partie. \\
+Dans la partie ELSE, l'algorithme fait appel $t$ fois à $\phi$, d'où : $(T-1)*t$ appels à $\phi$.\\
+La première partie fait aussi $t$ appels à $\phi$. En sommant, on obtient le nombre total d'appels : $T*t$.\\
+Or, on connaît la loi de $T$, donc, en prenant l'espérance, on obtient :
+
+$$ \mathbb{E}[T*t] = t*\mathbb{E}[T] = \frac{t}{\mathbb{P}(U \in A)} $$
+
+\end{proof}
+
+Pour garder le temps d'exécution suffisamment bas, il est important que $t$ soit suffisamment grand pour que $\mathbb{P}(U \in A)$ soit raisonnablement élevé. Dès lors que cette condition est achevée, $t$ devra être le plus petit possible, afin de garder un nombre de mise à jour faible.\\
+Cependant, il existe un moyen de contourner ce problème.
+
+\subsubsection{Variation de la taille des blocs}
+
+Lors de la construction du CFTP, une fonction de mise à jour à été composée avec elle-même $t$ fois. On appelle cet ensemble de $t$ pas un bloc.\\
+On suppose qu'il y ait un seuil $t'$ tel que $\mathbb{P}(U \in A) = 0$ si $t < t'$. En pratique, un tel seuil est très difficile à calculer : il est donc commun d'utiliser des blocs de taille qui augmente afin d'être sûr que $t$ dépassera éventuellement ce seuil.\\
+En général, il n'y a aucune raison pour que le même nombre de pas soit utilisé pour chaque bloc.\\
+Le théorème fondamental de la simulation parfaite s'adapte facilement au cas où $b,g$ et $f$ changent à chaque étape de la récursion.
+
+\begin{theorem}[Théorème fondamental de la simulation parfaite (seconde forme)]
+On suppose que pour $U_{1},U_{2},\ldots$ iid, on ait des suites de fonctions calculables $\left\{b_{t} \right\}$,$\left\{g_{t} \right\}$ et $\left\{f_{t} \right\}$ telles que chaque $\left\{b_{t} \right\}$ ait pour image $\left\{0,1\right\}$ et que $\prod_{t=1}^{\infty} \mathbb{P}(b_{t}(U) =0) =0$. Soit $X$ la variable aléatoire telle que, pour tout $t$ :
+
+$$ X \sim b_{t}(U)g_{t}(U) + (1-b_{t}(U))f_{t}(X,U)$$
+
+Soit $T = \inf\left\{t : b_{t}(U_{t}) = 1 \right\}$. Alors, 
+
+$$ Y = f_{0}(\ldots f_{T-2}(f_{T-1}(g_{T}(U_{T}),U_{T}),U_{T-1}),\ldots,U_{1})$$
+
+a la même distribution que $X$ et $\mathbb{E}[T] = \frac{1}{\mathbb{P}(b_{t}(U_{t}) = 1)}$
+
+\end{theorem}
+
+\begin{proof}
+La preuve est presque identique à celle du théorème fondamental de la simulation parfaite présentée dans le chapitre $1$.
+\end{proof}
+
+
+
+
+
+
+
 
 \end{document}

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (MiKTeX 2.9.7000 64-bit) (preloaded format=pdflatex 2019.4.30)  13 JUN 2019 14:58
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (MiKTeX 2.9.7000 64-bit) (preloaded format=pdflatex 2019.4.30)  8 JUL 2019 11:39
 entering extended mode
 **"./compte rendu.tex"
 ("compte rendu.tex"
@@ -255,6 +255,25 @@ Package graphics Info: Driver file: pdftex.def on input line 99.
 \Gin@req@height=\dimen121
 \Gin@req@width=\dimen122
 )
+("C:\Users\Antaker\AppData\Local\Programs\MiKTeX 2.9\tex/latex/caption\caption.
+sty"
+Package: caption 2018/10/06 v3.3-154 Customizing captions (AR)
+
+("C:\Users\Antaker\AppData\Local\Programs\MiKTeX 2.9\tex/latex/caption\caption3
+.sty"
+Package: caption3 2018/09/12 v1.8c caption3 kernel (AR)
+Package caption3 Info: TeX engine: e-TeX on input line 64.
+\captionmargin=\dimen123
+\captionmargin@=\dimen124
+\captionwidth=\dimen125
+\caption@tempdima=\dimen126
+\caption@indent=\dimen127
+\caption@parindent=\dimen128
+\caption@hangindent=\dimen129
+)
+\c@caption@flags=\count110
+\c@ContinuedFloat=\count111
+)
 ("C:\Users\Antaker\AppData\Local\Programs\MiKTeX 2.9\tex/latex/amscls\amsthm.st
 y"
 Package: amsthm 2017/10/31 v2.20.4
@@ -268,30 +287,30 @@ Package: amsthm 2017/10/31 v2.20.4
 \thm@headsep=\skip48
 \dth@everypar=\toks28
 )
-\c@definition=\count110
-\c@theorem=\count111
-\c@lemme=\count112
+\c@definition=\count112
+\c@theorem=\count113
+\c@lemme=\count114
 
 ("C:\Users\Antaker\AppData\Local\Programs\MiKTeX 2.9\tex/latex/listings\listing
 s.sty"
-\lst@mode=\count113
+\lst@mode=\count115
 \lst@gtempboxa=\box29
 \lst@token=\toks29
-\lst@length=\count114
-\lst@currlwidth=\dimen123
-\lst@column=\count115
-\lst@pos=\count116
-\lst@lostspace=\dimen124
-\lst@width=\dimen125
-\lst@newlines=\count117
-\lst@lineno=\count118
-\lst@maxwidth=\dimen126
+\lst@length=\count116
+\lst@currlwidth=\dimen130
+\lst@column=\count117
+\lst@pos=\count118
+\lst@lostspace=\dimen131
+\lst@width=\dimen132
+\lst@newlines=\count119
+\lst@lineno=\count120
+\lst@maxwidth=\dimen133
 
 ("C:\Users\Antaker\AppData\Local\Programs\MiKTeX 2.9\tex/latex/listings\lstmisc
 .sty"
 File: lstmisc.sty 2019/02/27 1.8b (Carsten Heinz)
-\c@lstnumber=\count119
-\lst@skipnumbers=\count120
+\c@lstnumber=\count121
+\lst@skipnumbers=\count122
 \lst@framebox=\box30
 )
 ("C:\Users\Antaker\AppData\Local\Programs\MiKTeX 2.9\tex/latex/listings\listing
@@ -307,7 +326,7 @@ nment
 
 ("C:\Users\Antaker\AppData\Local\Programs\MiKTeX 2.9\tex/latex/float\float.sty"
 Package: float 2001/11/08 v1.3d Float enhancements (AL)
-\c@float@type=\count121
+\c@float@type=\count123
 \float@exts=\toks30
 \float@box=\box31
 \@float@everytoks=\toks31
@@ -317,15 +336,15 @@ y"
 Package: ifthen 2014/09/29 v1.1c Standard LaTeX ifthen package (DPC)
 )
 \@float@every@algorithm=\toks32
-\c@algorithm=\count122
+\c@algorithm=\count124
 )
 ("C:\Users\Antaker\AppData\Local\Programs\MiKTeX 2.9\tex/latex/algorithms\algor
 ithmic.sty"
 Package: algorithmic 2009/08/24 v0.1 Document Style `algorithmic'
-\c@ALC@unique=\count123
-\c@ALC@line=\count124
-\c@ALC@rem=\count125
-\c@ALC@depth=\count126
+\c@ALC@unique=\count125
+\c@ALC@line=\count126
+\c@ALC@rem=\count127
+\c@ALC@depth=\count128
 \ALC@tlm=\skip49
 \algorithmicindent=\skip50
 )
@@ -343,40 +362,40 @@ File: lstlang3.sty 2019/02/27 1.8b listings language file
 ) ("compte rendu.aux")
 \openout1 = `"compte rendu.aux"'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 58.
-LaTeX Font Info:    ... okay on input line 58.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 58.
-LaTeX Font Info:    ... okay on input line 58.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 58.
-LaTeX Font Info:    ... okay on input line 58.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 58.
-LaTeX Font Info:    ... okay on input line 58.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 58.
-LaTeX Font Info:    ... okay on input line 58.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 58.
-LaTeX Font Info:    ... okay on input line 58.
-LaTeX Font Info:    Try loading font information for T1+lmr on input line 58.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 59.
+LaTeX Font Info:    ... okay on input line 59.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 59.
+LaTeX Font Info:    ... okay on input line 59.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 59.
+LaTeX Font Info:    ... okay on input line 59.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 59.
+LaTeX Font Info:    ... okay on input line 59.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 59.
+LaTeX Font Info:    ... okay on input line 59.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 59.
+LaTeX Font Info:    ... okay on input line 59.
+LaTeX Font Info:    Try loading font information for T1+lmr on input line 59.
 
 ("C:\Users\Antaker\AppData\Local\Programs\MiKTeX 2.9\tex/latex/lm\t1lmr.fd"
 File: t1lmr.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
-LaTeX Info: Redefining \degres on input line 58.
-LaTeX Info: Redefining \dots on input line 58.
-LaTeX Info: Redefining \up on input line 58.
+LaTeX Info: Redefining \degres on input line 59.
+LaTeX Info: Redefining \dots on input line 59.
+LaTeX Info: Redefining \up on input line 59.
 
 ("C:\Users\Antaker\AppData\Local\Programs\MiKTeX 2.9\tex/context/base/mkii\supp
 -pdf.mkii"
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count127
-\scratchdimen=\dimen127
+\scratchcounter=\count129
+\scratchdimen=\dimen134
 \scratchbox=\box33
-\nofMPsegments=\count128
-\nofMParguments=\count129
+\nofMPsegments=\count130
+\nofMParguments=\count131
 \everyMPshowfont=\toks33
-\MPscratchCnt=\count130
-\MPscratchDim=\dimen128
-\MPnumerator=\count131
-\makeMPintoPDFobject=\count132
+\MPscratchCnt=\count132
+\MPscratchDim=\dimen135
+\MPnumerator=\count133
+\makeMPintoPDFobject=\count134
 \everyMPtoPDFconversion=\toks34
 )
 ("C:\Users\Antaker\AppData\Local\Programs\MiKTeX 2.9\tex/latex/oberdiek\epstopd
@@ -437,42 +456,46 @@ Package grfext Info: Graphics extension search list:
 G,.JBIG2,.JB2,.eps]
 (grfext)             \AppendGraphicsExtensions on input line 456.
 )
-\c@lstlisting=\count133
-LaTeX Font Info:    Try loading font information for OT1+lmr on input line 69.
+Package caption Info: Begin \AtBeginDocument code.
+Package caption Info: float package is loaded.
+Package caption Info: listings package is loaded.
+Package caption Info: End \AtBeginDocument code.
+\c@lstlisting=\count135
+LaTeX Font Info:    Try loading font information for OT1+lmr on input line 70.
 
 ("C:\Users\Antaker\AppData\Local\Programs\MiKTeX 2.9\tex/latex/lm\ot1lmr.fd"
 File: ot1lmr.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
-LaTeX Font Info:    Try loading font information for OML+lmm on input line 69.
+LaTeX Font Info:    Try loading font information for OML+lmm on input line 70.
 
 ("C:\Users\Antaker\AppData\Local\Programs\MiKTeX 2.9\tex/latex/lm\omllmm.fd"
 File: omllmm.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
-LaTeX Font Info:    Try loading font information for OMS+lmsy on input line 69.
+LaTeX Font Info:    Try loading font information for OMS+lmsy on input line 70.
 
 
 ("C:\Users\Antaker\AppData\Local\Programs\MiKTeX 2.9\tex/latex/lm\omslmsy.fd"
 File: omslmsy.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
-LaTeX Font Info:    Try loading font information for OMX+lmex on input line 69.
+LaTeX Font Info:    Try loading font information for OMX+lmex on input line 70.
 
 
 ("C:\Users\Antaker\AppData\Local\Programs\MiKTeX 2.9\tex/latex/lm\omxlmex.fd"
 File: omxlmex.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <12> on input line 69.
+(Font)              <12> on input line 70.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <8> on input line 69.
+(Font)              <8> on input line 70.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <6> on input line 69.
-LaTeX Font Info:    Try loading font information for U+msa on input line 69.
+(Font)              <6> on input line 70.
+LaTeX Font Info:    Try loading font information for U+msa on input line 70.
 
 ("C:\Users\Antaker\AppData\Local\Programs\MiKTeX 2.9\tex/latex/amsfonts\umsa.fd
 "
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 69.
+LaTeX Font Info:    Try loading font information for U+msb on input line 70.
 
 ("C:\Users\Antaker\AppData\Local\Programs\MiKTeX 2.9\tex/latex/amsfonts\umsb.fd
 "
@@ -488,82 +511,72 @@ LaTeX Font Info:    External font `lmex10' loaded for size
 \openout3 = `"compte rendu.toc"'.
 
  [2]
-Underfull \hbox (badness 10000) in paragraph at lines 102--105
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 135--138
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 135--138
+Underfull \hbox (badness 10000) in paragraph at lines 103--106
 
  []
 
 [3]
-Underfull \hbox (badness 10000) in paragraph at lines 140--142
+Underfull \hbox (badness 10000) in paragraph at lines 139--141
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 168--170
+Underfull \hbox (badness 10000) in paragraph at lines 167--169
 
  []
 
 [4]
-Underfull \hbox (badness 10000) in paragraph at lines 185--186
+Underfull \hbox (badness 10000) in paragraph at lines 184--185
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 200--203
+Underfull \hbox (badness 10000) in paragraph at lines 199--202
 
  []
 
 [5]
-Underfull \hbox (badness 10000) in paragraph at lines 240--243
+Underfull \hbox (badness 10000) in paragraph at lines 239--242
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 240--243
+Underfull \hbox (badness 10000) in paragraph at lines 239--242
 
  []
 
 [6]
-Underfull \hbox (badness 10000) in paragraph at lines 283--286
+Underfull \hbox (badness 10000) in paragraph at lines 282--285
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 288--292
+Underfull \hbox (badness 10000) in paragraph at lines 287--291
 
  []
 
 [7]
-Underfull \hbox (badness 10000) in paragraph at lines 294--297
+Underfull \hbox (badness 10000) in paragraph at lines 293--296
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 303--306
+Underfull \hbox (badness 10000) in paragraph at lines 302--305
 
  []
 
 [8]
-Underfull \hbox (badness 10000) in paragraph at lines 370--374
+Underfull \hbox (badness 10000) in paragraph at lines 367--370
 
  []
 
 [9] [10]
-Underfull \hbox (badness 10000) in paragraph at lines 424--425
+Underfull \hbox (badness 10000) in paragraph at lines 421--422
 
  []
 
 
-Overfull \hbox (70.24713pt too wide) in paragraph at lines 434--438
+Overfull \hbox (70.24713pt too wide) in paragraph at lines 431--435
 \T1/lmr/m/n/10.95 tion $\OML/lmm/m/it/10.95 x$ \T1/lmr/m/n/10.95 sauf en $\OML/
 lmm/m/it/10.95 $\T1/lmr/m/n/10.95 , écrit de la ma-nière sui-vante : $\OML/lmm
 /m/it/10.95 L\OT1/lmr/m/n/10.95 (\OML/lmm/m/it/10.95 x; v\OT1/lmr/m/n/10.95 ) =
@@ -571,17 +584,17 @@ lmm/m/it/10.95 $\T1/lmr/m/n/10.95 , écrit de la ma-nière sui-vante : $\OML/lmm
  []
 
 [11]
-Overfull \hbox (92.66345pt too wide) detected at line 450
+Overfull \hbox (92.66345pt too wide) detected at line 447
 []
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 458--460
+Underfull \hbox (badness 10000) in paragraph at lines 455--457
 
  []
 
 
-Overfull \hbox (85.10086pt too wide) detected at line 461
+Overfull \hbox (85.10086pt too wide) detected at line 458
 \OML/lmm/m/it/10.95 \OT1/lmr/m/n/10.95 ([])\U/msb/m/n/10.95 P\OT1/lmr/m/n/10.9
 5 (\OML/lmm/m/it/10.95 X[] \OT1/lmr/m/n/10.95 = \OML/lmm/m/it/10.95 x[]\OMS/lms
 y/m/n/10.95 j\OML/lmm/m/it/10.95 X[] \OT1/lmr/m/n/10.95 = \OML/lmm/m/it/10.95 x
@@ -589,7 +602,7 @@ y/m/n/10.95 j\OML/lmm/m/it/10.95 X[] \OT1/lmr/m/n/10.95 = \OML/lmm/m/it/10.95 x
  []
 
 
-Overfull \hbox (98.32327pt too wide) detected at line 463
+Overfull \hbox (98.32327pt too wide) detected at line 460
 \OML/lmm/m/it/10.95 \OT1/lmr/m/n/10.95 ([])\U/msb/m/n/10.95 P\OT1/lmr/m/n/10.9
 5 (\OML/lmm/m/it/10.95 X[] \OT1/lmr/m/n/10.95 = \OML/lmm/m/it/10.95 x[]\OMS/lms
 y/m/n/10.95 j\OML/lmm/m/it/10.95 X[] \OT1/lmr/m/n/10.95 = \OML/lmm/m/it/10.95 x
@@ -597,22 +610,22 @@ y/m/n/10.95 j\OML/lmm/m/it/10.95 X[] \OT1/lmr/m/n/10.95 = \OML/lmm/m/it/10.95 x
  []
 
 [12] [13]
-Underfull \hbox (badness 10000) in paragraph at lines 496--497
+Underfull \hbox (badness 10000) in paragraph at lines 493--494
 
  []
 
-LaTeX Font Info:    Try loading font information for T1+lmtt on input line 499.
+LaTeX Font Info:    Try loading font information for T1+lmtt on input line 496.
 
 ("C:\Users\Antaker\AppData\Local\Programs\MiKTeX 2.9\tex/latex/lm\t1lmtt.fd"
 File: t1lmtt.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
 [14] [15] [16]
-Underfull \hbox (badness 10000) in paragraph at lines 616--618
+Underfull \hbox (badness 10000) in paragraph at lines 613--615
 
  []
 
 
-Overfull \hbox (55.38483pt too wide) detected at line 619
+Overfull \hbox (55.38483pt too wide) detected at line 616
 \OML/lmm/m/it/10.95 \OT1/lmr/m/n/10.95 ([])\U/msb/m/n/10.95 P\OT1/lmr/m/n/10.9
 5 (\OML/lmm/m/it/10.95 X[] \OT1/lmr/m/n/10.95 = \OML/lmm/m/it/10.95 x[]\OMS/lms
 y/m/n/10.95 j\OML/lmm/m/it/10.95 X[] \OT1/lmr/m/n/10.95 = \OML/lmm/m/it/10.95 x
@@ -621,7 +634,7 @@ y/m/n/10.95 j\OML/lmm/m/it/10.95 X[] \OT1/lmr/m/n/10.95 = \OML/lmm/m/it/10.95 x
  []
 
 
-Overfull \hbox (68.60724pt too wide) detected at line 621
+Overfull \hbox (68.60724pt too wide) detected at line 618
 \OML/lmm/m/it/10.95 \OT1/lmr/m/n/10.95 ([])\U/msb/m/n/10.95 P\OT1/lmr/m/n/10.9
 5 (\OML/lmm/m/it/10.95 X[] \OT1/lmr/m/n/10.95 = \OML/lmm/m/it/10.95 x[]\OMS/lms
 y/m/n/10.95 j\OML/lmm/m/it/10.95 X[] \OT1/lmr/m/n/10.95 = \OML/lmm/m/it/10.95 x
@@ -630,14 +643,14 @@ y/m/n/10.95 j\OML/lmm/m/it/10.95 X[] \OT1/lmr/m/n/10.95 = \OML/lmm/m/it/10.95 x
  []
 
 
-Overfull \hbox (51.4834pt too wide) detected at line 625
+Overfull \hbox (51.4834pt too wide) detected at line 622
 \OML/lmm/m/it/10.95 \OT1/lmr/m/n/10.95 ([])\OML/lmm/m/it/10.95 min [] \OT1/lmr
 /m/n/10.95 = \OML/lmm/m/it/10.95 \OT1/lmr/m/n/10.95 ([])\OML/lmm/m/it/10.95 mi
 n []
  []
 
 [17]
-Overfull \hbox (76.56104pt too wide) detected at line 637
+Overfull \hbox (76.56104pt too wide) detected at line 634
 \OML/lmm/m/it/10.95 exp\OT1/lmr/m/n/10.95 (\OML/lmm/m/it/10.95  \OT1/lmr/m/n/1
 0.95 + \OML/lmm/m/it/10.95 n[]\OT1/lmr/m/n/10.95 )\OML/lmm/m/it/10.95 min [] \
 OT1/lmr/m/n/10.95 = \OML/lmm/m/it/10.95 exp\OT1/lmr/m/n/10.95 (\OMS/lmsy/m/n/10
@@ -646,38 +659,33 @@ r/m/n/10.95 )\OML/lmm/m/it/10.95 min []
  []
 
 [18]
-Underfull \hbox (badness 10000) in paragraph at lines 654--655
+Underfull \hbox (badness 10000) in paragraph at lines 651--652
 
  []
 
 [19] [20] [21]
-Underfull \hbox (badness 10000) in paragraph at lines 762--768
+Underfull \hbox (badness 10000) in paragraph at lines 759--765
 
  []
 
 
-Overfull \hbox (1.57304pt too wide) in paragraph at lines 775--775
+Overfull \hbox (1.57304pt too wide) in paragraph at lines 772--772
 []\T1/lmr/bx/n/10.95 Variables aléa-toires auxi-liaires / Auxi-liary ran-dom va
 -riables 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 780--784
+Underfull \hbox (badness 10000) in paragraph at lines 777--781
 
  []
 
 [22] [23]
-Underfull \hbox (badness 10000) in paragraph at lines 819--825
+Underfull \hbox (badness 10000) in paragraph at lines 818--824
 
  []
 
 [24]
-Underfull \hbox (badness 10000) in paragraph at lines 860--870
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 860--870
+Underfull \hbox (badness 10000) in paragraph at lines 861--869
 
  []
 
@@ -717,67 +725,155 @@ Underfull \hbox (badness 10000) in paragraph at lines 989--992
  []
 
 [30 <./graphiques/normaltocauchy.jpeg>] [31] [32]
-Underfull \hbox (badness 10000) in paragraph at lines 1065--1066
+Underfull \hbox (badness 10000) in paragraph at lines 1066--1067
 
  []
 
 
 LaTeX Warning: No positions in optional float specifier.
-               Default added (so using `htbp') on input line 1086.
+               Default added (so using `htbp') on input line 1089.
 
-
-Overfull \hbox (23.85277pt too wide) in paragraph at lines 1106--1109
+[33]
+Overfull \hbox (23.85277pt too wide) in paragraph at lines 1112--1115
 \T1/lmr/m/n/10.95 On gé-nère dans l'al-go-rithme une va-riable aléa-toire de de
 n-sité $\OML/lmm/m/it/10.95 g\OT1/lmr/m/n/10.95 (\OML/lmm/m/it/10.95 s\OT1/lmr/
 m/n/10.95 ) = [](\OML/lmm/m/it/10.95 ts\OT1/lmr/m/n/10.95 )\OML/lmm/m/it/10.95 
 f[]\OT1/lmr/m/n/10.95 (\OML/lmm/m/it/10.95 s\OT1/lmr/m/n/10.95 )$
  []
 
-[33] [34]
-Underfull \hbox (badness 10000) in paragraph at lines 1114--1115
+[34]
+Underfull \hbox (badness 10000) in paragraph at lines 1120--1121
 
  []
 
 [35] [36] [37]
-Underfull \hbox (badness 10000) in paragraph at lines 1212--1215
+Underfull \hbox (badness 10000) in paragraph at lines 1218--1221
 
  []
 
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <14.4> on input line 1217.
+(Font)              <14.4> on input line 1222.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <10> on input line 1217.
+(Font)              <10> on input line 1222.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <7> on input line 1217.
+(Font)              <7> on input line 1222.
+
+Overfull \hbox (2.59605pt too wide) detected at line 1229
+\OML/lmm/m/it/10.95 B[]\OT1/lmr/m/n/10.95 (0\OML/lmm/m/it/10.95 ; \OT1/lmr/m/n/
+10.95 1) = []
+ []
+
 [38]
 <graphiques/boule_vitesse.jpeg, id=146, 306.39468pt x 291.33844pt>
 File: graphiques/boule_vitesse.jpeg Graphic file (type jpg)
 <use graphiques/boule_vitesse.jpeg>
-Package pdftex.def Info: graphiques/boule_vitesse.jpeg  used on input line 1253
+Package pdftex.def Info: graphiques/boule_vitesse.jpeg  used on input line 1264
 .
 (pdftex.def)             Requested size: 284.9441pt x 270.94194pt.
- [39 <./graphiques/boule_vitesse.jpeg>] [40]
-Underfull \hbox (badness 10000) in paragraph at lines 1262--1271
+ [39] [40 <./graphiques/boule_vitesse.jpeg>]
+Underfull \hbox (badness 10000) in paragraph at lines 1273--1282
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1275--1278
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 1280--1283
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 1291--1292
+Underfull \hbox (badness 10000) in paragraph at lines 1286--1289
 
  []
 
 [41]
-Overfull \hbox (10.29439pt too wide) in paragraph at lines 1307--1308
+<graphiques/backwards_coalescence_1.png, id=158, 272.03262pt x 222.88539pt>
+File: graphiques/backwards_coalescence_1.png Graphic file (type png)
+<use graphiques/backwards_coalescence_1.png>
+Package pdftex.def Info: graphiques/backwards_coalescence_1.png  used on input 
+line 1314.
+(pdftex.def)             Requested size: 244.82709pt x 200.59499pt.
+<graphiques/forwards_coalescence_1.png, id=160, 232.37943pt x 178.23502pt>
+File: graphiques/forwards_coalescence_1.png Graphic file (type png)
+<use graphiques/forwards_coalescence_1.png>
+Package pdftex.def Info: graphiques/forwards_coalescence_1.png  used on input l
+ine 1319.
+(pdftex.def)             Requested size: 232.37886pt x 178.23457pt.
+ [42 <./graphiques/backwards_coalescence_1.png>]
+Underfull \hbox (badness 10000) in paragraph at lines 1344--1347
+
+ []
+
+[43 <./graphiques/forwards_coalescence_1.png>]
+<graphiques/forwards_coalescence_2_1.png, id=171, 260.81557pt x 178.28339pt>
+File: graphiques/forwards_coalescence_2_1.png Graphic file (type png)
+<use graphiques/forwards_coalescence_2_1.png>
+Package pdftex.def Info: graphiques/forwards_coalescence_2_1.png  used on input
+ line 1349.
+(pdftex.def)             Requested size: 208.65273pt x 142.62689pt.
+<graphiques/forwards_coalescence_2_2.png, id=172, 276.54337pt x 178.27829pt>
+File: graphiques/forwards_coalescence_2_2.png Graphic file (type png)
+<use graphiques/forwards_coalescence_2_2.png>
+Package pdftex.def Info: graphiques/forwards_coalescence_2_2.png  used on input
+ line 1350.
+(pdftex.def)             Requested size: 221.23499pt x 142.6228pt.
+ [44 <./graphiques/forwards_coalescence_2_1.png> <./graphiques/forwards_coalesc
+ence_2_2.png>]
+<graphiques/forwards_coalescence_2_4.png, id=178, 276.54337pt x 178.27829pt>
+File: graphiques/forwards_coalescence_2_4.png Graphic file (type png)
+<use graphiques/forwards_coalescence_2_4.png>
+Package pdftex.def Info: graphiques/forwards_coalescence_2_4.png  used on input
+ line 1367.
+(pdftex.def)             Requested size: 221.23499pt x 142.6228pt.
+<graphiques/forwards_coalescence_2_3.png, id=179, 268.66171pt x 173.19725pt>
+File: graphiques/forwards_coalescence_2_3.png Graphic file (type png)
+<use graphiques/forwards_coalescence_2_3.png>
+Package pdftex.def Info: graphiques/forwards_coalescence_2_3.png  used on input
+ line 1368.
+(pdftex.def)             Requested size: 214.92964pt x 138.55797pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 1393--1394
+
+ []
+
+[45 <./graphiques/forwards_coalescence_2_4.png> <./graphiques/forwards_coalesce
+nce_2_3.png>]
+Underfull \hbox (badness 10000) in paragraph at lines 1395--1403
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1406--1407
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1409--1410
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1411--1416
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1421--1426
+
+ []
+
+[46]
+<graphiques/monotonic.png, id=188, 243.33333pt x 156.8689pt>
+File: graphiques/monotonic.png Graphic file (type png)
+<use graphiques/monotonic.png>
+Package pdftex.def Info: graphiques/monotonic.png  used on input line 1436.
+(pdftex.def)             Requested size: 243.33273pt x 156.8685pt.
+ [47 <./graphiques/monotonic.png>]
+Underfull \hbox (badness 10000) in paragraph at lines 1462--1465
+
+ []
+
+[48]
+Underfull \hbox (badness 10000) in paragraph at lines 1498--1499
+
+ []
+
+
+Overfull \hbox (10.29439pt too wide) in paragraph at lines 1514--1515
 \T1/lmr/m/n/10.95 rème fon-da-men-tal de la si-mu-la-tion par-faite, en po-sant
  $\OML/lmm/m/it/10.95 g\OT1/lmr/m/n/10.95 (\OML/lmm/m/it/10.95 U\OT1/lmr/m/n/10
 .95 ) = \OML/lmm/m/it/10.95 []\OT1/lmr/m/n/10.95 (\OML/lmm/m/it/10.95 x[]; U\O
@@ -785,47 +881,50 @@ T1/lmr/m/n/10.95 )$\T1/lmr/m/n/10.95 ,$\OML/lmm/m/it/10.95 b\OT1/lmr/m/n/10.95
 (\OML/lmm/m/it/10.95 U\OT1/lmr/m/n/10.95 ) =
  []
 
-[42] ("compte rendu.aux") ) 
+[49] [50] [51] ("compte rendu.aux") ) 
 Here is how much of TeX's memory you used:
- 7259 strings out of 492945
- 97644 string characters out of 3125364
- 461311 words of memory out of 3000000
- 11003 multiletter control sequences out of 15000+200000
- 88823 words of font info for 73 fonts, out of 3000000 for 9000
+ 8379 strings out of 492945
+ 118758 string characters out of 3125364
+ 481769 words of memory out of 3000000
+ 12106 multiletter control sequences out of 15000+200000
+ 103139 words of font info for 77 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
- 41i,11n,40p,605b,1767s stack positions out of 5000i,500n,10000p,200000b,50000s
-{C:/Users/Antaker/AppData/Local/Programs/MiKTeX 2.9/
-fonts/enc/dvips/lm/lm-rm.enc}{C:/Users/Antaker/AppData/Local/Programs/MiKTeX 2.
-9/fonts/enc/dvips/lm/lm-mathit.enc}{C:/Users/Antaker/AppData/Local/Programs/MiK
-TeX 2.9/fonts/enc/dvips/lm/lm-ec.enc}{C:/Users/Antaker/AppData/Local/Programs/M
-iKTeX 2.9/fonts/enc/dvips/lm/lm-mathsy.enc}{C:/Users/Antaker/AppData/Local/Prog
-rams/MiKTeX 2.9/fonts/enc/dvips/lm/lm-mathex.enc}<C:/Users/Antaker/AppData/Loca
-l/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmbx10.pfb><C:/Users/Antaker/AppDat
-a/Local/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmbx12.pfb><C:/Users/Antaker/
-AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmex10.pfb><C:/Users/An
-taker/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmmi10.pfb><C:/Us
-ers/Antaker/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmmi12.pfb>
-<C:/Users/Antaker/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmmi6
+ 41i,14n,40p,605b,1767s stack positions out of 5000i,500n,10000p,200000b,50000s
+{C:/Users/Antaker/AppData/Local/Programs/M
+iKTeX 2.9/fonts/enc/dvips/lm/lm-ec.enc}{C:/Users/Antaker/AppData/Local/Programs
+/MiKTeX 2.9/fonts/enc/dvips/lm/lm-rm.enc}{C:/Users/Antaker/AppData/Local/Progra
+ms/MiKTeX 2.9/fonts/enc/dvips/lm/lm-mathit.enc}{C:/Users/Antaker/AppData/Local/
+Programs/MiKTeX 2.9/fonts/enc/dvips/lm/lm-mathsy.enc}{C:/Users/Antaker/AppData/
+Local/Programs/MiKTeX 2.9/fonts/enc/dvips/lm/lm-mathex.enc}<C:/Users/Antaker/Ap
+pData/Local/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmbx10.pfb><C:/Users/Anta
+ker/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmbx12.pfb><C:/User
+s/Antaker/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmcsc10.pfb><
+C:/Users/Antaker/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmex10
 .pfb><C:/Users/Antaker/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/lm/
-lmmi7.pfb><C:/Users/Antaker/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/publi
-c/lm/lmmi8.pfb><C:/Users/Antaker/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/
-public/lm/lmr10.pfb><C:/Users/Antaker/AppData/Local/Programs/MiKTeX 2.9/fonts/t
-ype1/public/lm/lmr12.pfb><C:/Users/Antaker/AppData/Local/Programs/MiKTeX 2.9/fo
-nts/type1/public/lm/lmr17.pfb><C:/Users/Antaker/AppData/Local/Programs/MiKTeX 2
-.9/fonts/type1/public/lm/lmr6.pfb><C:/Users/Antaker/AppData/Local/Programs/MiKT
-eX 2.9/fonts/type1/public/lm/lmr7.pfb><C:/Users/Antaker/AppData/Local/Programs/
-MiKTeX 2.9/fonts/type1/public/lm/lmr8.pfb><C:/Users/Antaker/AppData/Local/Progr
-ams/MiKTeX 2.9/fonts/type1/public/lm/lmri10.pfb><C:/Users/Antaker/AppData/Local
-/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmsy10.pfb><C:/Users/Antaker/AppData
-/Local/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmsy6.pfb><C:/Users/Antaker/Ap
-pData/Local/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmsy8.pfb><C:/Users/Antak
-er/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmtt10.pfb><C:/Users
-/Antaker/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmtti10.pfb><C
-:/Users/Antaker/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/s
-ymbols/msbm10.pfb>
-Output written on "compte rendu.pdf" (42 pages, 530233 bytes).
+lmmi10.pfb><C:/Users/Antaker/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/publ
+ic/lm/lmmi12.pfb><C:/Users/Antaker/AppData/Local/Programs/MiKTeX 2.9/fonts/type
+1/public/lm/lmmi6.pfb><C:/Users/Antaker/AppData/Local/Programs/MiKTeX 2.9/fonts
+/type1/public/lm/lmmi7.pfb><C:/Users/Antaker/AppData/Local/Programs/MiKTeX 2.9/
+fonts/type1/public/lm/lmmi8.pfb><C:/Users/Antaker/AppData/Local/Programs/MiKTeX
+ 2.9/fonts/type1/public/lm/lmr10.pfb><C:/Users/Antaker/AppData/Local/Programs/M
+iKTeX 2.9/fonts/type1/public/lm/lmr12.pfb><C:/Users/Antaker/AppData/Local/Progr
+ams/MiKTeX 2.9/fonts/type1/public/lm/lmr17.pfb><C:/Users/Antaker/AppData/Local/
+Programs/MiKTeX 2.9/fonts/type1/public/lm/lmr6.pfb><C:/Users/Antaker/AppData/Lo
+cal/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmr7.pfb><C:/Users/Antaker/AppDat
+a/Local/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmr8.pfb><C:/Users/Antaker/Ap
+pData/Local/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmr9.pfb><C:/Users/Antake
+r/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmri10.pfb><C:/Users/
+Antaker/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmri12.pfb><C:/
+Users/Antaker/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmsy10.pf
+b><C:/Users/Antaker/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/lm/lms
+y6.pfb><C:/Users/Antaker/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/l
+m/lmsy8.pfb><C:/Users/Antaker/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/pub
+lic/lm/lmtt10.pfb><C:/Users/Antaker/AppData/Local/Programs/MiKTeX 2.9/fonts/typ
+e1/public/lm/lmtti10.pfb><C:/Users/Antaker/AppData/Local/Programs/MiKTeX 2.9/fo
+nts/type1/public/amsfonts/symbols/msbm10.pfb>
+Output written on "compte rendu.pdf" (51 pages, 1214345 bytes).
 PDF statistics:
- 237 PDF objects out of 1000 (max. 8388607)
+ 293 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
- 11 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 46 words of extra memory for PDF output out of 10000 (max. 10000000)
 
