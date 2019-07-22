@@ -21,24 +21,31 @@
 \contentsline {paragraph}{\relax $\@@underline {\hbox {\textbf {et "MetropolisHastingsconditionnalstop"}}}\mathsurround \z@ $\relax }{22}% 
 \contentsline {subsubsection}{\numberline {1.4.3}Variables al\'eatoires auxiliaires / Auxiliary random variables}{22}% 
 \contentsline {subsubsection}{\numberline {1.4.4}Shift Chains}{23}% 
-\contentsline {section}{\numberline {2}Chapitre 2 : Proc\'edures de rejet}{24}% 
-\contentsline {subsection}{\numberline {2.1}Th\'eor\`eme et exemple simple}{24}% 
-\contentsline {paragraph}{Exemple : tirage uniforme sur le cercle unit\'e}{24}% 
-\contentsline {subsection}{\numberline {2.2}M\'ethode de rejet pour variables al\'eatoires \`a densit\'e}{25}% 
-\contentsline {subsubsection}{\numberline {2.2.1}Exemple : D'une Cauchy vers une Normale}{27}% 
-\contentsline {paragraph}{\relax $\@@underline {\hbox {\textbf {Mise en place de la m\'ethode de rejet sous R : d'une Cauchy vers une Normale}}}\mathsurround \z@ $\relax }{28}% 
-\contentsline {subsection}{\numberline {2.3}Union d'ensembles}{30}% 
-\contentsline {subsection}{\numberline {2.4}Simulation \`a l'aide des in\'egalit\'es de Markov et Chernoff}{31}% 
-\contentsline {subsubsection}{\numberline {2.4.1}L'in\'egalit\'e de Markov en tant que proc\'edure de rejet}{31}% 
-\contentsline {subsubsection}{\numberline {2.4.2}Les in\'egalit\'es de Chernoff en tant que proc\'edure de rejet}{32}% 
-\contentsline {paragraph}{\relax $\@@underline {\hbox {\textbf {Mise en place de la m\'ethode de rejet sour R :}}}\mathsurround \z@ $\relax }{35}% 
-\contentsline {paragraph}{\relax $\@@underline {\hbox {\textbf {In\'egalit\'es de Chernoff et queue de loi binomiale}}}\mathsurround \z@ $\relax }{35}% 
-\contentsline {subsection}{\numberline {2.5}D\'efaut des m\'ethodes de rejet}{38}% 
-\contentsline {section}{\numberline {3}Chapitre 3 : Coupling From The Past}{41}% 
-\contentsline {paragraph}{D\'efinition : Fonction de mise \`a jour}{41}% 
-\contentsline {paragraph}{D\'efinition : Couplage}{41}% 
-\contentsline {subsection}{\numberline {3.1}CFTP : approche trajectorielle (Baccelli / Br\'emaud)}{41}% 
-\contentsline {paragraph}{Exemple : distribution stationnaire et temps de coalescence forwards}{46}% 
-\contentsline {subsection}{\numberline {3.2}CFTP : approche par blocs (Huber)}{48}% 
-\contentsline {paragraph}{Exemple}{48}% 
-\contentsline {subsubsection}{\numberline {3.2.1}Variation de la taille des blocs}{51}% 
+\contentsline {section}{\numberline {2}Chapitre 2 : Proc\'edures de rejet}{25}% 
+\contentsline {subsection}{\numberline {2.1}Th\'eor\`eme et exemple simple}{25}% 
+\contentsline {paragraph}{Exemple : tirage uniforme sur le cercle unit\'e}{25}% 
+\contentsline {subsection}{\numberline {2.2}M\'ethode de rejet pour variables al\'eatoires \`a densit\'e}{26}% 
+\contentsline {subsubsection}{\numberline {2.2.1}Exemple : D'une Cauchy vers une Normale}{28}% 
+\contentsline {paragraph}{\relax $\@@underline {\hbox {\textbf {Mise en place de la m\'ethode de rejet sous R : d'une Cauchy vers une Normale}}}\mathsurround \z@ $\relax }{29}% 
+\contentsline {subsection}{\numberline {2.3}Union d'ensembles}{31}% 
+\contentsline {subsection}{\numberline {2.4}Simulation \`a l'aide des in\'egalit\'es de Markov et Chernoff}{32}% 
+\contentsline {subsubsection}{\numberline {2.4.1}L'in\'egalit\'e de Markov en tant que proc\'edure de rejet}{32}% 
+\contentsline {subsubsection}{\numberline {2.4.2}Les in\'egalit\'es de Chernoff en tant que proc\'edure de rejet}{33}% 
+\contentsline {paragraph}{\relax $\@@underline {\hbox {\textbf {Mise en place de la m\'ethode de rejet sour R :}}}\mathsurround \z@ $\relax }{36}% 
+\contentsline {paragraph}{\relax $\@@underline {\hbox {\textbf {In\'egalit\'es de Chernoff et queue de loi binomiale}}}\mathsurround \z@ $\relax }{36}% 
+\contentsline {subsection}{\numberline {2.5}D\'efaut des m\'ethodes de rejet}{39}% 
+\contentsline {section}{\numberline {3}Chapitre 3 : Coupling From The Past}{42}% 
+\contentsline {paragraph}{D\'efinition : Fonction de mise \`a jour}{42}% 
+\contentsline {paragraph}{D\'efinition : Couplage}{42}% 
+\contentsline {subsection}{\numberline {3.1}CFTP : approche trajectorielle (Baccelli / Br\'emaud)}{42}% 
+\contentsline {paragraph}{Exemple : distribution stationnaire et temps de coalescence forwards}{47}% 
+\contentsline {subsection}{\numberline {3.2}CFTP : approche par blocs (Huber)}{49}% 
+\contentsline {paragraph}{Exemple}{49}% 
+\contentsline {subsection}{\numberline {3.3}CFTP monotone}{53}% 
+\contentsline {subsubsection}{\numberline {3.3.1}Mod\`ele D'Ising}{54}% 
+\contentsline {subsubsection}{\numberline {3.3.2}Mod\`ele gas Hard-core sur graphe bipartite}{56}% 
+\contentsline {subsubsection}{\numberline {3.3.3}Monotonie et temps de m\'elange}{57}% 
+\contentsline {subsection}{\numberline {3.4}Slice sampler}{60}% 
+\contentsline {subsection}{\numberline {3.5}Inconv\'enients du CFTP}{60}% 
+\contentsline {subsubsection}{\numberline {3.5.1}Non-interruptibilit\'e}{60}% 
+\contentsline {subsubsection}{\numberline {3.5.2}Lecture double}{62}% 

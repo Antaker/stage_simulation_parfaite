@@ -27,32 +27,45 @@
 \@writefile{toc}{\contentsline {paragraph}{\relax $\@@underline {\hbox {\textbf  {et "MetropolisHastingsconditionnalstop"}}}\mathsurround \z@ $\relax }{22}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsubsection}{\numberline {1.4.3}Variables al\'eatoires auxiliaires / Auxiliary random variables}{22}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsubsection}{\numberline {1.4.4}Shift Chains}{23}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {2}Chapitre 2 : Proc\'edures de rejet}{24}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.1}Th\'eor\`eme et exemple simple}{24}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Exemple : tirage uniforme sur le cercle unit\'e}{24}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.2}M\'ethode de rejet pour variables al\'eatoires \`a densit\'e}{25}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {2.2.1}Exemple : D'une Cauchy vers une Normale}{27}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{\relax $\@@underline {\hbox {\textbf  {Mise en place de la m\'ethode de rejet sous R : d'une Cauchy vers une Normale}}}\mathsurround \z@ $\relax }{28}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.3}Union d'ensembles}{30}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.4}Simulation \`a l'aide des in\'egalit\'es de Markov et Chernoff}{31}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {2.4.1}L'in\'egalit\'e de Markov en tant que proc\'edure de rejet}{31}\protected@file@percent }
-\@writefile{loa}{\contentsline {algorithm}{\numberline {1}{\ignorespaces Entr\'ees : $f$,$a$ Sortie : $X \sim f$ sachant $X > a$ \relax }}{32}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {2.4.2}Les in\'egalit\'es de Chernoff en tant que proc\'edure de rejet}{32}\protected@file@percent }
-\@writefile{loa}{\contentsline {algorithm}{\numberline {2}{\ignorespaces \newline  Entr\'ees : $f_{X}$,$a$,$t$ \newline  Sortie : $S_{n} = X_{1} + \ldots  + X_{n} $sachant $S_{n} \geq a$ (lorsque $t >0$) ou sachant $S_{n} \leq a$ (lorsque $t<0$)\relax }}{34}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{\relax $\@@underline {\hbox {\textbf  {Mise en place de la m\'ethode de rejet sour R :}}}\mathsurround \z@ $\relax }{35}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{\relax $\@@underline {\hbox {\textbf  {In\'egalit\'es de Chernoff et queue de loi binomiale}}}\mathsurround \z@ $\relax }{35}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.5}D\'efaut des m\'ethodes de rejet}{38}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {3}Chapitre 3 : Coupling From The Past}{41}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{D\'efinition : Fonction de mise \`a jour}{41}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{D\'efinition : Couplage}{41}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.1}CFTP : approche trajectorielle (Baccelli / Br\'emaud)}{41}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Exemple de temps de coalescence backwards, $N^{-} = 7$\relax }}{42}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Exemple de temps de coalescence forwards, $N^{+} = 4$\relax }}{43}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces $N^{+} \leq k$ implique $N^{'} \leq k$\relax }}{44}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces $N^{'} \leq k$ implique $N^{+} \leq k$\relax }}{45}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Exemple : distribution stationnaire et temps de coalescence forwards}{46}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Algorithme monotone de Propp-Wilson; ici $M = 6$\relax }}{47}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.2}CFTP : approche par blocs (Huber)}{48}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Exemple}{48}\protected@file@percent }
-\@writefile{loa}{\contentsline {algorithm}{\numberline {3}{\ignorespaces Sortie : $Y \sim \pi $ \relax }}{50}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.2.1}Variation de la taille des blocs}{51}\protected@file@percent }
+\@writefile{loa}{\contentsline {algorithm}{\numberline {1}{\ignorespaces Entr\'ee : \'etat $x$ Sortie :nouvel \'etat $x$\relax }}{23}\protected@file@percent }
+\@writefile{loa}{\contentsline {algorithm}{\numberline {2}{\ignorespaces Entr\'ee : \'etat $x$ Sortie :nouvel \'etat $x$\relax }}{24}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {2}Chapitre 2 : Proc\'edures de rejet}{25}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.1}Th\'eor\`eme et exemple simple}{25}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Exemple : tirage uniforme sur le cercle unit\'e}{25}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.2}M\'ethode de rejet pour variables al\'eatoires \`a densit\'e}{26}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {2.2.1}Exemple : D'une Cauchy vers une Normale}{28}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{\relax $\@@underline {\hbox {\textbf  {Mise en place de la m\'ethode de rejet sous R : d'une Cauchy vers une Normale}}}\mathsurround \z@ $\relax }{29}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3}Union d'ensembles}{31}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.4}Simulation \`a l'aide des in\'egalit\'es de Markov et Chernoff}{32}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {2.4.1}L'in\'egalit\'e de Markov en tant que proc\'edure de rejet}{32}\protected@file@percent }
+\@writefile{loa}{\contentsline {algorithm}{\numberline {3}{\ignorespaces Entr\'ees : $f$,$a$ Sortie : $X \sim f$ sachant $X > a$ \relax }}{33}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {2.4.2}Les in\'egalit\'es de Chernoff en tant que proc\'edure de rejet}{33}\protected@file@percent }
+\@writefile{loa}{\contentsline {algorithm}{\numberline {4}{\ignorespaces \newline  Entr\'ees : $f_{X}$,$a$,$t$ \newline  Sortie : $S_{n} = X_{1} + \ldots  + X_{n} $sachant $S_{n} \geq a$ (lorsque $t >0$) ou sachant $S_{n} \leq a$ (lorsque $t<0$)\relax }}{35}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{\relax $\@@underline {\hbox {\textbf  {Mise en place de la m\'ethode de rejet sour R :}}}\mathsurround \z@ $\relax }{36}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{\relax $\@@underline {\hbox {\textbf  {In\'egalit\'es de Chernoff et queue de loi binomiale}}}\mathsurround \z@ $\relax }{36}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.5}D\'efaut des m\'ethodes de rejet}{39}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {3}Chapitre 3 : Coupling From The Past}{42}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{D\'efinition : Fonction de mise \`a jour}{42}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{D\'efinition : Couplage}{42}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.1}CFTP : approche trajectorielle (Baccelli / Br\'emaud)}{42}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Exemple de temps de coalescence backwards, $N^{-} = 7$\relax }}{43}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Exemple de temps de coalescence forwards, $N^{+} = 4$\relax }}{44}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces $N^{+} \leq k$ implique $N^{'} \leq k$\relax }}{45}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces $N^{'} \leq k$ implique $N^{+} \leq k$\relax }}{46}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Exemple : distribution stationnaire et temps de coalescence forwards}{47}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Algorithme monotone de Propp-Wilson; ici $M = 6$\relax }}{48}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2}CFTP : approche par blocs (Huber)}{49}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Exemple}{49}\protected@file@percent }
+\@writefile{loa}{\contentsline {algorithm}{\numberline {5}{\ignorespaces Sortie : $Y \sim \pi $ \relax }}{51}\protected@file@percent }
+\@writefile{loa}{\contentsline {algorithm}{\numberline {6}{\ignorespaces Entr\'ee : t, Sortie : $Y \sim \pi $ \relax }}{53}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3}CFTP monotone}{53}\protected@file@percent }
+\@writefile{loa}{\contentsline {algorithm}{\numberline {7}{\ignorespaces Entr\'ee : t Sortie : $Y$\relax }}{54}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.3.1}Mod\`ele D'Ising}{54}\protected@file@percent }
+\@writefile{loa}{\contentsline {algorithm}{\numberline {8}{\ignorespaces Entr\'ee : $x \in \left \{ -1,1 \right \}^{V}, u \in [0,1], \nu \in V$ Sortie : $x \in \left \{ -1,1 \right \}^{V} $\relax }}{55}\protected@file@percent }
+\@writefile{loa}{\contentsline {algorithm}{\numberline {9}{\ignorespaces Entr\'ee : $t$ Sortie :$X \sim \pi $\relax }}{56}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.3.2}Mod\`ele gas Hard-core sur graphe bipartite}{56}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.3.3}Monotonie et temps de m\'elange}{57}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.4}Slice sampler}{60}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.5}Inconv\'enients du CFTP}{60}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.5.1}Non-interruptibilit\'e}{60}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.5.2}Lecture double}{62}\protected@file@percent }

@@ -229,16 +229,16 @@ Le fait que $\mathbb{E}[T] = \frac{1}{\mathbb{P}(b(U)=1)}$ provient du fait que 
 
 
 \begin{definition}
-Algorithme arretable
+Algorithme interruptible
 \end{definition}
-Dans le théorème fondamental de la simulation parfaite, si $X$ et $T$ sont indépendants, on dit que l'algorithme est arretable, sinon il est non-arretable.
+Dans le théorème fondamental de la simulation parfaite, si $X$ et $T$ sont indépendants, on dit que l'algorithme est interruptible, sinon il est non-interruptible. 
 
 \begin{definition}
 Algortihme de simulation parfaite à lecture unique
 \end{definition}
 Un algorithme de simulation parfaite qui utilise $X \sim b(U)g(U) + (1 - b(U))f(X,U)$ est un algorithme à lecture unique si $f(X,u) = f(X,u')$ pour tout $u$,$u'$. Sinon, c'est un algorithme à lecture double.\\
 ~\\
-En général, un algorithme arretable est préférable à un algorithme non-arretable, et un algorithme à lecture unique est préférable à un algorithme à lecture double.\\
+En général, un algorithme interruptible est préférable à un algorithme non-interruptible, et un algorithme à lecture unique est préférable à un algorithme à lecture double.\\
 
 \subsection{Modèles étudiés}
 
@@ -781,9 +781,46 @@ Il suffit donc de séparer le graphe en groupes de composants connectés en se ser
 
 \subsubsection{Shift Chains}
 
-Un autre type de chaîne utile pour les modèles répulsifs est le shift. Pour illustrer le modèle, on considère le modèle hard-core où chaque n\oe{}ud du graphe est soit occupé ($x(\nu) = 1$) soit inoccupé ($x(\nu) = 0$). Chaque n\oe{}ud occupé contribue d'un facteur $\lambda$ à la densité.\\
+Un autre type de chaîne utile pour les modèles répulsifs est le shift. Pour illustrer le modèle, on considère le modèle hard-core où chaque n\oe{}ud du graphe est soit occupé ($x(\nu) = 1$) soit inoccupé ($x(\nu) = 0$). Chaque n\oe{}ud occupé contribue d'un facteur $\lambda$ à la densité. Construire un pas à l'aide de l'échantillonneur de Gibbs est alors très simple.
+
+\floatname{algorithm}{HCGM-Gibbs}
+\begin{algorithm}
+\caption{Entrée : état $x$ Sortie :nouvel état $x$}
+\begin{algorithmic}[1]
+\STATE Tirer $\nu \leftarrow Unif(V)$
+\STATE Tirer $U \leftarrow Unif([0,1])$
+\STATE $N_{1} \leftarrow$ nombre de voisins de $\nu$ de label $1$ dans $x$
+\IF{$U < \lambda/(\lambda + 1)$ et $n_{1} = 0$}
+\STATE $x_{\nu} \leftarrow 1$
+\ENDIF
+\end{algorithmic}
+\end{algorithm}
+
+
 Dès lors qu'un des voisins de $\nu$ est occupé, la chaîne ne peut changer la valeur de $\nu$.\\
-Le shift autorise un échange de label entre $\nu$ et son voisin occupé avec une certaine probabilité $p_{shift}$. Lorsque deux voisins de $\nu$ ou plus sont occupés, aucun changement n'est possible et $\nu$ reste inoccupé. 
+Le shift autorise un échange de label entre $\nu$ et son voisin occupé avec une certaine probabilité $p_{shift}$. Lorsque deux voisins de $\nu$ ou plus sont occupés, aucun changement n'est possible et $\nu$ reste inoccupé. On obtient alors l'algorithme suivant.
+
+\newpage
+\floatname{algorithm}{HCGM-Shift}
+\begin{algorithm}
+\caption{Entrée : état $x$ Sortie :nouvel état $x$}
+\begin{algorithmic}[1]
+\STATE Tirer $\nu \leftarrow Unif(V)$
+\STATE Tirer $U \leftarrow Unif([0,1])$
+\STATE $S \leftarrow Bern(p_{shift})$
+\STATE $N_{1} \leftarrow$ nombre de voisins de $\nu$ de label $1$ dans $x$
+\IF{$U < \lambda/(\lambda + 1)$ et $n_{1} = 0$}
+\STATE $x_{\nu} \leftarrow 1$
+\ELSIF{$U < \lambda/(\lambda + 1)$ et $n_{1} = 1$ et $S = 1$}
+\STATE $w \leftarrow$ l'unique voisin de $\nu$ de label $1$
+\STATE $x(\nu) \leftarrow 1$
+\STATE $x(w) \leftarrow -1$
+\ENDIF
+\end{algorithmic}
+\end{algorithm}
+
+
+
 
 \newpage
 \section{Chapitre 2 : Procédures de rejet}
@@ -1553,7 +1590,7 @@ $$ \mathbb{E}[T*t] = t*\mathbb{E}[T] = \frac{t}{\mathbb{P}(U \in A)} $$
 Pour garder le temps d'exécution suffisamment bas, il est important que $t$ soit suffisamment grand pour que $\mathbb{P}(U \in A)$ soit raisonnablement élevé. Dès lors que cette condition est achevée, $t$ devra être le plus petit possible, afin de garder un nombre de mise à jour faible.\\
 Cependant, il existe un moyen de contourner ce problème.
 
-\subsubsection{Variation de la taille des blocs}
+\subsubsection*{Variation de la taille des blocs}
 
 Lors de la construction du CFTP, une fonction de mise à jour à été composée avec elle-même $t$ fois. On appelle cet ensemble de $t$ pas un bloc.\\
 On suppose qu'il y ait un seuil $t'$ tel que $\mathbb{P}(U \in A) = 0$ si $t < t'$. En pratique, un tel seuil est très difficile à calculer : il est donc commun d'utiliser des blocs de taille qui augmente afin d'être sûr que $t$ dépassera éventuellement ce seuil.\\
@@ -1577,8 +1614,336 @@ a la même distribution que $X$ et $\mathbb{E}[T] = \frac{1}{\mathbb{P}(b_{t}(U_{
 La preuve est presque identique à celle du théorème fondamental de la simulation parfaite présentée dans le chapitre $1$.
 \end{proof}
 
+On utilise cette forme du théorème fondamental de la simulation parfaite pour obtenir le résultat suivant :
+
+\begin{theorem}
+Soit $t(0) < t(1) < t(2) < \ldots$ des entiers positifs. Soit $W_{0},W_{1},\ldots$ indépendants tels que $W_{-i} \sim Unif([0,1]^{t(i)})$, et $A_{t(i)}$ un ensemble mesurable de $[0,1]^{t(i)}$ tel que $\phi_{t(i)}(\Omega,W_{-i}) = \left\{ y \right\}$. On suppose que $\prod_{i=1}^{\infty} \mathbb{P}(W_{-i} \in A) = 0$. Alors pour tout $x_{0} \in \Omega$,
+
+\begin{align*}
+Y_{0} &= \phi_{t(0)}(x_{0},W_{0})\mathbf{1}(W_{0} \in A_{t(0)}) + \phi_{t(0)}(\phi_{t(1)}(x_{0},W_{-1}),W_{0})\mathbf{1}(W_{-1} \in A_{t(1)})\\
+&+ \phi_{t(0)}(\phi_{t(1)}(\phi_{t(2)}(x_{0},W_{-2}),W_{-1}),W_{0})\mathbf{1}(W_{-2} \in A_{t(2)}) + \ldots
+\end{align*}
+
+est tel que $Y_{0} \sim \pi$.
+ 
+\end{theorem}
+
+Un choix usuel est de poser $t(i) = 2*t(i-1)$ afin que le nombre de pas double à chaque étape de l'algorithme. Si le $t$ initial est $t(0) = 1$, alors doubler le nombre de pas à chaque itération nous permettra d'atteindre $t'$ après un nombre logarithmique de récursions. De plus le travail total effectué dans tous les blocs sera de $1 + 2 + 4 + \ldots + t' = 2*t' - 1$. On utilise ce choix de $t(i)$ pour obtenir l'algorithme suivant :
+
+\floatname{algorithm}{Doubling-Coupling-from-the-past}
+\begin{algorithm}
+\caption{Entrée : t, Sortie : $Y \sim \pi$ }
+\begin{algorithmic}[1]
+\STATE Tirer $U \sim Unif([0,1]^{t})$
+\IF{$U \in A_{t}$}
+\STATE Rendre $\phi_{t}(x_{0},U)$ (où $x_{0}$ est un élément arbitraire de $\Omega$)
+\ELSE
+\STATE $X \leftarrow $ Doubling-Coupling-from-the-past($2*t$)
+\STATE Rendre $\phi_{t}(X,U)$
+\ENDIF
+\end{algorithmic}
+\end{algorithm}
+ 
+On notera que le choix $t(i) = 2*t(i-1)$ n'est pas mandatoire, d'autres choix sont valides. Seul le nombre de pas pris par l'algorithme (en moyenne) sera affecté.
+
+\subsection{CFTP monotone}
+
+La partie difficile permettant d'utiliser le CFTP est de créer les ensembles $A_{t(i)}$ ainsi qu'une méthode permettant de déterminer si $U \in A_{t(i)}$.\\
+C'est cette difficulté qui empêche d'utiliser le CFTP dans toutes les applications de Monte Carlo.\\
+On présentera ici une méthode permettant de trouver de tels $A_{t(i)}$ dans différentes applications.\\
+L'idée est la suivante. On suppose que $\Omega$ est un espace d'états admettant un ordre partiel (voir définition $11$).\\
+Comme exemple, on considère le modèle d'Ising et deux configurations $x$ et $y$. On dit  que $x \preceq y$ si pour tout n\oe{}ud $\nu$ on a $x(\nu) \leq y(\nu)$. Par exemple, si on a $4$ n\oe{}uds, $ (-1,-1,-1,1) \preceq (-1,-1,1,1)$. D'autre part, les configurations $(-1,-1,1,1)$ et $(1,1,-1,-1)$ ne sont pas comparables.\\
+Ensuite, on supposera que $\Omega$ est doté d'un plus grand élément $x_{max}$, et d'un plus petit élément $x_{min}$. Pour continuer avec l'exemple du modèle d'Ising, la configuration n'ayant que des $-1$ est le plus petit élément, celle n'ayant que des $1$, le plus grand.
+
+\begin{definition}
+Fonction de mise à jour monotone
+\end{definition}
+
+Soit $\phi$ une fonction de mise à jour pour un pas d'une chaîne de Markov. Si $\phi$ est telle que, pour tout $x preceq y$, et $u \in [0,1]$, on ait $\phi(x,u) \preceq \phi(y,u)$, alors on dit que $\phi$ est monotone.\\
+~\\
+
+On considère à présent deux chaînes de Markov $\left\{X_{t} \right\}$ et $\left\{Y_{t} \right\}$ telles que $X_{0} = x_{0}$ et $Y_{0} = y_{0}$ où $x_{0} \preceq y_{0}$. On suppose qu'à chaque pas, $X_{t+1} = \phi(X_{t},U_{t})$ et $Y_{t+1} = \phi(Y_{t},U_{t})$ où $U_{1},U_{2},\ldots$ sont iid telles que $U_{1} \sim Unif([0,1])$.\\
+On en déduit simplement que $X_{t+1} \preceq Y_{t+1}$ pour tout $t$.\\
+On suppose de plus que $x_{0} = x_{min}$ et $y_{0} = x_{max}$. Alors tout autre état $w_{0}$ vérifie $x_{0} \preceq w_{0} \preceq y_{0}$ et on construit alors de manière similaire une chaîne de Markov $W_{t}$ qui donnera $X_{t} \preceq W_{t} \preceq Y_{t}$ pour tout $t$.\\
+On suppose maintenant que $X_{t} = Y_{t}$. Les propriétés d'ordre partiel impliquent alors que $X_{t} = W_{t} = Y_{t}$. L'état de départ de $W_{t}$ était arbitraire, donc pour tout état de départ $w_{0} \in \Omega$, $\phi_{t}(w_{0},u) = X_{t} = Y_{t}$\\
+En d'autres termes, si après un nombre fixé de pas, les états extrémaux ont atteint le même état, alors tous les autres états ont été "piégés" entre ceux-ci et ont donc aussi atteint le même état.\\
+On obtient alors une variante importante du CFTP : le CFTP monotone.
+
+\floatname{algorithm}{Monotonic-Coupling-from-the-past}
+\begin{algorithm}
+\caption{Entrée : t Sortie : $Y$}
+\begin{algorithmic}[1]
+\STATE Tirer $U \sim Unif([0,1]^{t})$
+\STATE Soit $X_{t} \leftarrow \phi_{t}(x_{max},U)$ et $Y_{t} \leftarrow \phi_{t}(x_{min},U)$
+\IF{$X_{t} = Y_{t}$}
+\STATE Rendre $X_{t}$
+\ELSE
+\STATE Tirer $X \leftarrow $ Monotonic-Coupling-from-the-past($2*t$)
+\STATE Rendre $\phi_{t}(X,U)$
+\ENDIF
+\end{algorithmic}
+\end{algorithm}
+
+\subsubsection{Modèle D'Ising}
+
+On considère la mise à jour de Gibbs pour le modèle d'Ising de la section $1.4.1$.\\
+Lors de la mise à jour, un n\oe{}ud $\nu$ était choisi uniformément aléatoirement et $U \sim Unif([0,1])$. On note $N_{c}$ le nombre de voisins de $\nu$ de label $c$. Si $U < \exp(N_{1}\beta)/[\exp(N_{1}\beta + \exp(N_{-1}\beta)]$, alors le n\oe{}ud devenait de label $1$, sinon de label $-1$.\\
+Afin de pouvoir utiliser cette mise à jour pour la simulation parfaite, on doit l'écrire comme fonction de mise à jour, c'est-à-dire, l'état actuel et les choix aléatoires doivent être des paramètres d'entrée.
+
+\newpage
+\floatname{algorithm}{Ising-Gibbs}
+\begin{algorithm}
+\caption{Entrée : $x \in \left\{ -1,1 \right\}^{V}, u \in [0,1], \nu \in V$ Sortie : $x \in \left\{ -1,1 \right\}^{V} $}
+\begin{algorithmic}[1]
+\STATE $N_{1} \leftarrow$ nombre de voisins de $\nu$ de label $1$ dans $x$
+\STATE $N_{-1} \leftarrow$ nombre de voisins de $\nu$ de label $-1$ dans $x$
+\IF{$U < \exp(N_{1}\beta)/[\exp(N_{1}\beta + \exp(N_{-1}\beta)]$}
+\STATE $x(\nu) \leftarrow 1$
+\ELSE
+\STATE $x(\nu) \leftarrow -1$
+\ENDIF
+\end{algorithmic}
+\end{algorithm}
+
+\begin{lemme}
+La fonction créée précédemment est monotone lorsque $\beta > 0$
+\end{lemme}
+
+\begin{proof}
+Soit $x \preceq y$. Soit $\nu$ un n\oe{}ud du graphe considéré et la fonction $N_{c}(z)$ notant le nombre de voisins de $\nu$ de label $c$ dans la configuration $z$. Alors tout voisin de $\nu$ dans $x$ de label $1$ est aussi de label $1$ dans $y$, donc $N_{1}(x) \leq N_{1}(y)$. De manière similaire, on a $N_{-1}(x) \leq N_{-1}(y)$.\\
+Soit $f(n_{1},n_{-1}) = \exp(N_{1}(x)\beta)/[\exp(N_{1}(x)\beta + \exp(N_{-1}\beta)]$. Puisque $\beta >0$, $f(n_{1},n_{-1})$ est croissant en $n_{1}$ et décroissant en $n_{-1}$. Donc si $U < f(N_{1}(x),N_{-1}(x))$ alors on aura $U < f(N_{1}(y),N_{-1}(y))$. C'est-à-dire, si $x(\nu)$ est changé en $1$, alors $y(\nu)$ aussi.\\
+De même, si $U > f(N_{1}(y),N_{-1}(y))$, alors $U > f(N_{1}(x),N_{-1}(x))$. C'est-à-dire, si $y(\nu)$ devient $0$, alors $x(\nu)$ aussi.\\
+Enfin, si $f(N_{1}(x),N_{-1}(x)) < U < f(N_{1}(y),N_{-1}(y))$, alors seul le n\oe{}ud $x(\nu)$ est changé en $-1$, $y(\nu)$ devient $1$, l'ordre n'est alors pas changé.\\
+Donc, peu importe le choix de $\nu$ et $U$ dans la mise à jour, si $x \preceq y$, alors $\phi(x,\nu,U) \preceq \phi(y,\nu,U)$.
+\end{proof}
+
+Cela signifie que le CFTP monotne peut-être utilisé pour générer un échantillon aléatoire de la distribution stationnaire.
+\newpage
+\floatname{algorithm}{Monotonic-Ising-Gibbs}
+\begin{algorithm}
+\caption{Entrée : $t$ Sortie :$X \sim \pi$}
+\begin{algorithmic}[1]
+\STATE Tirer $(U_{1},\ldots,U_{t}) \leftarrow Unif([0,1]^{t})$
+\STATE Tirer $(V_{1},\ldots,V_{t}) \leftarrow Unif(V^{t})$
+\STATE $x_{max} \leftarrow (1,\ldots,1)$, $x_{min} \leftarrow (0,\ldots,0)$
+\FOR{i allant de $1$ à $T$}
+\STATE $x_{max} \leftarrow$ Ising-Gibbs($x_{max}$,$U_{i}$,$V_{i}$)
+\STATE $x_{min} \leftarrow$ Ising-Gibbs($x_{min}$,$U_{i}$,$V_{i}$)
+\ENDFOR
+\IF{$x_{max} \ne x_{min}$}
+\STATE $x_{max} \leftarrow$ Monotonic-Ising-Gibbs($2*t$)
+\FOR{i allant de $1$ à $t$}
+\STATE $x_{max} \leftarrow$ Ising-Gibbs($x_{max}$,$U_{i}$,$V_{i}$) 
+\ENDFOR
+\ENDIF
+\STATE $X \leftarrow x_{max}$
+\end{algorithmic}
+\end{algorithm}
+
+\subsubsection{Modèle gas Hard-core sur graphe bipartite}
+
+On considère maintenant la mise-à-jour HCGM-Gibbs de la section $1.4.4$. Cette fonction de mise-à-jour n'est pas monotone en utilisant l'ordre partiel $x \preceq y \leftrightarrow (\forall \nu \in V)(x(\nu) \leq y(\nu))$.\\
+Il est alors nécessaire de trouver une autre fonction de mise-à-jour ou un autre ordre partiel. Le problème est que la chaîne est répulsive,ie, deux n\oe{}uds voisins ne peuvent avoir le label $1$. Cependant, si le graphe est biparti, il est possible de construire un nouvel ordre partiel tel que l'on ait une fonction de mise-à-jour monotone.
+
+\begin{definition}
+Graphe biparti
+\end{definition}
+
+On dit qu'un graphe est biparti lorsque l'ensemble des n\oe{}uds $V$ peut être partitionné en deux ensembles $V_{1}$ et $V_{2}$ tels que pour toute arête $e$, un n\oe{}ud appartienne à $V_{1}$ et l'autre à $V_{2}$.\\
+Pour les configurations sur graphe biparti, on utilise l'ordre partiel suivant (similaire à l'ordre partiel défini précédemment) :
+
+$$x \preceq y \leftrightarrow (\forall \nu_{1} \in V_{1})(\forall \nu_{2} \in V_{2}) (x(\nu_{1}) \leq y(\nu_{1}) \land x(\nu_{2}) \geq y(\nu_{2}))$$
+
+\begin{lemme}
+HCGM-Gibbs est monotone relativement à l'ordre partiel ci-dessus
+\end{lemme}
+
+\begin{proof}
+Si $x \preceq y$ et le n\oe{}ud $i \in V_{2}$ est choisi pour être mis-à-jour, alors si un voisin $w$ de $i$ est tel que $x(w) = 1$, alors $y(w) = 1$ aussi. Donc $x(i)$ et $y(i)$ resteront tous deux à $0$. La seule manière pour que $y(i)$ soit changé en $1$ est si $y(w) = 0$ pour tout voisin $w$ de $i$. Dans ce cas, tout voisin vérifie aussi $x(w) = 0$. D'où : $x(i) = y(i) = \mathbf{1}(U < \lambda / (\lambda + 1))$.\\
+L'analyse pour $i \in V_{1}$ est similaire.
+\end{proof}
+
+L'état "le plus grand" est alors celui dont tous les n\oe{}uds de $V_{2}$ sont de label $1$ et tous les n\oe{}uds de $V_{1}$ sont de label $0$.\\ L'état "le plus petit" voit ses labels inversés par rapport au plus grand.
+
+\subsubsection{Monotonie et temps de mélange}
+
+Une des raisons pour lesquelles la monotonie est importante est que le CFTP monotone ne prendra pas plus de temps à fonctionner  
+que le temps de mélange de la chaîne de Markov.
+
+\begin{definition}
+Chaîne en ordre partiel
+\end{definition}
+
+Une chaîne de longueur $l$ en ordre partiel est un sous-ensemble de $l+1$ éléments tels que $ x_{0} \prec x_{1} \prec x_{2} \prec \ldots \prec x_{l}$\\
+~\\
+On présente ensuite une propriété importante de la distance en variation totale : celle-ci permet la représentation de deux variables aléatoires en utilisant une troisième variable aléatoire commune.
+
+\begin{lemme}
+On suppose que $d_{TV}(X,Y) = d$, où $X,Y$ sont des variables aléatoires de densités respectives $f_{X}$ et $f_{Y}$ par rapport à la mesure $\mu$ sur $\Omega$. Alors il existe des variables aléatoires $W_{1},W_{2},W_{3}$ et $B \sim Bern(d)$ indépendantes telles que :
+
+$$ X \sim (1-B)W_{1} + BW_{2}$$
+$$ Y \sim (1-B)W_{1} + BW_{3}$$
+\end{lemme}
+
+\begin{proof}
+On procède ici par disjonction de cas sur $d$.
+
+\begin{itemize}
+\item $d=0$. Alors les variables aléatoires $X$ et $Y$ sont égales, on pose $W_{1} = X (= Y)$ et $W_{2},W_{3}$ ont n'importe quelle distribution (car $B = 0$).
+
+\item $d=1$. Il suffit alors de poser $W_{2} = X$ et $W_{3} = Y$ puisque $B = 1$.
+
+\item $0 < d < 1$. On pose alors $g(s) = \min(f_{X}(s),f_{Y}(s))$ puis à $W_{1}$ on donne la densité $g/\int_{\Omega}g d\nu$,à $W_{2}$ la densité $[f_{X}(s) - g(s)]/\int_{\Omega}(f_{X}(r) - g(r))d\nu(r)$ et à $W_{3}$ la densité $[f_{Y}(s) - g(s)]/\int_{\Omega}(f_{Y}(r) - g(r))d\nu(r)$.\\
+Il reste à voir maintenant que $\int_{\Omega}g d\nu = 1 - d$. Pour le montrer, on rappelle d'abord que la distance en variation totale est $d = \sup_{D} |\mathbb{P}(Y \in D) - \mathbb{P}(X \in D)|$. Puisque $|\mathbb{P}(Y \in D) - \mathbb{P}(X \in D)| = |\mathbb{P}(Y \in D^{C}) - \mathbb{P}(X \in D^{C})|$, le supremum peut être considéré sur les ensembles $D$ tels que $\mathbb{P}(Y \in D) \geq \mathbb{P}(X \in D)$.\\
+Soit à présent $C = \left\{ s \in \Omega | f_{X}(s) \leq f_{Y}(s) \right\}$. Soit $D$ un ensemble mesurable tel que $\mathbb{P}(Y \in D) \geq \mathbb{P}(X \in D)$. On a, pour toute variable aléatoire $W$, $\mathbb{P}(W \in D) = \mathbb{P}(W \in C) - \mathbb{P}(W \in C \cap D^{C}) + \mathbb{P}(W \in C^{C} \cap D)$.\\
+Pour voir cela, il suffit de voir que, pour une mesure $\mu$ et des ensembles mesurables $C$ et $D$ :
+
+$$\mu(D \cap C) = \mu(C \setminus (D^{C} \cap C)) = \mu(D \setminus (D \cap C^{C}))$$
+
+puis que, 
+$$\mu(C) - \mu(D^{C} \cap C) = \mu(D) - \mu(D \cap C^{C})$$
+
+On définit ensuite, pour toute variable aléatoire $W$, $h(W) = \mathbb{P}(W \in C \cap D^{C}) - \mathbb{P}(W \in C^{C} \cap D)$. On a alors : 
+
+$$\mathbb{P}(Y \in D) - \mathbb{P}(X \in D) = \mathbb{P}(Y \in C) - \mathbb{P}(X \in C) - h(Y) + h(X)$$
+
+Or, 
+
+$$-h(Y) + h(X) = [\mathbb{P}(X \in C \cap D^{C}) - \mathbb{P}(Y \in C \cap D^{C})] + [\mathbb{P}(Y \in C^{C} \cap D) - \mathbb{P}(X \in C^{C} \cap D)]$$
+
+De la manière dont $C$ a été choisi, les deux termes entre crochets sont non-positifs ou nuls, on a donc :
+
+$$ 0 \leq \mathbb{P}(Y \in D) - \mathbb{P}(X \in D) \leq \mathbb{P}(Y \in C) - \mathbb{P}(X \in C)$$
+
+Puisque $D$ était un ensemble arbitraire tel que $\mathbb{P}(Y \in D) \leq \mathbb{P}(X \in D)$, la distance de variation totale est alors $d = \mathbb{P}(Y \in C) - \mathbb{P}(X \in C)$.\\
+On considère à présent la constante de normalisation de $W_{2}$.
+
+\begin{align*}
+\int_{\Omega}f_{X}(s) - g(s) d\nu(s) &= \int_{C} f_{X}(s) - g(s)d\nu(s) + \int_{C^{C}} f_{X}(s) - g(s)d\nu(s)\\
+&= 0 + \int_{C^{C}} f_{X}(s) - f_{Y}(s)d\nu(s) \\
+&= \mathbb{P}(X \in C^{C}) - \mathbb{P}(Y \in C^{C}) = \mathbb{P}(Y \in C^{C}) - \mathbb{P}(X \in C^{C}) = d
+\end{align*}
+La densité de $(1-B)W_{1} + BW_{2}$ est : 
+
+$$(1-d)\frac{\min(f_{X}(s),f_{Y}(s))}{1-d} + d\frac{f_{X} - \min(f_{X}(s)(s),f_{Y}(s))}{d} = f_{X}(s)$$
+
+la même densité que $X$. Un résultat similaire vaut pour $Y$.
 
 
+\end{itemize}
+
+\end{proof}
+
+On se sert de ce résultat dans le théorème suivant :\\
+
+\begin{theorem}[Propp et Wilson]
+Pour un ensemble discret $\Omega$, soit $l$ la longueur de la chaîne la plus longue en ordre partiel de $\Omega$. Soit $p$ la probabilité qu'un appel à Monotonic-coupling-from-the-past($t$). Notons $d_{t} = \sup_{x \in \Omega} d_{TV}([X_{t} | X_{0} = x], \pi)$. On a alors :
+
+$$ \frac{p}{l} \leq d_{t} \leq p$$
+
+\end{theorem} 
+
+\begin{proof}
+Le fait que $d_{t} \leq p$ est provient du Lemme de couplage (voir chapitre $1$ théorème 4).\\
+On va montrer ici que $\frac{p}{l} \leq d_{t}$. Pour un élément $x \in \Omega$, soit $h(x)$ la longueur de la chaîne la plus longue ayant pour plus grand élément $x$. Si $X_{t}$ est la chaîne commençant en $x_{min}$, et $Y_{t}$ celle commençant en $x_{max}$, alors on aura toujours $X_{t} \preceq Y_{t}$. On notera que si $X_{t} \prec Y_{t}$, alors $h(X_{t}) + 1 \leq h(Y_{t})$, mais si $X_{t} = Y_{t}$ alors $h(X_{t}) = h(Y_{t})$. On en conclut donc que $h(Y_{t}) - h(X_{t})$ est une variable aléatoire entière positive ou nulle qui vaut au moins $1$ lorsque $X_{t} \neq Y_{t}$. On obtient, d'après l'inégalité de Markov : 
+
+$$p = \mathbb{P}(X_{t} \neq Y_{t}) \leq \mathbb{E}[h(Y_{t}) - h(X_{t})]$$
+
+En utilisant le lemme $12$, on sait qu'il existe $W_{1},W_{2},W_{3}$ et $B \sim Bern(d_{t})$ indépendants tels que $X_{t} \sim (1-B)W_{1} + BW_{2}$ et $Y_{t} \sim (1-B)W_{1} + BW_{3}$. D'où : 
+
+$$p \leq \mathbb{E}[h(Y_{t}) - h(X_{t})] = \mathbb{E}[B(h(W_{2}) - h(W_{3}))] = d_{t}l$$
+\end{proof}
+
+La distance de variation totale tend à décroître très rapidement car c'est un exemple de fonction sous-multiplicative.
+
+\begin{lemme}
+La distance de variation totale $d_{t}$ vérifie $d_{t+s} \leq d_{t}d_{s}$.
+\end{lemme}
+
+La preuve comprend l'utilisation du lemme de couplage cité dans le théorème $17$. La propriété énoncée permet de montrer que la taille d'un bloc dans le CFTP monotone nécessaire à la coalescence n'est pas plus grand que le temps que met la chaîne de Markov à commencer à se mélanger.
+
+\begin{lemme}
+On suppose que $d_{t} \leq e^{-1}$. Alors pour un bloc de taille $t[k+ln(l)]$, la probabilité $p$ qu'un bloc ne coalesce pas est au plus $e^{-k}$.
+\end{lemme}
+
+\begin{proof}
+Par la propriété de sous-multiplicativité, $d_{t[k + ln(k)]} \leq [e^{-1}]^{k+ln(l)} = l^{-1}e^{-k}$. En utilisant le théorème précédent cela donne : $p \leq ll^{-1}e^{-k} = e^{-k}$.
+\end{proof}
+
+\begin{lemme}
+On suppose que dans le CFTP monotone lancé pour un bloc de taille $t$, on ait $\mathbb{P}(X_{t} \ne Y_{t}) \leq e^{-1}$. Alors le nombre moyen de pas de la chaîne de Markov utilisé par Monotonic-Coupling-from-the-past($t$) est au plus de $19.2t$.
+\end{lemme}
+
+\begin{proof}
+Un appel à Monotonic-Coupling-from-the-past avec pour entrée $s$ requiert au plus $2s$ pas de la chaîne de Markov : $s$ pas pour déterminer si $X_{t} = Y_{t}$ puis $s$ autres pas après l'appel récursif si $X_{t} = Y_{t}$\\
+Notons $R_{k}$ l'évènement suivant : le $k$ème appel à Monotonic-Coupling-from-the-past ne vérifie pas $X_{t} = Y_{t}$. Si le premier appel utilise un seul pas et que le nombre de pas double à chaque appel, alors après $\lceil log_{2}(t) \rceil$ appels, le prochain appel a un paramètre d'au moins $t$, et n'échoue donc qu'avec probabilité au plus $e^{-1}$. D'où : 
+
+\begin{align*}
+\mathbb{E}[2S] &= \sum_{k=1}^{\infty} 2*2^{k}\mathbb{P}(R_{1}R_{2}\ldots R_{k-1})\\
+&\leq 2*(2t) + \sum_{k= \lceil log_{2}(t) \rceil +1}^{\infty}2^{k+1}(e^{-1})^{k-1-\lceil log_{2}(t) \rceil} \\
+&\leq 4t + 4t/(1-2/e) \leq 19.2t \\
+\end{align*}
+
+\end{proof}
+
+Comme exemple, considérons le modèle d'Ising. La taille maximale d'une chaîne est $\#V$, le nombre de n\oe{}uds du graphe. Donc, si $t$ est le temps nécessaire pour que la distance de variation totale descende en dessous de $e^{-1}$, alors $O(tln(\#V))$ pas sont nécessaires en moyenne pour générer une simulation exacte du modèle. D'autre part, o($t$) pas sont aussi nécessaires pour générer une sortie avec la simulation exacte : le CFTP ne fait donc pas converger la chaîne de Markov plus vite qu'il ne faut.\\
+La partie importante du CFTP ici est que la connaissance du $t$ pour lequel la distance de variation totale est au plus $e^{-1}$ n'est pas nécessaire pour utiliser la procédure. Lorsque l'algorithme s'arrête, le résultat est garanti d'avoir été généré selon la distribution ciblée.
+
+
+\subsection{Slice sampler}
+
+(plus tard)
+
+\subsection{Inconvénients du CFTP}
+
+Bien que le CFTP soit un outil puissant pour créer des algorithmes de simulation exacte, il a quand même des défauts. Les deux principaux problèmes sont la non-interruptibilité et la lecture double.
+
+\subsubsection{Non-interruptibilité}
+
+Considérons d'abord un exemple. On veut générer une loi géométrique à partir de $B_{1},B_{2}, \ldots$ des réalisations de $Bern(p)$, puis en posant $T = \inf \left\{ t | B_{t} = 1 \right\}$ et $f_{T}(B_{1},\ldots,B_{T}) = T$. Alors $T \sim Geom(p)$. Bien sûr ici $T$ et $f_{T}$ ne sont pas indépendants puisqu'ils sont de même valeur. Donc, d'après la définition $5$ du chapitre $1$, cet algorithme est non-interruptible.\\
+On considère ce problème du point de vue d'une personne souhaitant simuler ce problème. Peut-être que celle-ci, en mettant en place ce problème veut inconsciemment que si  l'algorithme prend trop de temps (ou de pas, par exemple, $5$ millions de pas), alors la personne fait preuve d'impatience et interrompt l'algorithme.\\
+Cette décision est en fait une partie non-reconnue de l'algorithme, et signifie que l'on obtient pas d'échantillon suivant une loi $Geom(p)$ mais plutôt une loi $Geom(p)$ conditionné à être dans $\left\{ 1, \ldots, 5*10^{6} \right\}$. Dans notre cas, c'est peut-être anodin, sauf si $p$ est très petit. Le potentiel est là, et la volonté de la personne à vouloir arrêter l'algorithme fait que celui-ci n'est plus un algorithme de simulation exacte.\\
+On donne à présent un exemple d'algorithme interruptible. Considérons la méthode de rejet permettant de tirer selon une mesure $\nu$ sur un ensemble $A$ sachant que l'on sait tirer selon la mesure $\nu$ sur $B$, et sachant que $A$ est contenu dans $B$.
+
+\begin{lemme}
+On suppose que $\nu$ est une mesure finie sur $B$, que $A \subset B$ et $\nu (A) >0$. Pour des variables iid$X_{1},X_{2},\ldots \sim \nu(B)$ et $T = \inf \left\{ t | X_{t} \in A \right\}$, on a que $T$ et $f_{T}(X_{1},\ldots,X_{T}) = X_{T}$ sont des variables aléatoires indépendantes. Et donc, la méthode de rejet est un algorithme interruptible.
+\end{lemme}  
+
+\begin{proof}
+Soit $C$ un sous-ensemble mesurable de $A$ et $i \in \left\{ 1,2,\ldots \right\}$. Alors : 
+
+\begin{align*}
+\mathbb{P}(X_{T} \in C, T = i) &= \mathbb{P}(X_{1},\ldots,X_{i-1} \notin C, X_{i} \in C)\\
+&= \left(1 - \frac{\nu(A)}{\nu(B)}\right)^{i-1} \left(\frac{\nu(C}{\nu(B)}\right)\\
+&= \left(1 - \frac{\nu(A)}{\nu(B)}\right)^{i-1} \left(\frac{\nu(A)}{\nu(B)}\right)\left(\frac{\nu(C)}{\nu(A)}\right)\\
+&= \mathbb{P}(X_{1},\ldots,X_{i-1} \notin C, X_{i} \in A)\mathbb{P}(X_{T} \in C)\\
+&= \mathbb{P}(T = i) \mathbb{P}(X_{T} \in C)
+\end{align*}
+
+où $\mathbb{P}(X_{T} \in A) = \frac{\nu(A)}{\nu(B)}$ est le théorème $6$ du chapitre $2$. 
+
+\end{proof}
+
+L'avantage d'un algorithme interruptible est que l'utilisateur peut l'arrêter puis le relancer sans changer la sortie de l'algorithme. L'utilisateur n'a donc pas à se soucier de possibles limitations (connues ou non) sur le temps de calcul de l'algorithme.\\
+Le problème est le suivant : en général, le CFTP est non-interruptible.\\
+On rappelle d'abord que le CFTP décrit la distribution ciblée $\pi$ comme un mélange de deux autres distributions. Soit $A$ l'évènement tel que si $U \in A$, alors $\phi(x,U) = \left\{y\right\} ~ \forall x \in \Omega$. Alors, pour $Y \sim \pi$ et pour tout ensemble mesurable $C$, 
+
+$$ \mathbb{P}(Y \in C) = \mathbb{P}(Y \in C | A)\mathbb{P}(A) + \mathbb{P}(Y \in C | A^{C}) \mathbb{P}(A^{C})$$
+
+Lorsque que $A$ se réalise, $\phi(x,U) = \left\{y\right\}$, et on rend $y$. Lorsque $A^{C}$ se réalise, on utilise une récursion pour tirer $X \sim \pi$ puis $\phi(X,U)$ donne $[Y | A^{C}]$.\\
+On suppose à présent que l'utilisateur n'a pas le temps d'effectuer la récursion. Alors le résultat n'est pas $Y \sim \pi$ mais plutôt $[Y | A]$.
+Comme exemple, on considère le problème de tirer uniformément sur $\left\{1,2,3\right\}$ en utilisant la fonction de mise à jour de la chaîne de Markov suivante : 
+
+$$ \phi_{1}(x,U) = x + \mathbf{1}(x < 3 , U > 1/2) - \mathbf{1}(x > 1, U \leq 1/2)$$
+
+On suppose que $\phi_{2}(x,U_{1},U_{2}) = \phi_{1}(\phi_{1}(x,U_{1}),U_{2})$,ie, $\phi_{2}$ effectue deux pas dans la chaîne de Markov. Dans quel cas avons nous $\phi_{2}(\Omega,U_{1},U_{2}) = \left\{y\right\}$? Seulement dans le cas où $U_{1}$ et $U_{2}$ tombent tout deux dans $(1/2,1]$ ou $[0,1/2]$. Dans le premier cas $\phi_{2}(\Omega,U_{1},U_{2}) = \left\{3\right\}$ et dans le second $\phi_{2}(\Omega,U_{1},U_{2}) = \left\{1\right\}$. En aucun cas avons nous $\phi_{2}(\Omega,U_{1},U_{2}) = \left\{2\right\}$ donc le résultat ne peut-être uniforme sur $\left\{1,2,3\right\}$.\\
+Des raisons connues (temps de calcul, temps autorisé par l'utilisateur) et des raisons inconnues (coupure de courant) signifient qu'en somme, chaque simulation est lancée avec une borne supérieure aléatoire sur le temps d'arrêt de l'algorithme. Si il y a une limite sur le temps pour lequel l'algorithme peut-être lancé, celui-ci cesse d'être un algorithme de simulation exacte.
+
+\subsubsection{Lecture double}
+
+L'autre problème du CFTP provient de sa structure. Lorsque les variables aléatoires $U$ sont générées, si la récursion s'opère, alors ces variables $u$ doivent être utilisées à nouveau. Donc, elle doivent en théorie être stockées, ce qui peut imposer un problème sur la mémoire. \\
+Il y a deux moyens de pallier à ce défaut. Premièrement, on peut simplement ne garder en mémoire que la "seed" utilisée pour générer les choix alétoires.\\
+De plus, il existe une variante du CFTP telle que les choix aléatoires n'ont pas à être stockés. Cette variante s'appelle le CFTP à lecture unique, que le livre d'Huber (Chapitre 5) aborde.
 
 
 

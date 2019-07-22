@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (MiKTeX 2.9.7000 64-bit) (preloaded format=pdflatex 2019.4.30)  8 JUL 2019 11:39
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (MiKTeX 2.9.7000 64-bit) (preloaded format=pdflatex 2019.4.30)  22 JUL 2019 16:35
 entering extended mode
 **"./compte rendu.tex"
 ("compte rendu.tex"
@@ -679,40 +679,40 @@ Underfull \hbox (badness 10000) in paragraph at lines 777--781
 
  []
 
-[22] [23]
-Underfull \hbox (badness 10000) in paragraph at lines 818--824
+[22] [23] [24]
+Underfull \hbox (badness 10000) in paragraph at lines 855--861
 
  []
 
-[24]
-Underfull \hbox (badness 10000) in paragraph at lines 861--869
+[25]
+Underfull \hbox (badness 10000) in paragraph at lines 898--906
 
  []
 
-[25] [26] [27]
-Overfull \hbox (74.48674pt too wide) in paragraph at lines 906--907
+[26] [27] [28]
+Overfull \hbox (74.48674pt too wide) in paragraph at lines 943--944
  $[]$[]
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 906--907
+Underfull \hbox (badness 10000) in paragraph at lines 943--944
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 906--907
+Underfull \hbox (badness 10000) in paragraph at lines 943--944
 
  []
 
-[28] [29]
-<graphiques/normaltocauchy.jpeg, id=114, 306.39468pt x 291.33844pt>
+[29] [30]
+<graphiques/normaltocauchy.jpeg, id=118, 306.39468pt x 291.33844pt>
 File: graphiques/normaltocauchy.jpeg Graphic file (type jpg)
 <use graphiques/normaltocauchy.jpeg>
-Package pdftex.def Info: graphiques/normaltocauchy.jpeg  used on input line 972
-.
+Package pdftex.def Info: graphiques/normaltocauchy.jpeg  used on input line 100
+9.
 (pdftex.def)             Requested size: 306.39394pt x 291.33772pt.
 
-Overfull \hbox (2.03973pt too wide) in paragraph at lines 984--986
+Overfull \hbox (2.03973pt too wide) in paragraph at lines 1021--1023
 \T1/lmr/m/n/10.95 Il est pos-sible d'ac-cé-lé-rer l'al-go-rithme : on a en fait
  $\OML/lmm/m/it/10.95 sup[]\OT1/lmr/m/n/10.95 (1 + \OML/lmm/m/it/10.95 x[]\OT1/
 lmr/m/n/10.95 ) [](\OMS/lmsy/m/n/10.95  \OML/lmm/m/it/10.95 x[]=\OT1/lmr/m/n/10
@@ -720,160 +720,160 @@ lmr/m/n/10.95 ) [](\OMS/lmsy/m/n/10.95  \OML/lmm/m/it/10.95 x[]=\OT1/lmr/m/n/10
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 989--992
+Underfull \hbox (badness 10000) in paragraph at lines 1026--1029
 
  []
 
-[30 <./graphiques/normaltocauchy.jpeg>] [31] [32]
-Underfull \hbox (badness 10000) in paragraph at lines 1066--1067
+[31 <./graphiques/normaltocauchy.jpeg>] [32] [33]
+Underfull \hbox (badness 10000) in paragraph at lines 1103--1104
 
  []
 
 
 LaTeX Warning: No positions in optional float specifier.
-               Default added (so using `htbp') on input line 1089.
+               Default added (so using `htbp') on input line 1126.
 
-[33]
-Overfull \hbox (23.85277pt too wide) in paragraph at lines 1112--1115
+[34]
+Overfull \hbox (23.85277pt too wide) in paragraph at lines 1149--1152
 \T1/lmr/m/n/10.95 On gé-nère dans l'al-go-rithme une va-riable aléa-toire de de
 n-sité $\OML/lmm/m/it/10.95 g\OT1/lmr/m/n/10.95 (\OML/lmm/m/it/10.95 s\OT1/lmr/
 m/n/10.95 ) = [](\OML/lmm/m/it/10.95 ts\OT1/lmr/m/n/10.95 )\OML/lmm/m/it/10.95 
 f[]\OT1/lmr/m/n/10.95 (\OML/lmm/m/it/10.95 s\OT1/lmr/m/n/10.95 )$
  []
 
-[34]
-Underfull \hbox (badness 10000) in paragraph at lines 1120--1121
+[35]
+Underfull \hbox (badness 10000) in paragraph at lines 1157--1158
 
  []
 
-[35] [36] [37]
-Underfull \hbox (badness 10000) in paragraph at lines 1218--1221
+[36] [37] [38]
+Underfull \hbox (badness 10000) in paragraph at lines 1255--1258
 
  []
 
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <14.4> on input line 1222.
+(Font)              <14.4> on input line 1259.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <10> on input line 1222.
+(Font)              <10> on input line 1259.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <7> on input line 1222.
+(Font)              <7> on input line 1259.
 
-Overfull \hbox (2.59605pt too wide) detected at line 1229
+Overfull \hbox (2.59605pt too wide) detected at line 1266
 \OML/lmm/m/it/10.95 B[]\OT1/lmr/m/n/10.95 (0\OML/lmm/m/it/10.95 ; \OT1/lmr/m/n/
 10.95 1) = []
  []
 
-[38]
-<graphiques/boule_vitesse.jpeg, id=146, 306.39468pt x 291.33844pt>
+[39]
+<graphiques/boule_vitesse.jpeg, id=150, 306.39468pt x 291.33844pt>
 File: graphiques/boule_vitesse.jpeg Graphic file (type jpg)
 <use graphiques/boule_vitesse.jpeg>
-Package pdftex.def Info: graphiques/boule_vitesse.jpeg  used on input line 1264
+Package pdftex.def Info: graphiques/boule_vitesse.jpeg  used on input line 1301
 .
 (pdftex.def)             Requested size: 284.9441pt x 270.94194pt.
- [39] [40 <./graphiques/boule_vitesse.jpeg>]
-Underfull \hbox (badness 10000) in paragraph at lines 1273--1282
+ [40] [41 <./graphiques/boule_vitesse.jpeg>]
+Underfull \hbox (badness 10000) in paragraph at lines 1310--1319
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1286--1289
+Underfull \hbox (badness 10000) in paragraph at lines 1323--1326
 
  []
 
-[41]
-<graphiques/backwards_coalescence_1.png, id=158, 272.03262pt x 222.88539pt>
+[42]
+<graphiques/backwards_coalescence_1.png, id=162, 272.03262pt x 222.88539pt>
 File: graphiques/backwards_coalescence_1.png Graphic file (type png)
 <use graphiques/backwards_coalescence_1.png>
 Package pdftex.def Info: graphiques/backwards_coalescence_1.png  used on input 
-line 1314.
+line 1351.
 (pdftex.def)             Requested size: 244.82709pt x 200.59499pt.
-<graphiques/forwards_coalescence_1.png, id=160, 232.37943pt x 178.23502pt>
+<graphiques/forwards_coalescence_1.png, id=164, 232.37943pt x 178.23502pt>
 File: graphiques/forwards_coalescence_1.png Graphic file (type png)
 <use graphiques/forwards_coalescence_1.png>
 Package pdftex.def Info: graphiques/forwards_coalescence_1.png  used on input l
-ine 1319.
+ine 1356.
 (pdftex.def)             Requested size: 232.37886pt x 178.23457pt.
- [42 <./graphiques/backwards_coalescence_1.png>]
-Underfull \hbox (badness 10000) in paragraph at lines 1344--1347
+ [43 <./graphiques/backwards_coalescence_1.png>]
+Underfull \hbox (badness 10000) in paragraph at lines 1381--1384
 
  []
 
-[43 <./graphiques/forwards_coalescence_1.png>]
-<graphiques/forwards_coalescence_2_1.png, id=171, 260.81557pt x 178.28339pt>
+[44 <./graphiques/forwards_coalescence_1.png>]
+<graphiques/forwards_coalescence_2_1.png, id=175, 260.81557pt x 178.28339pt>
 File: graphiques/forwards_coalescence_2_1.png Graphic file (type png)
 <use graphiques/forwards_coalescence_2_1.png>
 Package pdftex.def Info: graphiques/forwards_coalescence_2_1.png  used on input
- line 1349.
+ line 1386.
 (pdftex.def)             Requested size: 208.65273pt x 142.62689pt.
-<graphiques/forwards_coalescence_2_2.png, id=172, 276.54337pt x 178.27829pt>
+<graphiques/forwards_coalescence_2_2.png, id=176, 276.54337pt x 178.27829pt>
 File: graphiques/forwards_coalescence_2_2.png Graphic file (type png)
 <use graphiques/forwards_coalescence_2_2.png>
 Package pdftex.def Info: graphiques/forwards_coalescence_2_2.png  used on input
- line 1350.
+ line 1387.
 (pdftex.def)             Requested size: 221.23499pt x 142.6228pt.
- [44 <./graphiques/forwards_coalescence_2_1.png> <./graphiques/forwards_coalesc
+ [45 <./graphiques/forwards_coalescence_2_1.png> <./graphiques/forwards_coalesc
 ence_2_2.png>]
-<graphiques/forwards_coalescence_2_4.png, id=178, 276.54337pt x 178.27829pt>
+<graphiques/forwards_coalescence_2_4.png, id=182, 276.54337pt x 178.27829pt>
 File: graphiques/forwards_coalescence_2_4.png Graphic file (type png)
 <use graphiques/forwards_coalescence_2_4.png>
 Package pdftex.def Info: graphiques/forwards_coalescence_2_4.png  used on input
- line 1367.
+ line 1404.
 (pdftex.def)             Requested size: 221.23499pt x 142.6228pt.
-<graphiques/forwards_coalescence_2_3.png, id=179, 268.66171pt x 173.19725pt>
+<graphiques/forwards_coalescence_2_3.png, id=183, 268.66171pt x 173.19725pt>
 File: graphiques/forwards_coalescence_2_3.png Graphic file (type png)
 <use graphiques/forwards_coalescence_2_3.png>
 Package pdftex.def Info: graphiques/forwards_coalescence_2_3.png  used on input
- line 1368.
+ line 1405.
 (pdftex.def)             Requested size: 214.92964pt x 138.55797pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 1393--1394
+Underfull \hbox (badness 10000) in paragraph at lines 1430--1431
 
  []
 
-[45 <./graphiques/forwards_coalescence_2_4.png> <./graphiques/forwards_coalesce
+[46 <./graphiques/forwards_coalescence_2_4.png> <./graphiques/forwards_coalesce
 nce_2_3.png>]
-Underfull \hbox (badness 10000) in paragraph at lines 1395--1403
+Underfull \hbox (badness 10000) in paragraph at lines 1432--1440
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1406--1407
+Underfull \hbox (badness 10000) in paragraph at lines 1443--1444
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1409--1410
+Underfull \hbox (badness 10000) in paragraph at lines 1446--1447
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1411--1416
+Underfull \hbox (badness 10000) in paragraph at lines 1448--1453
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1421--1426
+Underfull \hbox (badness 10000) in paragraph at lines 1458--1463
 
  []
 
-[46]
-<graphiques/monotonic.png, id=188, 243.33333pt x 156.8689pt>
+[47]
+<graphiques/monotonic.png, id=192, 243.33333pt x 156.8689pt>
 File: graphiques/monotonic.png Graphic file (type png)
 <use graphiques/monotonic.png>
-Package pdftex.def Info: graphiques/monotonic.png  used on input line 1436.
+Package pdftex.def Info: graphiques/monotonic.png  used on input line 1473.
 (pdftex.def)             Requested size: 243.33273pt x 156.8685pt.
- [47 <./graphiques/monotonic.png>]
-Underfull \hbox (badness 10000) in paragraph at lines 1462--1465
+ [48 <./graphiques/monotonic.png>]
+Underfull \hbox (badness 10000) in paragraph at lines 1499--1502
 
  []
 
-[48]
-Underfull \hbox (badness 10000) in paragraph at lines 1498--1499
+[49]
+Underfull \hbox (badness 10000) in paragraph at lines 1535--1536
 
  []
 
 
-Overfull \hbox (10.29439pt too wide) in paragraph at lines 1514--1515
+Overfull \hbox (10.29439pt too wide) in paragraph at lines 1551--1552
 \T1/lmr/m/n/10.95 rème fon-da-men-tal de la si-mu-la-tion par-faite, en po-sant
  $\OML/lmm/m/it/10.95 g\OT1/lmr/m/n/10.95 (\OML/lmm/m/it/10.95 U\OT1/lmr/m/n/10
 .95 ) = \OML/lmm/m/it/10.95 []\OT1/lmr/m/n/10.95 (\OML/lmm/m/it/10.95 x[]; U\O
@@ -881,7 +881,76 @@ T1/lmr/m/n/10.95 )$\T1/lmr/m/n/10.95 ,$\OML/lmm/m/it/10.95 b\OT1/lmr/m/n/10.95
 (\OML/lmm/m/it/10.95 U\OT1/lmr/m/n/10.95 ) =
  []
 
-[49] [50] [51] ("compte rendu.aux") ) 
+[50] [51] [52]
+Underfull \hbox (badness 10000) in paragraph at lines 1662--1664
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1662--1664
+
+ []
+
+[53]
+Overfull \hbox (8.42407pt too wide) in paragraph at lines 1665--1671
+\OML/lmm/m/it/10.95 \OT1/lmr/m/n/10.95 (\OML/lmm/m/it/10.95 X[]; U[]\OT1/lmr/m
+/n/10.95 )$ \T1/lmr/m/n/10.95 et $\OML/lmm/m/it/10.95 Y[] \OT1/lmr/m/n/10.95 = 
+\OML/lmm/m/it/10.95 \OT1/lmr/m/n/10.95 (\OML/lmm/m/it/10.95 Y[]; U[]\OT1/lmr/m
+/n/10.95 )$ \T1/lmr/m/n/10.95 où $\OML/lmm/m/it/10.95 U[]; U[]; []$ \T1/lmr/m/n
+/10.95 sont iid telles que $\OML/lmm/m/it/10.95 U[] \OMS/lmsy/m/n/10.95  \OML/
+lmm/m/it/10.95 Unif\OT1/lmr/m/n/10.95 ([0\OML/lmm/m/it/10.95 ; \OT1/lmr/m/n/10.
+95 1])$\T1/lmr/m/n/10.95 . 
+ []
+
+[54]
+Overfull \hbox (25.9184pt too wide) in paragraph at lines 1713--1718
+\OML/lmm/m/it/10.95 f\OT1/lmr/m/n/10.95 (\OML/lmm/m/it/10.95 n[]; n[]\OT1/lmr/m
+/n/10.95 )$ \T1/lmr/m/n/10.95 est crois-sant en $\OML/lmm/m/it/10.95 n[]$ \T1/l
+mr/m/n/10.95 et dé-crois-sant en $\OML/lmm/m/it/10.95 n[]$\T1/lmr/m/n/10.95 . D
+onc si $\OML/lmm/m/it/10.95 U < f\OT1/lmr/m/n/10.95 (\OML/lmm/m/it/10.95 N[]\OT
+1/lmr/m/n/10.95 (\OML/lmm/m/it/10.95 x\OT1/lmr/m/n/10.95 )\OML/lmm/m/it/10.95 ;
+ N[]\OT1/lmr/m/n/10.95 (\OML/lmm/m/it/10.95 x\OT1/lmr/m/n/10.95 ))$
+ []
+
+[55] [56]
+Underfull \hbox (badness 10000) in paragraph at lines 1777--1780
+
+ []
+
+[57]
+Overfull \hbox (72.67915pt too wide) detected at line 1812
+\OMS/lmsy/m/n/10.95  \OML/lmm/m/it/10.95 h\OT1/lmr/m/n/10.95 (\OML/lmm/m/it/10.
+95 Y\OT1/lmr/m/n/10.95 ) + \OML/lmm/m/it/10.95 h\OT1/lmr/m/n/10.95 (\OML/lmm/m/
+it/10.95 X\OT1/lmr/m/n/10.95 ) = [\U/msb/m/n/10.95 P\OT1/lmr/m/n/10.95 (\OML/lm
+m/m/it/10.95 X \OMS/lmsy/m/n/10.95 2 \OML/lmm/m/it/10.95 C \OMS/lmsy/m/n/10.95 
+\ \OML/lmm/m/it/10.95 D[]\OT1/lmr/m/n/10.95 ) \OMS/lmsy/m/n/10.95   \U/msb/m/n/
+10.95 P\OT1/lmr/m/n/10.95 (\OML/lmm/m/it/10.95 Y \OMS/lmsy/m/n/10.95 2 \OML/lmm
+/m/it/10.95 C \OMS/lmsy/m/n/10.95 \ \OML/lmm/m/it/10.95 D[]\OT1/lmr/m/n/10.95 )
+] + [\U/msb/m/n/10.95 P\OT1/lmr/m/n/10.95 (\OML/lmm/m/it/10.95 Y \OMS/lmsy/m/n/
+10.95 2 \OML/lmm/m/it/10.95 C[] \OMS/lmsy/m/n/10.95 \ \OML/lmm/m/it/10.95 D\OT1
+/lmr/m/n/10.95 ) \OMS/lmsy/m/n/10.95   \U/msb/m/n/10.95 P\OT1/lmr/m/n/10.95 (\O
+ML/lmm/m/it/10.95 X \OMS/lmsy/m/n/10.95 2 \OML/lmm/m/it/10.95 C[] \OMS/lmsy/m/n
+/10.95 \ \OML/lmm/m/it/10.95 D\OT1/lmr/m/n/10.95 )]
+ []
+
+
+Overfull \hbox (63.6821pt too wide) detected at line 1825
+[]
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1837--1838
+
+ []
+
+[58]
+Overfull \hbox (32.89824pt too wide) in paragraph at lines 1870--1871
+[]\T1/lmr/m/n/10.95 Par la pro-priété de sous-multiplicativité, $\OML/lmm/m/it/
+10.95 d[] \OMS/lmsy/m/n/10.95  \OT1/lmr/m/n/10.95 [\OML/lmm/m/it/10.95 e[]\OT1
+/lmr/m/n/10.95 ][] =
+ []
+
+[59] [60] [61] [62] ("compte rendu.aux") ) 
 Here is how much of TeX's memory you used:
  8379 strings out of 492945
  118758 string characters out of 3125364
@@ -889,42 +958,42 @@ Here is how much of TeX's memory you used:
  12106 multiletter control sequences out of 15000+200000
  103139 words of font info for 77 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
- 41i,14n,40p,605b,1767s stack positions out of 5000i,500n,10000p,200000b,50000s
-{C:/Users/Antaker/AppData/Local/Programs/M
-iKTeX 2.9/fonts/enc/dvips/lm/lm-ec.enc}{C:/Users/Antaker/AppData/Local/Programs
-/MiKTeX 2.9/fonts/enc/dvips/lm/lm-rm.enc}{C:/Users/Antaker/AppData/Local/Progra
-ms/MiKTeX 2.9/fonts/enc/dvips/lm/lm-mathit.enc}{C:/Users/Antaker/AppData/Local/
-Programs/MiKTeX 2.9/fonts/enc/dvips/lm/lm-mathsy.enc}{C:/Users/Antaker/AppData/
-Local/Programs/MiKTeX 2.9/fonts/enc/dvips/lm/lm-mathex.enc}<C:/Users/Antaker/Ap
-pData/Local/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmbx10.pfb><C:/Users/Anta
-ker/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmbx12.pfb><C:/User
-s/Antaker/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmcsc10.pfb><
-C:/Users/Antaker/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmex10
-.pfb><C:/Users/Antaker/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/lm/
-lmmi10.pfb><C:/Users/Antaker/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/publ
-ic/lm/lmmi12.pfb><C:/Users/Antaker/AppData/Local/Programs/MiKTeX 2.9/fonts/type
-1/public/lm/lmmi6.pfb><C:/Users/Antaker/AppData/Local/Programs/MiKTeX 2.9/fonts
-/type1/public/lm/lmmi7.pfb><C:/Users/Antaker/AppData/Local/Programs/MiKTeX 2.9/
-fonts/type1/public/lm/lmmi8.pfb><C:/Users/Antaker/AppData/Local/Programs/MiKTeX
- 2.9/fonts/type1/public/lm/lmr10.pfb><C:/Users/Antaker/AppData/Local/Programs/M
-iKTeX 2.9/fonts/type1/public/lm/lmr12.pfb><C:/Users/Antaker/AppData/Local/Progr
-ams/MiKTeX 2.9/fonts/type1/public/lm/lmr17.pfb><C:/Users/Antaker/AppData/Local/
-Programs/MiKTeX 2.9/fonts/type1/public/lm/lmr6.pfb><C:/Users/Antaker/AppData/Lo
-cal/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmr7.pfb><C:/Users/Antaker/AppDat
-a/Local/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmr8.pfb><C:/Users/Antaker/Ap
-pData/Local/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmr9.pfb><C:/Users/Antake
-r/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmri10.pfb><C:/Users/
-Antaker/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmri12.pfb><C:/
-Users/Antaker/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmsy10.pf
-b><C:/Users/Antaker/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/lm/lms
-y6.pfb><C:/Users/Antaker/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/l
-m/lmsy8.pfb><C:/Users/Antaker/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/pub
-lic/lm/lmtt10.pfb><C:/Users/Antaker/AppData/Local/Programs/MiKTeX 2.9/fonts/typ
-e1/public/lm/lmtti10.pfb><C:/Users/Antaker/AppData/Local/Programs/MiKTeX 2.9/fo
-nts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on "compte rendu.pdf" (51 pages, 1214345 bytes).
+ 41i,14n,40p,663b,1767s stack positions out of 5000i,500n,10000p,200000b,50000s
+{C:/Users/Antaker/AppData/Local/Progr
+ams/MiKTeX 2.9/fonts/enc/dvips/lm/lm-ec.enc}{C:/Users/Antaker/AppData/Local/Pro
+grams/MiKTeX 2.9/fonts/enc/dvips/lm/lm-rm.enc}{C:/Users/Antaker/AppData/Local/P
+rograms/MiKTeX 2.9/fonts/enc/dvips/lm/lm-mathit.enc}{C:/Users/Antaker/AppData/L
+ocal/Programs/MiKTeX 2.9/fonts/enc/dvips/lm/lm-mathsy.enc}{C:/Users/Antaker/App
+Data/Local/Programs/MiKTeX 2.9/fonts/enc/dvips/lm/lm-mathex.enc}<C:/Users/Antak
+er/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmbx10.pfb><C:/Users
+/Antaker/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmbx12.pfb><C:
+/Users/Antaker/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmcsc10.
+pfb><C:/Users/Antaker/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/lm/l
+mex10.pfb><C:/Users/Antaker/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/publi
+c/lm/lmmi10.pfb><C:/Users/Antaker/AppData/Local/Programs/MiKTeX 2.9/fonts/type1
+/public/lm/lmmi12.pfb><C:/Users/Antaker/AppData/Local/Programs/MiKTeX 2.9/fonts
+/type1/public/lm/lmmi6.pfb><C:/Users/Antaker/AppData/Local/Programs/MiKTeX 2.9/
+fonts/type1/public/lm/lmmi7.pfb><C:/Users/Antaker/AppData/Local/Programs/MiKTeX
+ 2.9/fonts/type1/public/lm/lmmi8.pfb><C:/Users/Antaker/AppData/Local/Programs/M
+iKTeX 2.9/fonts/type1/public/lm/lmr10.pfb><C:/Users/Antaker/AppData/Local/Progr
+ams/MiKTeX 2.9/fonts/type1/public/lm/lmr12.pfb><C:/Users/Antaker/AppData/Local/
+Programs/MiKTeX 2.9/fonts/type1/public/lm/lmr17.pfb><C:/Users/Antaker/AppData/L
+ocal/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmr6.pfb><C:/Users/Antaker/AppDa
+ta/Local/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmr7.pfb><C:/Users/Antaker/A
+ppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmr8.pfb><C:/Users/Antak
+er/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmr9.pfb><C:/Users/A
+ntaker/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmri10.pfb><C:/U
+sers/Antaker/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmri12.pfb
+><C:/Users/Antaker/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmsy
+10.pfb><C:/Users/Antaker/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/l
+m/lmsy6.pfb><C:/Users/Antaker/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/pub
+lic/lm/lmsy8.pfb><C:/Users/Antaker/AppData/Local/Programs/MiKTeX 2.9/fonts/type
+1/public/lm/lmtt10.pfb><C:/Users/Antaker/AppData/Local/Programs/MiKTeX 2.9/font
+s/type1/public/lm/lmtti10.pfb><C:/Users/Antaker/AppData/Local/Programs/MiKTeX 2
+.9/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
+Output written on "compte rendu.pdf" (62 pages, 1255611 bytes).
 PDF statistics:
- 293 PDF objects out of 1000 (max. 8388607)
+ 328 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
  46 words of extra memory for PDF output out of 10000 (max. 10000000)
 
