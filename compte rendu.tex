@@ -89,7 +89,7 @@ Sujet de stage : Simulation parfaite de processus stochastiques spatio-temporels
 
 \section*{Préface}
 
-L'université de Lorraine comprend de nombreux chercheurs dans tout domaines, notamment dans notre cas les mathématiques. Algèbre, analyse, probabilités,etc de nombreux sujets de recherches sont disponibles.\\ On m'a proposé de travailler dans le domaine des probabilités et statistiques, à propos d'un problème classique du domaine : la génération d'échantillons selon une loi de probabilité ciblée.\\ L'objectif de ce stage et ultimement de ce mémoire est le suivant : présenter une introduction précise aux méthodes classiques de simulation de tels échantillons, ainsi que fournir des exemples d'applications. \\
+L'IECL Nancy comprend de nombreux chercheurs dans tout domaines, notamment dans notre cas les mathématiques. Algèbre, analyse, probabilités,etc de nombreux sujets de recherches sont disponibles.\\ On m'a proposé de travailler dans le domaine des probabilités et statistiques, à propos d'un problème classique du domaine : la génération d'échantillons selon une loi de probabilité ciblée.\\ L'objectif de ce stage et ultimement de ce mémoire est le suivant : présenter une introduction précise aux méthodes classiques de simulation de tels échantillons, ainsi que fournir des exemples d'applications. \\
 Ce stage est basé principalement sur le livre de Mark Huber :\\ \underline{\textit{"Perfect Simulation"}}, où ce mémoire fournit non seulement une traduction d'une partie de ce livre mais aussi :
 \begin{itemize}
 \item l'implémentation sous R des algorithmes énoncés
@@ -1670,7 +1670,7 @@ Le pseudo-code suivant formalise cette idée.
 On peut alors utiliser la bounding chain avec le CFTP pour générer des exactement selon la loi cible. On veut à présent savoir combien de temps met le CFTP dans ce cas pour fonctionner. Pour cela, on doit borner le temps moyen pour que tous les labels $\left\{0,1\right\}$ disparaissent dans la bounding chain. 
 
 \begin{lemme}
-Notons $\phi_{t}^{BC}$ comme étant $t$ pas effectués à l'aide de HCGM-bounding-chain-Gibbs-update. Pour $\lambda < 1/(\Delta -1)$,où $\delta$ est le degré du grapne, la probabilité pour que la bounding chain lie plus d'un état est au plus de 
+Notons $\phi_{t}^{BC}$ comme étant $t$ pas effectués à l'aide de HCGM-bounding-chain-Gibbs-update. Pour $\lambda < 1/(\Delta -1)$,où $\Delta$ est le degré du graphe, la probabilité pour que la bounding chain lie plus d'un état est au plus de 
 
 $$\# V \exp(-t(\# V)^{-1}(1- \lambda \Delta(1+\lambda)))$$
 \end{lemme}

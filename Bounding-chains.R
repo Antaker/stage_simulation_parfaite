@@ -1,11 +1,9 @@
 
 Bounding_chain_voisins_1 <- function(Y,k,l){ ## Entrée : bounding chain, coordonnées d'un noeud du graphe. Sortie : nombre de voisins de label 1 du noeud choisi##
   
-  
-  ##Comme on ne vérifie que les 1, on a besoin seulement de la deuxième partie de la bounding chain, de par sa construction##
   X = Y
   
-  ##On entoure la matrice de valeurs aberrant##
+  ##On entoure la matrice de valeurs aberrantes##
   X = rbind(rep(-99,dim(X)[2]),X)
   X = rbind(X,rep(-99,dim(X)[2]))
   X = cbind(rep(-99,dim(X)[1]),X)  
@@ -25,9 +23,9 @@ Bounding_chain_voisins_1 <- function(Y,k,l){ ## Entrée : bounding chain, coordon
 
 Bounding_chain_voisins_01 <- function(Y,k,l){ ## Entrée : bounding chain, coordonnées d'un noeud du graphe. Sortie : nombre de voisins de label 1 du noeud choisi##
   
+  
   X = Y
 
-  
   ##On entoure les matrices de valeurs aberrantes##
   X = rbind(rep(-99,dim(X)[1]),X)
   X = rbind(X,rep(-99,dim(X)[2]))
@@ -87,6 +85,7 @@ Bounding_chain_update_HCGM <- function(Y,u,lambda){##mise à jour d'un noeud pour
 
 Bounding_chain_cftp_HCGM <- function(t,lambda,Nrows,Ncols){##Effectue la méthode de bounding chains pour l'obtention d'un échantillon de la loi stationnaire pour le modèle hardcore gas de paramètre lambda et une mise à jour de type Gibbs pour un graphe de taille Nrows*Ncols##
   
+  a = 1
   ##tirage des aléatoires##
   u = runif(t)
   
@@ -94,9 +93,9 @@ Bounding_chain_cftp_HCGM <- function(t,lambda,Nrows,Ncols){##Effectue la méthode
   Y = matrix(2,Nrows,Ncols) 
   
   ##on met à jour la bounding chain selon les choix aléatoires u##
-  for(i in 1:t){
-    Y = Bounding_chain_update_HCGM(Y,u[i],lambda)
-  }
+
+    Y = Bounding_chain_update_HCGM(Y,u,lambda)
+
   
   ##si la bounding chain a plus d'un état sur au moins un des noeuds##
   
@@ -105,18 +104,15 @@ Bounding_chain_cftp_HCGM <- function(t,lambda,Nrows,Ncols){##Effectue la méthode
     
     ##après récursions, X sera la bounding chain où tout noeud n'aura qu'un élément##
     X = Bounding_chain_cftp_HCGM(2*t,lambda,Nrows,Ncols)
+    a = 2*X[[2]]
     
     ##on représente la bounding chain par une matrice remplie de 0,1 et 2, où 2 représente le label {0,1}$##
-    Y = X
+    Y = X[[1]]
     
-    for (i in 1:t){
-      
-      Y = Bounding_chain_update_HCGM(Y,u[i],lambda)
-      
-    }
+    Y = Bounding_chain_update_HCGM(Y,u,lambda)
   
   }
-  return(Y)
+    return(list(Y,a))
   
 }
 
@@ -142,27 +138,27 @@ Bounding_chain_update_shift <- function(Y,u,lambda,pshift){##mise à jour d'un no
     
     ##On vérifie le tableau des cas donné dans le chapitre d'Huber associé##
     
-    if(u[i]>lambda/(1 + lambda)){
+    if(u[i]>=lambda/(1 + lambda)){
       
       Y[k,l] = 0
       
-    }else if((N1 == 0) && (N01 == 0) && (u[i] < lambda/(1+lambda)) ){
+    }else if((N1 == 0) && (N01 == 0)){
       
       Y[k,l] = 1
       
-    }else if((N1 == 0) && (N01 == 1) && (u[i]<lambda/(1+lambda)) && (S == 0)){
+    }else if((N1 == 0) && (N01 == 1) && (S == 0)){
       
       Y[k,l] = 2
 
-    }else if ((N1 == 1) && (S==0) && u[i]<lambda/(1+lambda)){
+    }else if ((N1 == 1) && (S==0)){
       
       Y[k,l] = 0
       
-    }else if(N1>=2 && u[i]<lambda/(1+lambda)){
+    }else if(N1>=2){
       
       Y[k,l] = 0
       
-    }else if(N1 == 0 && N01 == 1 && u[i]<lambda/(1+lambda) && S==1){
+    }else if((N1 == 0) && (N01 == 1) && (S==1)){
       
       k = k+1
       l = l+1
@@ -179,10 +175,10 @@ Bounding_chain_update_shift <- function(Y,u,lambda,pshift){##mise à jour d'un no
       w = w - c(1,1)
       k=k-1
       l=l-1
-      Y[w] = 0
+      Y[w[1],w[2]] = 0
       Y[k,l] = 1
       
-    }else if((N1==1) && (N01 == 0) && (u[i]<lambda/(1+lambda)) && (S == 1) ){
+    }else if((N1==1) && (N01 == 0) && (S == 1)){
       
       k = k+1
       l = l+1
@@ -197,13 +193,13 @@ Bounding_chain_update_shift <- function(Y,u,lambda,pshift){##mise à jour d'un no
       w = c(k-1,l)*(X[k-1,l] == 1) + c(k,l+1)*(X[k,l+1] == 1) + c(k+1,l)*(X[k+1,l] == 1) + c(k,l-1)*(X[k,l-1] == 1)
       
       w = w - c(1,1)
-      k=k-1
-      l=l-1
-      Y[w] = 0
+      k = k-1
+      l = l-1
+      Y[w[1],w[2]] = 0
       Y[k,l] = 1
       
       
-    }else if((N1==1) && (N01 >= 1) && (u[i]<lambda/(1+lambda)) && (S == 1)){
+    }else if((N1==1) && (N01 >= 1) && (S == 1)){
       
       k = k+1
       l = l+1
@@ -218,13 +214,12 @@ Bounding_chain_update_shift <- function(Y,u,lambda,pshift){##mise à jour d'un no
       w = c(k-1,l)*(X[k-1,l] == 1) + c(k,l+1)*(X[k,l+1] == 1) + c(k+1,l)*(X[k+1,l] == 1) + c(k,l-1)*(X[k,l-1] == 1)
       
       w = w - c(1,1)
-      k=k-1
-      l=l-1
-      Y[w] = 2
+      k =k-1
+      l =l-1
+      Y[w[1],w[2]] = 2
       Y[k,l] = 2
       
     }
-    
     
   }
   
@@ -233,7 +228,7 @@ Bounding_chain_update_shift <- function(Y,u,lambda,pshift){##mise à jour d'un no
 }
 
 Bounding_chain_cftp_shift <- function(t,lambda,pshift,Nrows,Ncols){##Effectue la méthode de bounding chains pour l'obtention d'un échantillon de la loi stationnaire pour le modèle hardcore gas shift de paramètre lambda et une mise à jour de type Gibbs pour un graphe de taille Nrows*Ncols##
-  
+  a = 1
   ##tirage des aléatoires##
   u = runif(t)
   
@@ -241,9 +236,9 @@ Bounding_chain_cftp_shift <- function(t,lambda,pshift,Nrows,Ncols){##Effectue la
   Y = matrix(2,Nrows,Ncols) 
   
   ##on met à jour la bounding chain selon les choix aléatoires u##
-  for(i in 1:t){
-    Y = Bounding_chain_update_shift(Y,u[i],lambda,pshift)
-  }
+  
+  Y = Bounding_chain_update_shift(Y,u,lambda,pshift)
+  
   
   ##si la bounding chain a plus d'un état sur au moins un des noeuds##
   
@@ -252,24 +247,27 @@ Bounding_chain_cftp_shift <- function(t,lambda,pshift,Nrows,Ncols){##Effectue la
     
     ##après récursions, X sera la bounding chain où tout noeud n'aura qu'un élément##
     X = Bounding_chain_cftp_shift(2*t,lambda,pshift,Nrows,Ncols)
-    
+    a = 2*X[[2]]
     ##on représente la bounding chain par une matrice remplie de 0,1 et 2, où 2 représente le label {0,1}$##
-    Y = X
+    Y = X[[1]]
     
-    for (i in 1:t){
+    Y = Bounding_chain_update_shift(Y,u,lambda,pshift)
       
-      Y = Bounding_chain_update_shift(Y,u[i],lambda,pshift)
-      
-    }
-    
   }
-  return(Y)
+  return(list(Y,a))
   
 }
 
+##nombre d'uniformes utilisées = 2*a - 1#
+##complexité = nombre de calculs fait pour chaque uniforme roulée##
 
-
-Bounding_chain_cftp_HCGM(1,0.5,5,5)
-Bounding_chain_cftp_shift(1,0.5,0.5,5,5)
+t = c()
+for (i in 1:10^4){t = c(t,Bounding_chain_cftp_shift(1,0.5,0.5,10,10)[[2]])
+print(i)}
+mean(t)
+Bounding_chain_cftp_HCGM(1,0.5,10,10)[[2]]
+X = Bounding_chain_cftp_shift(1,0.5,0.5,10,10)[[1]]
+X
+image(X)
 
 
