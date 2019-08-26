@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (MiKTeX 2.9.7000 64-bit) (preloaded format=pdflatex 2019.4.30)  22 AUG 2019 09:56
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (MiKTeX 2.9.7000 64-bit) (preloaded format=pdflatex 2019.4.30)  26 AUG 2019 14:08
 entering extended mode
 **"./compte rendu.tex"
 ("compte rendu.tex"
@@ -924,23 +924,28 @@ Overfull \hbox (3.58977pt too wide) in paragraph at lines 1776--1777
 $\OML/lmm/m/it/10.95 D[] \OT1/lmr/m/n/10.95 = # []$
  []
 
-[55] [56]
-Underfull \hbox (badness 10000) in paragraph at lines 1788--1789
+[55]
+Underfull \hbox (badness 10000) in paragraph at lines 1784--1790
 
  []
 
-LaTeX Font Info:    Try loading font information for T1+lmtt on input line 1791
+[56]
+Underfull \hbox (badness 10000) in paragraph at lines 1804--1805
+
+ []
+
+LaTeX Font Info:    Try loading font information for T1+lmtt on input line 1807
 .
 ("C:\Users\Antaker\AppData\Local\Programs\MiKTeX 2.9\tex/latex/lm\t1lmtt.fd"
 File: t1lmtt.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
 [57] [58] [59]
-Underfull \hbox (badness 10000) in paragraph at lines 1890--1891
+Underfull \hbox (badness 10000) in paragraph at lines 1906--1907
 
  []
 
 [60] [61] [62] [63] [64]
-Underfull \hbox (badness 10000) in paragraph at lines 2063--2064
+Underfull \hbox (badness 10000) in paragraph at lines 2079--2080
 
  []
 
@@ -985,7 +990,7 @@ lic/lm/lmsy8.pfb><C:/Users/Antaker/AppData/Local/Programs/MiKTeX 2.9/fonts/type
 1/public/lm/lmtt10.pfb><C:/Users/Antaker/AppData/Local/Programs/MiKTeX 2.9/font
 s/type1/public/lm/lmtti10.pfb><C:/Users/Antaker/AppData/Local/Programs/MiKTeX 2
 .9/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on "compte rendu.pdf" (68 pages, 1289045 bytes).
+Output written on "compte rendu.pdf" (68 pages, 1291358 bytes).
 PDF statistics:
  347 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)

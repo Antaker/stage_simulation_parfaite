@@ -57,7 +57,7 @@ Coupling_from_the_past_Huber <- function(){  ##effectue le CFTP pour la fonction
 
 ##On calcule le nombre moyen de choix aléatoires utilisés (ou on rend un tableau de sorties de l'algorithme)
 t=NULL
-for (i in 1:10^6){
+for (i in 1:10^4){
   
   t=c(t, Coupling_from_the_past_counting())
   
@@ -162,7 +162,7 @@ Monotonic_Ising_Gibbs <- function(t,a,b,bet){ ##t = nombre de pas effectués, a =
     xmax = IsingGibbsUpdate(xmax,u[k],c(i[k],j[k]),bet)
     xmin = IsingGibbsUpdate(xmin,u[k],c(i[k],j[k]),bet)
   }
-  if (sum(xmax != xmin)>=1)
+  if (sum(xmax != xmin)>=1){ ##si les fins de trajectoires résultant des mises à jour des états extrémaux sont différentes, on fait une récursion##
     xmax = Monotonic_Ising_Gibbs(2*t,a,b,bet)
     
     for (m in 1:t){
@@ -170,6 +170,8 @@ Monotonic_Ising_Gibbs <- function(t,a,b,bet){ ##t = nombre de pas effectués, a =
       xmax = IsingGibbsUpdate(xmax,u[m],c(i[m],j[m]),bet)  
       
     }
+    
+  }  
   
   return(xmax)
   
@@ -187,3 +189,85 @@ for (i in 1:10^3){
 }
 mean(U)
 mean(V)
+
+voisins_1 <- function(Y,A,k){ ## Entrée : état du modèle HCGM,matrice d'adjacence,numéro du noeud du graphe. Sortie : nombre de voisins de label 1 du noeud choisi##
+  
+  X = Y
+  V1 = X[[1]]
+  V2 = X[[2]]
+  N1 = 0
+  
+  ##numvoisin contiendra les numéros des noeuds voisins de k##
+  numvoisin = (A[k,] == 1)
+  a = 1:dim(A)[2]
+  numvoisin = a[numvoisin]
+  
+  ##On compte le nombre de 1 autour du noeud considéré selon qu'il soit dans une partie du graphe ou l'autre##
+  
+  if(k <= dim(V1)[1]){
+    
+    for (i in numvoisin){
+      
+      N1 = N1 + 1*(V2[i - length(V1)]==1)
+      
+    }
+  }else{
+    
+    for (i in numvoisin){
+      
+      N1 = N1 + 1*(V1[i]==1)
+      
+    }
+  }
+  
+  return(N1)
+  
+}
+
+HCGM_Gibbs_update <- function(X,A,lambda){ ##met à jour un état X de la chaine pour le modèle HCGM biparti de matrice d'adjacence A
+  
+  u = runif(1)
+  
+  ij = sample(1:dim(A)[1],1,replace = TRUE)
+  
+  N1 = voisins_1(X,A,ij)
+  
+  if((u < lambda/(lambda +1)) && (N1==0)){
+    if(ij <= length(X[[1]])){X[[1]][ij] = 1}else{X[[2]][ij - length(X[[1]])] = 1}
+  }
+  return(X)
+}
+
+Monotonic_HCGM_Bipartite_Gibbs <- function(t,A,lV1,lV2,lambda){ ##t = nombre de pas effectués, A = matrice d'adjacence du graphe biparti, V1 = ensemble des noeuds d'un côté du graphe biparti, V2 = ensemble des noeuds de l'autre côté du graphe biparti
+  
+  V1 = matrix(1,1,lV1)
+  V2 = matrix(0,1,lV2)
+  V3 = matrix(0,1,lV1)
+  V4 = matrix(1,1,lV2)
+
+  ##On initialise les états extremaux##
+  xmin = list(V1,V2)
+  xmax = list(V3,V4)
+  
+  for (k in 1:t){
+    xmin = HCGM_Gibbs_update(xmin,A,lambda)
+    xmax = HCGM_Gibbs_update(xmax,A,lambda)
+  }
+  if (sum(xmin[[1]]==xmax[[1]])<=length(xmin[[1]]) | sum(xmin[[2]]==xmax[[2]])<=length(xmin[[2]])){  ##si les fins de trajectoires résultant des mises à jour des états extrémaux sont différentes, on fait une récursion##
+    
+    xmax = Monotonic_HCGM_Bipartite_Gibbs(2*t,A,lV1,lV2,lambda)
+  
+    for (m in 1:t){
+      
+      xmax = HCGM_Gibbs_update(xmax,A,lambda)  
+      
+    }
+  
+  }
+  return(xmax)
+  
+}
+
+## v1 = ensemble des noeuds de V1 ##
+## v2 = ensemble des noeuds de V2 ##
+## A = matrice d'adjacence ##

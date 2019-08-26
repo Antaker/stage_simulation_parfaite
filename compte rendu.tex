@@ -1383,7 +1383,7 @@ Cela signifie que le CFTP monotne peut-être utilisé pour générer un échantillon 
 \end{algorithmic}
 \end{algorithm}
 
-\subsubsection{Modèle gas Hard-core sur graphe bipartite}
+\subsubsection{Modèle gas Hard-core sur graphe biparti}
 
 On considère maintenant la mise-à-jour HCGM-Gibbs de la section $1.4.4$. Cette fonction de mise-à-jour n'est pas monotone en utilisant l'ordre partiel $x \preceq y \leftrightarrow (\forall \nu \in V)(x(\nu) \leq y(\nu))$.\\
 Il est alors nécessaire de trouver une autre fonction de mise-à-jour ou un autre ordre partiel. Le problème est que la chaîne est répulsive,ie, deux n\oe{}uds voisins ne peuvent avoir le label $1$. Cependant, si le graphe est biparti, il est possible de construire un nouvel ordre partiel tel que l'on ait une fonction de mise-à-jour monotone.
@@ -1778,6 +1778,22 @@ Voir lemme $4.6$ du livre d'Huber pour plus de détails. La preuve étudie le comp
 
 \newpage
 \section{Comparaison de méthodes}
+
+\subsection{CFTP : Comparaison entre la méthode de Baccelli/Brémaud et Huber}
+
+La comparaison ici est très simple : l'approche de Baccelli/Brémaud demande de calculer toutes les trajectoires à partir de tous les états initiaux possibles, et demande donc un nombre de calculs bien plus élevé que la méthode d'Huber.\\
+La méthode d'Huber ne requiert de connaître qu'une simple condition sur les choix aléatoires effectués. \\
+Bien qu'au final il faille calculer la trajectoire complète, il n'est pas nécessaire de calculer de trajectoire à chaque fois que l'on tire des choix aléatoires, d'où un nombre de calculs et finalement un temps de calcul réduit.\\
+De plus, la méthode de Baccelli/Brémaud n'est pas adaptée à tous les problèmes : certains d'entre eux sont trop compliqués pour qu'on puisse considérer tous les états initiaux possibles (par exemple, tout modèle se basant sur des graphes aura un nombre d'états initiaux augmentant exponentiellement selon le nombre de n\oe{}uds).\\
+Cependant, la mise en place de Baccelli/Brémaud est conceptuellement plus simple que celle d'Huber : il suffit de connaître tous les états possibles, de connaître la fonction de mise à jour et de faire alors évoluer toutes les trajectoires selon des choix aléatoires; la méthode de Huber requiert de connaître suffisamment le comportement de la chaîne étudiée afin de déterminer un ensemble dans lequel les choix aléatoires effectués permettent d'obtenir le même état final, peu importe le choix initial effectué.\\
+En somme, si la chaîne est suffisamment simple et que vous ne la connaissez pas suffisamment, utilisez plutôt la méthode Baccelli/Brémaud, sinon, si vous avez la connaissance de l'ensemble des choix aléatoires résultant en un même état final, utilisez la méthode d'Huber.
+\newline
+La comparaison n'est au final valable que pour les modèles "simples" (comme l'exemple avec les états $\left\{0,1,2\right\}$ donné par Huber) puisque ensuite se retrouve avec la méthode de CFTP monotone ou les bounding chains que l'on analyse dans la suite.
+
+\subsection{Comparaison entre CFTP monotone et bounding chains}
+
+Ici aussi la comparaison de méthodes est assez claire : si un modèle peut être adapté à fonctionner à l'aide du CFTP monotone, alors celui-ci sera plus efficace que la méthode de bounding chains. En effet, si l'on peut utiliser le CFTP monotone, alors l'utilisation d'une bounding chain est automatiquement plus coûteuse : le besoin de déduire les états de chaque n\oe{}ud à chaque lancer aléatoire est plus coûteux que de faire évoluer les états extrémaux jusqu'à ce qu'ils coïncident.
+
 
 \newpage
 \section{Annexe : programmes}

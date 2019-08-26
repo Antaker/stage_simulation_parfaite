@@ -36,7 +36,7 @@
 \contentsline {paragraph}{Exemple}{36}% 
 \contentsline {subsection}{\numberline {3.3}CFTP monotone}{40}% 
 \contentsline {subsubsection}{\numberline {3.3.1}Mod\`ele D'Ising}{41}% 
-\contentsline {subsubsection}{\numberline {3.3.2}Mod\`ele gas Hard-core sur graphe bipartite}{43}% 
+\contentsline {subsubsection}{\numberline {3.3.2}Mod\`ele gas Hard-core sur graphe biparti}{43}% 
 \contentsline {subsubsection}{\numberline {3.3.3}Monotonie et temps de m\'elange}{44}% 
 \contentsline {subsection}{\numberline {3.4}Slice sampler}{47}% 
 \contentsline {subsection}{\numberline {3.5}Inconv\'enients du CFTP}{47}% 
@@ -47,6 +47,8 @@
 \contentsline {subsection}{\numberline {4.2}Mod\`ele hard-core gas}{51}% 
 \contentsline {subsection}{\numberline {4.3}Probl\`eme d'initialisation}{53}% 
 \contentsline {section}{\numberline {5}Comparaison de m\'ethodes}{56}% 
+\contentsline {subsection}{\numberline {5.1}CFTP : Comparaison entre la m\'ethode de Baccelli/Br\'emaud et Huber}{56}% 
+\contentsline {subsection}{\numberline {5.2}Comparaison entre CFTP monotone et bounding chains}{56}% 
 \contentsline {section}{\numberline {6}Annexe : programmes}{57}% 
 \contentsline {subsection}{\numberline {6.1}Chapitre 1}{57}% 
 \contentsline {paragraph}{\relax $\@@underline {\hbox {\textbf {Programmation sous R : \'echantillonneur de Gibbs}}}\mathsurround \z@ $\relax }{57}% 
