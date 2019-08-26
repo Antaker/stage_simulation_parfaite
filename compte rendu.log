@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (MiKTeX 2.9.7000 64-bit) (preloaded format=pdflatex 2019.4.30)  26 AUG 2019 14:08
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (MiKTeX 2.9.7000 64-bit) (preloaded format=pdflatex 2019.4.30)  26 AUG 2019 15:59
 entering extended mode
 **"./compte rendu.tex"
 ("compte rendu.tex"
@@ -521,11 +521,24 @@ Underfull \hbox (badness 10000) in paragraph at lines 156--158
  []
 
 
+LaTeX Warning: Reference `eq1' on page 6 undefined on input line 159.
+
+
+LaTeX Warning: Reference `eq1' on page 6 undefined on input line 185.
+
+
 Underfull \hbox (badness 10000) in paragraph at lines 184--186
 
  []
 
+
+LaTeX Warning: Reference `eq1' on page 6 undefined on input line 194.
+
 [6]
+
+LaTeX Warning: Reference `eq1' on page 7 undefined on input line 201.
+
+
 Underfull \hbox (badness 10000) in paragraph at lines 201--202
 
  []
@@ -924,12 +937,7 @@ Overfull \hbox (3.58977pt too wide) in paragraph at lines 1776--1777
 $\OML/lmm/m/it/10.95 D[] \OT1/lmr/m/n/10.95 = # []$
  []
 
-[55]
-Underfull \hbox (badness 10000) in paragraph at lines 1784--1790
-
- []
-
-[56]
+[55] [56]
 Underfull \hbox (badness 10000) in paragraph at lines 1804--1805
 
  []
@@ -949,7 +957,14 @@ Underfull \hbox (badness 10000) in paragraph at lines 2079--2080
 
  []
 
-[65] [66] [67] [68] ("compte rendu.aux") ) 
+[65] [66] [67] [68] ("compte rendu.aux")
+
+LaTeX Warning: There were undefined references.
+
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
+ ) 
 Here is how much of TeX's memory you used:
  8390 strings out of 492945
  118865 string characters out of 3125364
@@ -958,39 +973,39 @@ Here is how much of TeX's memory you used:
  111671 words of font info for 79 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
  41i,14n,40p,663b,1762s stack positions out of 5000i,500n,10000p,200000b,50000s
-{C:/Users/Antaker/AppData/Local/Progr
-ams/MiKTeX 2.9/fonts/enc/dvips/lm/lm-ec.enc}{C:/Users/Antaker/AppData/Local/Pro
-grams/MiKTeX 2.9/fonts/enc/dvips/lm/lm-rm.enc}{C:/Users/Antaker/AppData/Local/P
-rograms/MiKTeX 2.9/fonts/enc/dvips/lm/lm-mathit.enc}{C:/Users/Antaker/AppData/L
-ocal/Programs/MiKTeX 2.9/fonts/enc/dvips/lm/lm-mathsy.enc}{C:/Users/Antaker/App
-Data/Local/Programs/MiKTeX 2.9/fonts/enc/dvips/lm/lm-mathex.enc}<C:/Users/Antak
-er/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmbx10.pfb><C:/Users
-/Antaker/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmbx12.pfb><C:
-/Users/Antaker/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmcsc10.
-pfb><C:/Users/Antaker/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/lm/l
-mex10.pfb><C:/Users/Antaker/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/publi
-c/lm/lmmi10.pfb><C:/Users/Antaker/AppData/Local/Programs/MiKTeX 2.9/fonts/type1
-/public/lm/lmmi12.pfb><C:/Users/Antaker/AppData/Local/Programs/MiKTeX 2.9/fonts
-/type1/public/lm/lmmi6.pfb><C:/Users/Antaker/AppData/Local/Programs/MiKTeX 2.9/
-fonts/type1/public/lm/lmmi7.pfb><C:/Users/Antaker/AppData/Local/Programs/MiKTeX
- 2.9/fonts/type1/public/lm/lmmi8.pfb><C:/Users/Antaker/AppData/Local/Programs/M
-iKTeX 2.9/fonts/type1/public/lm/lmr10.pfb><C:/Users/Antaker/AppData/Local/Progr
-ams/MiKTeX 2.9/fonts/type1/public/lm/lmr12.pfb><C:/Users/Antaker/AppData/Local/
-Programs/MiKTeX 2.9/fonts/type1/public/lm/lmr17.pfb><C:/Users/Antaker/AppData/L
-ocal/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmr6.pfb><C:/Users/Antaker/AppDa
-ta/Local/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmr7.pfb><C:/Users/Antaker/A
-ppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmr8.pfb><C:/Users/Antak
-er/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmr9.pfb><C:/Users/A
-ntaker/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmri10.pfb><C:/U
-sers/Antaker/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmri12.pfb
-><C:/Users/Antaker/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmsy
-10.pfb><C:/Users/Antaker/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/l
-m/lmsy6.pfb><C:/Users/Antaker/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/pub
-lic/lm/lmsy8.pfb><C:/Users/Antaker/AppData/Local/Programs/MiKTeX 2.9/fonts/type
-1/public/lm/lmtt10.pfb><C:/Users/Antaker/AppData/Local/Programs/MiKTeX 2.9/font
-s/type1/public/lm/lmtti10.pfb><C:/Users/Antaker/AppData/Local/Programs/MiKTeX 2
-.9/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on "compte rendu.pdf" (68 pages, 1291358 bytes).
+{C:/Users/Antaker/AppData/Local/Programs/MiKTeX 2.9/fonts/enc/dvips/lm/lm-ec.
+enc}{C:/Users/Antaker/AppData/Local/Programs/MiKTeX 2.9/fonts/enc/dvips/lm/lm-r
+m.enc}{C:/Users/Antaker/AppData/Local/Programs/MiKTeX 2.9/fonts/enc/dvips/lm/lm
+-mathit.enc}{C:/Users/Antaker/AppData/Local/Programs/MiKTeX 2.9/fonts/enc/dvips
+/lm/lm-mathsy.enc}{C:/Users/Antaker/AppData/Local/Programs/MiKTeX 2.9/fonts/enc
+/dvips/lm/lm-mathex.enc}<C:/Users/Antaker/AppData/Local/Programs/MiKTeX 2.9/fon
+ts/type1/public/lm/lmbx10.pfb><C:/Users/Antaker/AppData/Local/Programs/MiKTeX 2
+.9/fonts/type1/public/lm/lmbx12.pfb><C:/Users/Antaker/AppData/Local/Programs/Mi
+KTeX 2.9/fonts/type1/public/lm/lmcsc10.pfb><C:/Users/Antaker/AppData/Local/Prog
+rams/MiKTeX 2.9/fonts/type1/public/lm/lmex10.pfb><C:/Users/Antaker/AppData/Loca
+l/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmmi10.pfb><C:/Users/Antaker/AppDat
+a/Local/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmmi12.pfb><C:/Users/Antaker/
+AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmmi6.pfb><C:/Users/Ant
+aker/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmmi7.pfb><C:/User
+s/Antaker/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmmi8.pfb><C:
+/Users/Antaker/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmr10.pf
+b><C:/Users/Antaker/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmr
+12.pfb><C:/Users/Antaker/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/l
+m/lmr17.pfb><C:/Users/Antaker/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/pub
+lic/lm/lmr6.pfb><C:/Users/Antaker/AppData/Local/Programs/MiKTeX 2.9/fonts/type1
+/public/lm/lmr7.pfb><C:/Users/Antaker/AppData/Local/Programs/MiKTeX 2.9/fonts/t
+ype1/public/lm/lmr8.pfb><C:/Users/Antaker/AppData/Local/Programs/MiKTeX 2.9/fon
+ts/type1/public/lm/lmr9.pfb><C:/Users/Antaker/AppData/Local/Programs/MiKTeX 2.9
+/fonts/type1/public/lm/lmri10.pfb><C:/Users/Antaker/AppData/Local/Programs/MiKT
+eX 2.9/fonts/type1/public/lm/lmri12.pfb><C:/Users/Antaker/AppData/Local/Program
+s/MiKTeX 2.9/fonts/type1/public/lm/lmsy10.pfb><C:/Users/Antaker/AppData/Local/P
+rograms/MiKTeX 2.9/fonts/type1/public/lm/lmsy6.pfb><C:/Users/Antaker/AppData/Lo
+cal/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmsy8.pfb><C:/Users/Antaker/AppDa
+ta/Local/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmtt10.pfb><C:/Users/Antaker
+/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmtti10.pfb><C:/Users/
+Antaker/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/symbols/m
+sbm10.pfb>
+Output written on "compte rendu.pdf" (68 pages, 1292174 bytes).
 PDF statistics:
  347 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
