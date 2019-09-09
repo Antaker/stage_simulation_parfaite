@@ -9,50 +9,52 @@
 \contentsline {paragraph}{Exemple 1 : Mod\`ele d'Ising}{9}% 
 \contentsline {paragraph}{Exemple 2 : Mod\`ele Hard-core gas}{9}% 
 \contentsline {paragraph}{Exemple 3 : Mod\`ele de Strauss}{9}% 
-\contentsline {subsubsection}{\numberline {1.2.2}Permutations}{10}% 
-\contentsline {paragraph}{Exemple}{10}% 
+\contentsline {subsubsection}{\numberline {1.2.2}Permutations}{9}% 
+\contentsline {paragraph}{Exemple}{9}% 
 \contentsline {subsection}{\numberline {1.3}Cha\IeC {\^\i }nes de Markov et simulation approch\'ee}{10}% 
-\contentsline {subsection}{\numberline {1.4}Cr\'eation de cha\IeC {\^\i }nes de Markov}{12}% 
-\contentsline {subsubsection}{\numberline {1.4.1}\'Echantillonnage de Gibbs}{13}% 
+\contentsline {subsection}{\numberline {1.4}Cr\'eation de cha\IeC {\^\i }nes de Markov}{11}% 
+\contentsline {subsubsection}{\numberline {1.4.1}\'Echantillonnage de Gibbs}{12}% 
 \contentsline {subsubsection}{\numberline {1.4.2}Metropolis-Hastings}{14}% 
 \contentsline {subsubsection}{\numberline {1.4.3}Variables al\'eatoires auxiliaires / Auxiliary random variables}{16}% 
 \contentsline {subsubsection}{\numberline {1.4.4}Shift Chains}{17}% 
-\contentsline {section}{\numberline {2}Chapitre 2 : Proc\'edures de rejet}{19}% 
-\contentsline {subsection}{\numberline {2.1}Th\'eor\`eme et exemple simple}{19}% 
-\contentsline {paragraph}{Exemple : tirage uniforme sur le cercle unit\'e}{19}% 
-\contentsline {subsection}{\numberline {2.2}M\'ethode de rejet pour variables al\'eatoires \`a densit\'e}{20}% 
-\contentsline {subsubsection}{\numberline {2.2.1}Exemple : D'une Cauchy vers une Normale}{22}% 
-\contentsline {subsection}{\numberline {2.3}Union d'ensembles}{23}% 
-\contentsline {subsection}{\numberline {2.4}Simulation \`a l'aide des in\'egalit\'es de Markov et Chernoff}{24}% 
-\contentsline {subsubsection}{\numberline {2.4.1}L'in\'egalit\'e de Markov en tant que proc\'edure de rejet}{24}% 
-\contentsline {subsubsection}{\numberline {2.4.2}Les in\'egalit\'es de Chernoff en tant que proc\'edure de rejet}{24}% 
-\contentsline {subsection}{\numberline {2.5}D\'efaut des m\'ethodes de rejet}{26}% 
-\contentsline {section}{\numberline {3}Chapitre 3 : Coupling From The Past}{29}% 
-\contentsline {paragraph}{D\'efinition : Fonction de mise \`a jour}{29}% 
-\contentsline {paragraph}{D\'efinition : Couplage}{29}% 
-\contentsline {subsection}{\numberline {3.1}CFTP : approche trajectorielle (Baccelli / Br\'emaud)}{29}% 
-\contentsline {paragraph}{Exemple : distribution stationnaire et temps de coalescence forwards}{34}% 
-\contentsline {subsection}{\numberline {3.2}CFTP : approche par blocs (Huber)}{36}% 
-\contentsline {paragraph}{Exemple}{36}% 
-\contentsline {subsection}{\numberline {3.3}CFTP monotone}{40}% 
-\contentsline {subsubsection}{\numberline {3.3.1}Mod\`ele D'Ising}{41}% 
-\contentsline {subsubsection}{\numberline {3.3.2}Mod\`ele gas Hard-core sur graphe biparti}{43}% 
-\contentsline {subsubsection}{\numberline {3.3.3}Monotonie et temps de m\'elange}{44}% 
-\contentsline {subsection}{\numberline {3.4}Slice sampler}{47}% 
-\contentsline {subsection}{\numberline {3.5}Inconv\'enients du CFTP}{47}% 
-\contentsline {subsubsection}{\numberline {3.5.1}Non-interruptibilit\'e}{47}% 
-\contentsline {subsubsection}{\numberline {3.5.2}Lecture double}{49}% 
-\contentsline {section}{\numberline {4}Bounding chains}{50}% 
-\contentsline {subsection}{\numberline {4.1}Qu'est-ce qu'une bounding chain ?}{50}% 
-\contentsline {subsection}{\numberline {4.2}Mod\`ele hard-core gas}{51}% 
-\contentsline {subsection}{\numberline {4.3}Probl\`eme d'initialisation}{53}% 
-\contentsline {section}{\numberline {5}Comparaison de m\'ethodes}{56}% 
-\contentsline {subsection}{\numberline {5.1}CFTP : Comparaison entre la m\'ethode de Baccelli/Br\'emaud et Huber}{56}% 
-\contentsline {subsection}{\numberline {5.2}Comparaison entre CFTP monotone et bounding chains}{56}% 
-\contentsline {section}{\numberline {6}Annexe : programmes}{57}% 
-\contentsline {subsection}{\numberline {6.1}Chapitre 1}{57}% 
-\contentsline {paragraph}{\relax $\@@underline {\hbox {\textbf {Programmation sous R : \'echantillonneur de Gibbs}}}\mathsurround \z@ $\relax }{57}% 
-\contentsline {paragraph}{\relax $\@@underline {\hbox {\textbf {Programmation sous R : M\'etropolis-Hastings}}}\mathsurround \z@ $\relax }{60}% 
-\contentsline {subsection}{\numberline {6.2}Chapitre 2}{63}% 
-\contentsline {paragraph}{\relax $\@@underline {\hbox {\textbf {Mise en place de la m\'ethode de rejet sour R :}}}\mathsurround \z@ $\relax }{65}% 
-\contentsline {paragraph}{\relax $\@@underline {\hbox {\textbf {In\'egalit\'es de Chernoff et queue de loi binomiale}}}\mathsurround \z@ $\relax }{65}% 
+\contentsline {section}{\numberline {2}Chapitre 2 : Proc\'edures de rejet}{18}% 
+\contentsline {subsection}{\numberline {2.1}Th\'eor\`eme et exemple simple}{18}% 
+\contentsline {paragraph}{Exemple : tirage uniforme sur le cercle unit\'e}{18}% 
+\contentsline {subsection}{\numberline {2.2}M\'ethode de rejet pour variables al\'eatoires \`a densit\'e}{19}% 
+\contentsline {subsubsection}{\numberline {2.2.1}Exemple : D'une Cauchy vers une Normale}{20}% 
+\contentsline {subsection}{\numberline {2.3}Union d'ensembles}{21}% 
+\contentsline {subsection}{\numberline {2.4}Simulation \`a l'aide des in\'egalit\'es de Markov et Chernoff}{22}% 
+\contentsline {subsubsection}{\numberline {2.4.1}L'in\'egalit\'e de Markov en tant que proc\'edure de rejet}{22}% 
+\contentsline {subsubsection}{\numberline {2.4.2}Les in\'egalit\'es de Chernoff en tant que proc\'edure de rejet}{23}% 
+\contentsline {subsection}{\numberline {2.5}D\'efaut des m\'ethodes de rejet}{25}% 
+\contentsline {section}{\numberline {3}Chapitre 3 : Coupling From The Past}{28}% 
+\contentsline {paragraph}{D\'efinition : Fonction de mise \`a jour}{28}% 
+\contentsline {paragraph}{D\'efinition : Couplage}{28}% 
+\contentsline {subsection}{\numberline {3.1}CFTP : approche trajectorielle (Baccelli / Br\'emaud)}{28}% 
+\contentsline {paragraph}{Exemple : distribution stationnaire et temps de coalescence forwards}{33}% 
+\contentsline {subsection}{\numberline {3.2}CFTP : approche par blocs (Huber)}{35}% 
+\contentsline {paragraph}{Exemple}{35}% 
+\contentsline {subsection}{\numberline {3.3}CFTP monotone}{39}% 
+\contentsline {subsubsection}{\numberline {3.3.1}Mod\`ele D'Ising}{40}% 
+\contentsline {subsubsection}{\numberline {3.3.2}Mod\`ele gas Hard-core sur graphe biparti}{41}% 
+\contentsline {subsubsection}{\numberline {3.3.3}Monotonie et temps de m\'elange}{42}% 
+\contentsline {subsection}{\numberline {3.4}Inconv\'enients du CFTP}{45}% 
+\contentsline {subsubsection}{\numberline {3.4.1}Non-interruptibilit\'e}{45}% 
+\contentsline {subsubsection}{\numberline {3.4.2}Lecture double}{47}% 
+\contentsline {section}{\numberline {4}Bounding chains}{48}% 
+\contentsline {subsection}{\numberline {4.1}Qu'est-ce qu'une bounding chain ?}{48}% 
+\contentsline {subsection}{\numberline {4.2}Mod\`ele hard-core gas}{49}% 
+\contentsline {subsection}{\numberline {4.3}Mod\`ele d'Ising}{51}% 
+\contentsline {subsection}{\numberline {4.4}Probl\`eme d'initialisation}{52}% 
+\contentsline {section}{\numberline {5}Comparaison de m\'ethodes}{55}% 
+\contentsline {subsection}{\numberline {5.1}CFTP : Comparaison entre la m\'ethode de Baccelli/Br\'emaud et Huber}{55}% 
+\contentsline {subsection}{\numberline {5.2}Comparaison entre CFTP monotone et bounding chains}{55}% 
+\contentsline {subsubsection}{\numberline {5.2.1}Mod\`ele HCGM sur graphe biparti}{55}% 
+\contentsline {subsubsection}{\numberline {5.2.2}Mod\`ele d'Ising}{60}% 
+\contentsline {section}{\numberline {6}Annexe : programmes}{61}% 
+\contentsline {subsection}{\numberline {6.1}Chapitre 1}{61}% 
+\contentsline {paragraph}{\relax $\@@underline {\hbox {\textbf {Programmation sous R : \'echantillonneur de Gibbs}}}\mathsurround \z@ $\relax }{61}% 
+\contentsline {paragraph}{\relax $\@@underline {\hbox {\textbf {Programmation sous R : M\'etropolis-Hastings}}}\mathsurround \z@ $\relax }{64}% 
+\contentsline {subsection}{\numberline {6.2}Chapitre 2}{67}% 
+\contentsline {paragraph}{\relax $\@@underline {\hbox {\textbf {Mise en place de la m\'ethode de rejet sour R :}}}\mathsurround \z@ $\relax }{69}% 
+\contentsline {paragraph}{\relax $\@@underline {\hbox {\textbf {In\'egalit\'es de Chernoff et queue de loi binomiale}}}\mathsurround \z@ $\relax }{69}% 

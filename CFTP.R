@@ -15,7 +15,7 @@ simple_update <- function(x,u,t){##fonction d'update présentée comme exemple par
 
 }
 
-Coupling_from_the_past_counting <- function(i=0){##effectue le CFTP pour la fonction d'update donnée plus haut, par la méthode donnée par Huber##
+Coupling_from_the_past_counting <- function(i=2){##effectue le CFTP pour la fonction d'update donnée plus haut, par la méthode donnée par Huber##
   
   
   ##Cet algorithme rend le nombre d'appels à la fonction d'update nécessaires à l'obtention d'une réalisation de CFTP##
@@ -24,7 +24,7 @@ Coupling_from_the_past_counting <- function(i=0){##effectue le CFTP pour la fonc
   
   if (u[1]<0.5 && u[2]<0.5){
     
-    return(i+2)
+    return(i)
     
   }
   else{
@@ -57,13 +57,13 @@ Coupling_from_the_past_Huber <- function(){  ##effectue le CFTP pour la fonction
 
 ##On calcule le nombre moyen de choix aléatoires utilisés (ou on rend un tableau de sorties de l'algorithme)
 t=NULL
-for (i in 1:10^4){
+for (i in 1:(10**6)){
   
   t=c(t, Coupling_from_the_past_counting())
   
 }
-plot(2*dgeom(2*(1:30),1/4), type = "l",from = 2,xlim = c(2,40), ylim = c(0,0.25),col = "red", type="p")
-hist(t,freq = F,add = T,breaks = 44)
+plot(2*(dgeom((0:30),1/4)+1), type = "p",xlim = c(2,40),col = "red")
+hist(t,freq = F)
 
 
 Coupling_from_the_past_Bacc <- function(){  ##effectue le CFTP pour la fonction d'update donnée plus haut, par la méthode donnée dans Baccelli et Bremaud##
@@ -147,6 +147,7 @@ IsingGibbsUpdate <- function(X,u,v,beta){       ## X = graphe (rectangulaire ou 
 
 Monotonic_Ising_Gibbs <- function(t,a,b,bet){ ##t = nombre de pas effectués, a = dim(X)[1], b = dim(X)[2]
   
+  
   ##On tire t choix aléatoires##
   u = runif(t)
   
@@ -156,18 +157,21 @@ Monotonic_Ising_Gibbs <- function(t,a,b,bet){ ##t = nombre de pas effectués, a =
   
   ##On initialise les états extremaux##
   xmin = matrix(-1,a,b)
-  xmax = matrix(1,a,b)
+  xmax = list(matrix(1,a,b),t)
   
+  ##On fait évoluer les états extrémaux selon les mêmes choix aléatoires##
   for (k in 1:t){
-    xmax = IsingGibbsUpdate(xmax,u[k],c(i[k],j[k]),bet)
+    xmax[[1]] = IsingGibbsUpdate(xmax[[1]],u[k],c(i[k],j[k]),bet)
     xmin = IsingGibbsUpdate(xmin,u[k],c(i[k],j[k]),bet)
   }
-  if (sum(xmax != xmin)>=1){ ##si les fins de trajectoires résultant des mises à jour des états extrémaux sont différentes, on fait une récursion##
+  ##si les fins de trajectoires résultant des mises à jour des états extrémaux sont différentes, on fait une récursion##
+  if (sum(xmax[[1]] != xmin)>=1){     
     xmax = Monotonic_Ising_Gibbs(2*t,a,b,bet)
     
+    ##après récursion, xmax est un état tel que les états extrémaux se sont rejoints, on le met alors à jour selon les choix aléatoires effectués pré-récursion##
     for (m in 1:t){
     
-      xmax = IsingGibbsUpdate(xmax,u[m],c(i[m],j[m]),bet)  
+      xmax[[1]] = IsingGibbsUpdate(xmax[[1]],u[m],c(i[m],j[m]),bet)  
       
     }
     
@@ -178,17 +182,16 @@ Monotonic_Ising_Gibbs <- function(t,a,b,bet){ ##t = nombre de pas effectués, a =
 }
 
 
-t = NULL
-U = NULL
-V = NULL
-for (i in 1:10^3){
-  t = Monotonic_Ising_Gibbs(1,5,5,2)
-  U = c(U, sum(t==1))
-  V = c(V, sum(t==-1))
+Isingcomptage550.5 = NULL
+for(i in 1:10^3){
   
+  X = Monotonic_Ising_Gibbs(1,5,5,1)[[2]]  
+  Isingcomptage550.5 = c(Isingcomptage550.5,X)
+  print(i)
 }
-mean(U)
-mean(V)
+
+table(Isingcomptage550.5)
+hist(Isingcomptage550.5)
 
 voisins_1 <- function(Y,A,k){ ## Entrée : état du modèle HCGM,matrice d'adjacence,numéro du noeud du graphe. Sortie : nombre de voisins de label 1 du noeud choisi##
   
@@ -204,7 +207,7 @@ voisins_1 <- function(Y,A,k){ ## Entrée : état du modèle HCGM,matrice d'adjacenc
   
   ##On compte le nombre de 1 autour du noeud considéré selon qu'il soit dans une partie du graphe ou l'autre##
   
-  if(k <= dim(V1)[1]){
+  if(k <= dim(V1)[2]){
     
     for (i in numvoisin){
       
@@ -234,7 +237,7 @@ HCGM_Gibbs_update <- function(X,A,lambda){ ##met à jour un état X de la chaine p
   
   if((u < lambda/(lambda +1)) && (N1==0)){
     if(ij <= length(X[[1]])){X[[1]][ij] = 1}else{X[[2]][ij - length(X[[1]])] = 1}
-  }
+  }else{if(ij <= length(X[[1]])){X[[1]][ij] = 0}else{X[[2]][ij - length(X[[1]])] = 0}}
   return(X)
 }
 
@@ -253,21 +256,33 @@ Monotonic_HCGM_Bipartite_Gibbs <- function(t,A,lV1,lV2,lambda){ ##t = nombre de 
     xmin = HCGM_Gibbs_update(xmin,A,lambda)
     xmax = HCGM_Gibbs_update(xmax,A,lambda)
   }
-  if (sum(xmin[[1]]==xmax[[1]])<=length(xmin[[1]]) | sum(xmin[[2]]==xmax[[2]])<=length(xmin[[2]])){  ##si les fins de trajectoires résultant des mises à jour des états extrémaux sont différentes, on fait une récursion##
+  if ((sum(xmin[[1]]!=xmax[[1]])>=1 | sum(xmin[[2]]!=xmax[[2]])>=1) && t<8192){  ##si les fins de trajectoires résultant des mises à jour des états extrémaux sont différentes, on fait une récursion##
     
     xmax = Monotonic_HCGM_Bipartite_Gibbs(2*t,A,lV1,lV2,lambda)
-  
+    
     for (m in 1:t){
       
-      xmax = HCGM_Gibbs_update(xmax,A,lambda)  
+      xmax[1:2] = HCGM_Gibbs_update(xmax,A,lambda)  
       
     }
   
   }
-  return(xmax)
+  return(c(xmax,t,(sum(xmin[[1]]!=xmax[[1]])>=1 | sum(xmin[[2]]!=xmax[[2]])>=1)))
   
 }
 
 ## v1 = ensemble des noeuds de V1 ##
 ## v2 = ensemble des noeuds de V2 ##
 ## A = matrice d'adjacence ##
+
+A1comptage2 = NULL
+for(i in 1:10^3){
+  
+  X = Monotonic_HCGM_Bipartite_Gibbs(t,A1,lV1,lV2,2)  
+  if(X[[4]] == TRUE){A1comptage2 = c(A1comptage2,8192)}
+  else{A1comptage2= c(A1comptage2,X[[3]]) }
+  print(i)
+}
+
+table(A1comptage2)
+hist(A1comptage2)
