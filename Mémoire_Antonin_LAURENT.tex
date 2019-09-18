@@ -1,0 +1,3534 @@
+
+\documentclass[a4paper,oneside,11pt]{article}
+
+
+\setlength{\hoffset}{-26pt}
+\setlength{\textwidth}{420pt} 
+
+%% Language %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage[french]{babel} %francais, polish, spanish, ...
+\usepackage[T1]{fontenc}
+\usepackage[ansinew]{inputenc}
+\usepackage{lmodern} %Type1-font for non-english texts and characters
+\usepackage{xcolor}
+\usepackage{amsmath,amsfonts,amssymb}
+
+
+%% Packages for Graphics & Figures %%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{graphicx} %%For loading graphic files
+\usepackage{caption} 
+\usepackage{multirow}
+
+
+%% Math Packages %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amsfonts}
+\newtheorem{definition}{Définition}
+\newtheorem{theorem}{Th\'eor\`eme}
+\newtheorem{lemme}{Lemme}
+
+%%inclusion de code et pseudo-code%%
+\usepackage{listings} %%permet l'insertion de code dans le texte%%
+\usepackage{algorithm}
+\usepackage{algorithmic} 
+
+\usepackage{hyperref}
+
+\makeatletter
+\renewcommand{\fnum@algorithm}{\fname@algorithm}
+\makeatother
+
+
+\lstset{
+language=R,
+basicstyle=\ttfamily\small, %
+identifierstyle=\color{red}, %
+keywordstyle=\color{blue}, %
+stringstyle=\color{black!60}, %
+columns=flexible, %
+tabsize=2, %
+extendedchars=true, %
+showspaces=false, %
+showstringspaces=false, %
+numbers=left, %
+numberstyle=\tiny, %
+breaklines=true, %
+breakautoindent=true, %
+captionpos=b, %
+rulecolor=\color{black}
+}
+
+
+
+\begin{document}
+
+
+\pagestyle{empty} %No headings for the first pages.
+
+
+
+\title{
+Master Ingénierie Mathématique pour la Science des Données \\
+~\\
+Orientation Modélisation, Calcul, Aide à la Décision \\
+~\\
+Université de Lorraine \\
+~\\
+Entreprise encadrante : Université de Lorraine \\
+~\\
+Sujet de stage : Simulation parfaite de processus stochastiques spatio-temporels}
+\author{Antonin LAURENT}
+%\date{} %%If commented, the current date is used.
+\maketitle
+
+\begin{center}
+\begin{tabular}{cc}
+\includegraphics[scale=0.8]{graphiques/logoIECL.jpg} & \includegraphics[scale=0.8]{graphiques/logoUL.png} 
+\end{tabular}
+\end{center}
+
+\newpage
+
+%% Inhaltsverzeichnis %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\tableofcontents %Table of contents
+
+\pagestyle{plain} %Now display headings: headings / fancy / ...
+
+\newpage
+
+\section*{Résumé / Préface}
+
+L'IECL Nancy comprend de nombreux chercheurs dans tout domaine, notamment dans notre cas les mathématiques. Algèbre, analyse, probabilités,etc de nombreux sujets de recherches sont disponibles.\\ On m'a proposé de travailler dans le domaine des probabilités et statistiques, à propos d'un problème classique du domaine : la génération d'échantillons selon une loi de probabilité ciblée.\\ L'objectif de ce stage et ultimement de ce mémoire est le suivant : présenter une introduction précise aux méthodes classiques de simulation de tels échantillons, ainsi que fournir des exemples d'applications. \\
+Ce stage est basé principalement sur le livre de Mark Huber :\\ \underline{\textit{"Perfect Simulation"}}, où ce mémoire fournit non seulement une traduction d'une partie de ce livre mais aussi :
+\begin{itemize}
+\item l'implémentation sous R de la plupart des algorithmes énoncés
+\item une révision de certains résultats
+\item une comparaison des méthodes données
+\end{itemize}
+
+Les pages des théorèmes démontrés par Huber seront fournies avant de les énoncer, si aucune source n'est fournie c'est un résultat qui a été modifié,ajouté dans le cadre de ce stage ou qui n'a pas été démontré. \\
+On présentera dans ce mémoire : 
+
+\begin{itemize}
+\item L'avant simulation exacte : méthodes approchées 
+\item Acceptation/Rejet : premiers pas de la simulation exacte
+\item CFTP : première méthode avancée
+\item Bounding chain : évolution du CFTP
+\item Comparaison de résultats : une analyse concise
+\end{itemize}
+
+~~\\
+Mots clés : simulation exacte, méthode de rejet,chaine de Markov, Coupling From The Past, graphes, modèles d'Ising, modèle hardcore gas, modèle shift
+
+\newpage
+\section{Chapitre 1 : Introduction}
+
+\subsection{Définitions et théorèmes}
+
+\begin{definition}[Temps d'arrêt]
+On dit que $T$ est un temps d'arrêt pour une suite \\
+$X_{1},X_{2},\ldots$ si, connaissant les valeurs de $X_{1},X_{2},\ldots,X_{n}$ on peut déterminer si $T \leq n$.
+\end{definition}
+
+
+
+\begin{definition}[Fonction calculable]
+Une fonction est dite calculable (computable en anglais) si il existe un algorithme capable de retourner le résultat de la fonction.
+\end{definition}
+
+
+
+\begin{definition}[Algorithme probabiliste]
+Soit $\cal{I}$ un ensemble d'indices tel que pour tout $I \in \cal{I}$, il existe une distribution $\pi_{I}$ sur un espace d'états $\Omega_{I}$. On se donne une suite de variables aléatoires $X_{1},X_{2},\ldots$ où les $X_{I} \in S_{I}$ .\\
+Un algorithme probabiliste est une famille de temps d'arrêts $ \left\{ T_{I} \right\}_{I \in \cal{I}}$ et et de fonctions calculables 
+$ \left\{ f_{I,t} \right\} _{i \in \mathcal{I}, t \in \left\{ 1,2,\ldots \right\} } $. La sortie de l'algorithme est $f_{I,T_{I}}(X_{1},\ldots,X_{T_{I}})$.\\
+
+\end{definition}
+
+
+\begin{definition}[Algorithme de simulation parfaite]
+Un algorithme de simulation parfaite est un algorithme probabiliste dont la sortie est une variable aléatoire qui provient d'une distribution cible.
+\end{definition}
+
+Les algorithmes de simulation parfaite sont une sous-classe des algorithmes de simulation exacte, algorithmes qui tirent d'une distribution ciblée. \\
+Cependant les algorithmes dont le temps d'arrêt 
+$T_{I}$ est déterministe (algorithmes tournant selon un nombre fini de choix aléatoires) sont généralement considérés comme algorithmes de simulation exacte mais pas comme algorithmes de simulation parfaite.
+
+
+\begin{theorem}[Théorème fondamental de la simulation parfaite, Huber p.4]
+On suppose que pour $U_{1},U_{2},\ldots$ iid tel que $U_{i} \sim$ Unif([0,1]) , il existe des fonctions calculables $b,g$ et $f$ telles que la fonction $b$ ait pour image $ \left\{ 0,1 \right\} $ et $\mathbb{P}(b(U) = 1) > 0$. \\
+Pour une variable aléatoire X qui vérifie : 
+
+\begin{equation}
+ X \sim b(U)g(U) + (1 - b(U))f(X,U),
+ \label{eq1}
+\end{equation}
+
+
+
+
+soit $T =$ inf$\left\{t : b(U_{t}) = 1\right\}$. On a alors que :
+
+$$ Y = f(\ldots f(f(g(U_{T}),U_{T-1}),U_{T-2}),\ldots,U_{1})$$
+
+a la même distribution que $X$ et on a $\mathbb{E}[T] = \frac{1}{\mathbb{P}(b(U) = 1)}$.
+\end{theorem}
+
+\begin{proof}
+Soient $X_{0},X_{1},\ldots$ des tirages indépendants chacun distribués selon $X$, et $U_{1},U_{2},\ldots$ iid tel que $U_{i} \sim$ Unif([0,1]). Pour $X_{t}$, fixons $X_{t,t} = X_{t}$ et récursivement, on pose :
+
+$$ X_{t,i} = b(U_{i+1})g(U_{i+1}) + (1 - b(U_{i+1}))f(X_{t,i+1},U_{i+1}),  $$
+pour $i \in \left\{0,\ldots,t-1\right\}$.\\
+
+On a alors d'après la relation \eqref{eq1} : $X_{t,0} \sim X$. On montre ce résultat pour les premiers indices t, les suivants sont prouvés de la même manière.
+\paragraph{\underline{t=0}}
+
+\begin{align*}
+X_{0,0} = X_{0} \\
+\intertext{comme on l'a posé précédemment, d'où} 
+X_{0,0} \sim X.
+\end{align*}
+
+\paragraph{\underline{t=1}}
+
+\begin{align*}
+X_{1,0} = b(U_{1})g(U_{1}) + (1 - b(U_{1}))f(X_{1,1},U_{1})\\ 
+\end{align*}
+
+Or, 
+
+\begin{align*}
+X_{1,1} = X_{1} \sim X.\\
+\end{align*}
+
+En remplaçant dans l'équation précédente, on obtient :
+
+\begin{align*}
+X_{1,0} = b(U_{1})g(U_{1}) + (1 - b(U_{1}))f(X_{1},U_{1})\\ 
+\end{align*}
+\qquad D'après la relation \eqref{eq1}, on obtient alors $X_{1,0} = X_{1} \sim X$.\\
+
+\paragraph{\underline{t=2}}
+
+\begin{align*}
+X_{2,0} &= b(U_{1})g(U_{1}) + (1 - b(U_{1}))f(X_{2,1},U_{1})\\ 
+X_{2,1} &= b(U_{2})g(U_{2}) + (1 - b(U_{2}))f(X_{2,2},U_{2})\\
+&= b(U_{2})g(U_{2}) + (1 - b(U_{2}))f(X_{2},U_{2})\\
+\end{align*}
+À nouveau, par la relation \eqref{eq1}, on a : $X_{2,1} = X_{2}$
+On remplace donc par cette valeur dans $X_{2,0}$ et on obtient :
+
+\begin{align*}
+X_{2,0} &= b(U_{1})g(U_{1}) + (1 - b(U_{1}))f(X_{2},U_{1})\\
+\end{align*}
+
+D'après la relation \eqref{eq1}, on obtient alors $X_{2,0} = X_{2} \sim X$.\\
+
+On a donc $X_{0,0},X_{1,0},X_{2,0},\ldots$ de même distribution que $X$ mais pas forcément indépendants. On considère à présent la variable $Y$ énoncée dans le théorème. On a alors la relation suivante : $X_{t,0} = Y$ si $t \geq T$. On illustre ce résultat avec comme exemple $T=2$ et $t=2,3$ : \\
+On a donc : 
+$$ Y = f(g(U_{2}),U_{1}) $$
+
+Montrons que $X_{2,0} = X_{3,0} = Y$. Étant donné que $T=2$, on a $b(U_{1}) = 0$ et $b(U_{2}) = 1$ , d'où :
+
+\begin{align*}
+X_{2,0} &= f(X_{2,1},U_{1})\\
+X_{2,1} &= g(U_{2})\\
+\intertext{on remplace dans la première équation et on obtient}
+X_{2,0} &= f(g(U_{2}),U_{1})\\
+\end{align*}
+
+D'où le résultat pour t=2. Voyons pour t=3.\\
+~\\
+De même, puisque $T=2$, on a $b(U_{1}) = 0$ et $b(U_{2}) = 1$ , d'où :
+
+\begin{align*}
+X_{3,0} &= f(X_{3,1},U_{1})\\
+X_{3,1} &= g(U_{2})\\
+\intertext{on remplace dans la première équation et on obtient}
+X_{3,0} &= f(g(U_{2}),U_{1})\\
+\end{align*}
+
+D'où le résultat.\\
+Ensuite, puisque les $U_{i}$ sont indépendants, on a que : $\mathbb{P}(T > t) = (1 - \mathbb{P}(b(U) = 1))^{t}$ et puisque, par hypothèse, $\mathbb{P}(b(U) = 1) >0$, on a la relation qui tend vers $0$ pour $t$ tendant vers l'infini.
+Il ne reste plus qu'à montrer $Y \sim X$. Pour tout $t$, pour tout ensemble $C$ :
+
+\begin{align*}
+\mathbb{P}(Y \in C) &= \mathbb{P}(Y \in C, t \geq T) + \mathbb{P}(Y \in C, t < T)
+\intertext{puisque $X_{t,0} = Y$ si $t \geq T$, on a}
+&= \mathbb{P}(X_{t,0} \in C, t \geq T) + \mathbb{P}(Y \in C, t < T)\\
+&= \mathbb{P}(X_{t,0} \in C) - \mathbb{P}(X_{t,0} \in C, t < T) + \mathbb{P}(Y \in C, t < T)
+\intertext{puisque $X_{t,0} \sim X$, on a}
+&= \mathbb{P}(X \in C) - \mathbb{P}(X_{t,0} \in C, t < T) + \mathbb{P}(Y \in C, t < T)
+\end{align*}
+
+Les deux derniers termes sont bornés par $\mathbb{P}(T > t) = (1 - \mathbb{P}(b(U) = 1))^{t}$, et puisque l'équation est vraie pour n'importe quel $t$,  on obtient : $\mathbb{P}(Y \in C) = \mathbb{P}(X \in C)$ pour tout ensemble $C$ , donc $Y \sim X$.
+Le fait que $\mathbb{E}[T] = \frac{1}{\mathbb{P}(b(U)=1)}$ provient du fait que $T$ suit une loi géométrique de paramètre $\mathbb{P}(b(U) =1)$
+
+\end{proof}
+
+
+
+
+\begin{definition}[Algorithme interruptible]
+Dans le théorème fondamental de la simulation parfaite, si $X$ et $T$ sont indépendants, on dit que l'algorithme est interruptible, sinon il est non-interruptible.
+\end{definition}
+ 
+
+\begin{definition}[Algortihme de simulation parfaite à lecture unique]
+Un algorithme de simulation parfaite qui utilise $X \sim b(U)g(U) + (1 - b(U))f(X,U)$ est un algorithme à lecture unique si $f(X,u) = f(X,u')$ pour tout $u$,$u'$. Sinon, c'est un algorithme à lecture double.
+\end{definition}
+
+En général, un algorithme interruptible est préférable à un algorithme non-interruptible, et un algorithme à lecture unique est préférable à un algorithme à lecture double.\\
+
+\subsection{Modèles étudiés}
+
+\subsubsection{Champs aléatoires de Markov}
+
+On considère un graphe $G = (V,E)$. $V$ est l'ensemble des n\oe{}uds et $E$ est l'ensemble des arêtes. On notera par la suite $\Delta$ le degré du graphe (égal au degré du n\oe{}ud ayant un nombre de voisins maximal). On notera par $\Omega$ l'ensemble des labels des n\oe{}uds.
+
+\begin{definition}[Ensemble séparant]
+On dit qu'un sous-ensemble de n\oe{}uds $S$ sépare les n\oe{}uds $i$ et $j$ si tout chemin du graphe menant $i$ à $j$ passe par $S$.
+\end{definition}
+
+
+\begin{definition}[Champ aléatoire de Markov]
+Pour un graphe $G = (V,E)$ et un ensemble de labels $\Omega$, on dit que la distribution de $X$ sur $\Omega$ est un champ aléatoire de Markov si, pour tous les n\oe{}uds $i$ et $j$, pour tous les ensembles $S$ séparant $i$ de $j$, on a : $[X(i)|X(j),X(S)] \sim [X(i)|X(S)]$. Un état $x \in \Omega$ est appelé une configuration.
+\end{definition}
+
+
+\begin{definition}[Clique]
+Une clique est un sous-ensemble de n\oe{}uds du graphe tel que chaque paire de n\oe{}uds soit connectée par une arête.
+\end{definition}
+
+
+\begin{theorem}[Théorème de Hammersley-Clifford]
+Pour un graphe fini $G=(V,E)$, la distribution $\pi$ est un champ aléatoire de Markov si elle a pour densité $f_{X}$ et qu'il existe des fonctions $\phi _{C}$ pour toute clique C telles que $f_{X}$ puisse s'écrire : 
+
+$$ f_{X}(x) = \frac{1}{Z} \prod _{C \in cliques(G)} \phi_{C}(x)$$
+\end{theorem}
+
+
+
+\begin{definition}[Auto-modèle]
+On dit qu'un champ aléatoire de Markov est un auto-modèle, si il existe des fonctions $f_{i}$ et $g_{i}$ telles que la densité de $X \sim \pi$ peut-être écrite sous la forme : 
+$$ f_{X}(x) = \frac{1}{Z} \left[\prod_{i \in V} f_{i}(X(i))\right]\left[ \prod _{ \left\{i,j \right\} \in E} g_{\left\{i,j\right\}}(X(i),X(j))\right]$$
+\end{definition}
+
+
+Dans la suite, on définit des exemples bien connus d'auto-modèles que l'on étudiera par la suite.
+
+\paragraph{Exemple 1 : Modèle d'Ising}
+~\\
+~\\
+Le modèle d'Ising est un auto-modèle de paramètres $\mu$ et $\beta$ , où $\Omega = \left\{ -1,1 \right\} ^{V}$, et $f(c) = exp(\mu c)$, $g(c_{1},c_{2}) = exp(\beta \mathbf{1}(c_{1} = c_{2}))$. Dans la littérature, on appelle $\mu$ magnétisation et $\beta$ la température inverse. Lorsque $\beta >0$, on dit que le modèle est ferromagnétique. Lorsque $\mu = 0$, on dit que le modèle est sans champ magnétique.
+
+\paragraph{Exemple 2 : Modèle Hard-core gas}
+~\\
+~\\ 
+Le modèle hard-core gas est un auto-modèle défini sur $\left\{0,1 \right\} ^{V}$ et de paramètre $\lambda >0$ où $f(c) = \lambda ^{c}$ 
+et $g(c_{1},c_{2}) = 1 - c_{1}c_{2}$. Lorsqu'un no\oe{}ud $\nu$ a pour label $1$, on dit que le n\oe{}ud est occupé, sinon, il est inoccupé.
+
+\paragraph{Exemple 3 : Modèle de Strauss}
+~\\
+~\\
+Le modèle de Strauss est un auto-modèle sur $\left\{0,1 \right\} ^{V}$ de paramètres $\lambda >0$ et $\gamma \in [0,1]$ où $f(c) = \lambda ^{c}$ et $g(c_{1},c_{2}) = 1 + (\gamma - 1)c_{1}c_{2}$.Lorsqu'un no\oe{}ud $\nu$ a pour label $1$, on dit que le n\oe{}ud est occupé, sinon, il est inoccupé.
+
+\subsubsection{Permutations}
+
+Un problème classique de distribution sur les permutations est lié à la recherche du permanent d'une matrice non-négative.
+
+\paragraph{Exemple}
+~\\
+~\\
+Pour une matrice non-négative $w(i,j)$, notons :
+
+$$w(\sigma) = \prod_{i=1}^{n} w(i,\sigma(i))$$
+\\
+\nolinebreak Tant qu'il existe au moins une permutation $\sigma$ telle que $w(i,\sigma(i)) >0$ pour tout $i$, cela donne une densité non normalisée sur l'ensemble des permutations. La constante de normalisation pour cette densité est alors appelée le permanent de la matrice $w(i,j)$. Si aucun $\sigma$ ne vérifie cette relation, le permanent est 0.
+~\\
+Une autre distribution importante que l'on va considérer est la distribution uniforme sur les permutations où certains objets doivent avoir une position plus faible que les autres.
+
+\begin{definition}[Relation d'ordre partiel]
+Soit un ensemble $P$. Une relation d'ordre partiel sur $P$ est une relation binaire $\preceq$ telle que pour tout $a,b,c \in P$, la relation est:
+
+\begin{enumerate}
+\item (Réflexive) $a \preceq a$
+\item (Antisymétrique) Si $a \preceq b$ et $b \preceq a$, alors $a = b$
+\item (Transitive) Si $a \preceq b$ et $b \preceq c$, alors $a \preceq c$
+\end{enumerate}
+\end{definition}
+
+
+Un ensemble disposant d'une relation d'ordre partiel est parfois appelé poset d'après l'anglais partially ordered set.
+
+\begin{definition}[Extension linéaire d'un ordre partiel]
+Une extension linéaire d'un ordre partiel sur $1,\ldots,n$ est une permutation pour laquelle si $i$ et $j$ sont tels que $\sigma(i) \prec \sigma(j)$, alors $i<j$.  
+\end{definition}
+
+
+
+\subsection{Chaînes de Markov et simulation approchée}
+
+Jusqu'au développement des algorithmes de simulation parfaite/exacte, la manière principale d'obtenir une réalisation d'une distribution ciblée était une méthode d'approche. Plusieurs algorithmes et méthodes ont été mis en place et l'ensemble de ces méthodes porte le nom de Chaîne de Markov Monte Carlo (Markov Chain Monte Carlo, MCMC dans la littérature).
+~\\
+On ne rappellera pas ici les principales définitions pour les chaînes de Markov mais d'autres seront nécessaires pour la suite.
+On s'intéressera notamment aux chaînes de Harris et au théorème ergodique associé.
+
+\begin{definition}[Chaîne de Harris]
+Une chaîne de Markov $\left\{X_{t} \right\}$ sur un espace d'état $\Omega$ est une chaîne de Harris si il existe des ensembles mesurables $A,B \in \Omega$ et $\epsilon > 0$ pour $x \in A$ et $y \in B$, et une mesure de probabilité $\rho$ où $\rho(B) = 1$ tels que l'on ait :
+
+\begin{enumerate}
+\item Pour $T_{A} = inf\left\{ t \geq 0 : X_{t} \in A \right\}, ( \forall z \in \Omega)(\mathbb{P}(T_{A} < \infty | X_{0} = z) > 0).$
+\item Si $x \in A$ et $C \subseteq B$, alors $\mathbb{P}(X_{1} \in C | X_{0} = x) \geq \epsilon \rho (C)$
+\end{enumerate}  
+\end{definition}
+
+
+
+\begin{definition}[Chaîne récurrente]
+Soit $R = \inf \left\{ n>0 : X_{n} \in A \right\}$. On dit qu'une chaîne de Harris est une chaîne récurrente si pour tout $x \in A$, $\mathbb{P}(R < \infty | X_{0} = x) = 1$. Une chaîne qui n'est pas récurrente est dite transiente.
+\end{definition}
+
+
+
+\begin{definition}[Chaîne apériodique]
+Une chaîne de Harris récurrente est apériodique si pour tout $x \in \Omega$, il existe $n$ tel que pour tout $n' \geq n$, $\mathbb{P}(X_{n'} \in A | X_{0} = x) >0$
+\end{definition}
+
+
+
+\begin{theorem}[Théorème ergodique pour les chaînes de Harris]
+Soit $X_{n}$ une chaîne de Harris récurrente et apériodique de distribution stationnaire $\pi$. Si $\mathbb{P}(R < \infty | X_{0} = x) = 1$ pour tout $x$, alors, pour $t \to \infty$, pour tout ensemble mesurable $C$ et pour tout $x$ : 
+
+$$ |\mathbb{P}(X_{t} \in C|X_{0} = x) - \pi(C)| \to 0 $$
+\end{theorem} 
+
+Ce théorème est le c\oe{}ur des méthodes MCMC, puisqu'il "suffit" de construire une chaîne de Harris ayant pour distribution stationnaire la distribution souhaitée et de la faire avancer pendant un nombre infini de pas. Cependant, n'ayant pas un temps infini, les utilisateurs font tourner leurs algorithmes durant un grand nombre de pas et espèrent arriver dans la distribution stationnaire.
+~\\
+\linebreak Nous pourrons cependant déterminer à quel point la chaîne est proche de la loi stationnaire à l'aide du concept de couplage (voir chapitre 3 pour une définition et application étendue).
+
+\begin{definition}[Couplage]
+Supposons que $\left\{X_{t} \right\} \sim \nu_{X}$ et $\left\{Y_{t} \right\} \sim \nu_{Y}$. Un couplage de $\left\{X_{t} \right\}$ et $\left\{Y_{t} \right\}$ est un processus bivarié $\left\{(X^{'}_{t},Y^{'}_{t})\right\}$ tel que $\left\{X^{'}_{t} \right\} \sim \nu_{X}$ et $\left\{Y^{'}_{t} \right\} \sim \nu_{Y}$.
+\end{definition}
+
+
+\begin{theorem}[Lemme de Couplage]
+Soit $Y_{0} \sim \pi$ et $X_{0} = x_{0}$ tels que les deux variables évoluent de manière couplée. Alors, pour tout mesurable $C$ :
+$$ |\mathbb{P}(X_{t} \in C|X_{0}=x) - \pi(C)| \leq \mathbb{P}(X_{t} \ne Y_{t}).$$
+\end{theorem} 
+
+
+
+\subsection{Création de chaînes de Markov}
+
+Afin d'utiliser les méthodes MCMC, il faut créer des chaînes de Harris qui convergent vers la distribution $\pi$ ciblée.
+Il est généralement mieux de créer des chaînes réversibles plutôt que des chaînes simplement stationnaires.\\
+Nous utiliserons la notation suivante pour la définition de réversibilité : $\pi(dx) = f(x)dx$. Et donc, pour tout mesurable $A$, $\pi(A) = \int_{x \in A} \pi(dx) = \int_{x \in A} f(x)dx$.\\
+Nous utiliserons l'équation de balance détaillée pour en déduire la réversibilité:
+ 
+\begin{definition}[Équation de balance détaillée]
+Une distribution $\pi$ est réversible selon une chaîne de Markov $\left\{ X_{t} \right\}$ en particulier si : $\pi(dx)\mathbb{P}(X_{t+1} \in dy | X_{t} = x) = \pi(dy)\mathbb{P}(X_{t+1} \in dx | X_{t} = y).$
+\end{definition}
+
+
+\begin{lemme}[Huber p.16, lemme 1.2]
+Si $\pi$ est réversible, alors $\pi$ est stationnaire.
+\end{lemme}
+
+\begin{proof}
+Soit $\Omega$ l'espace d'état de la chaîne de Markov $\left\{ X_{t} \right\}$ considérée et $\pi$ réversible pour cette chaîne.
+Pour $X_{t} \sim \pi$, et $C$ un ensemble mesurable, alors on a :
+
+\begin{align*}
+\mathbb{P}(X_{t+1} \in C) &= \mathbb{E}[\mathbf{1}(X_{t+1} \in C)] \\ 
+&= \mathbb{E}[\mathbb{E}[\mathbf{1}(X_{t+1} \in C)|X_{t}]]
+\\
+&= \int_{x \in \Omega} \mathbb{E}[\mathbf{1}(X_{t+1} \in C)|X_{t} = x]\pi(dx)
+\\
+&= \int_{x \in \Omega} \mathbb{P}(X_{t+1} \in C | X_{t} = x)\pi(dx)
+\\
+&= \int_{x \in \Omega} \int_{y \in C} \mathbb{P}(X_{t+1} \in dy|X_{t} = x)\pi(dx)
+\\
+&= \int_{y \in C} \int_{x \in \Omega} \mathbb{P}(X_{t+1} \in dx|X_{t} = y)\pi(dy)
+\\
+&=  \int_{y \in C} \mathbb{P}(X_{t+1} \in \Omega|X_{t} = y)\pi(dy)
+\\
+&= \int_{y \in C} \pi(dy)
+\\
+&= \pi(C)
+\end{align*}
+
+D'où la stationnarité de $\pi$.\\
+
+\end{proof}
+
+Plusieurs types de chaînes réversibles existent telles que l'échantillonnage de Gibbs (Gibbs sampler), Metropolis-Hastings,etc. Ces chaînes sont présentées dans la suite.
+
+\subsubsection{Échantillonnage de Gibbs}
+
+On présente ici un échantillonneur de Gibbs, qui agit sur un espace d'états de la forme $C^{V}$. On appelle $\nu \in V$ une dimension du problème. Pour $X_{t} = x$, l'échantillonneur choisit une dimension $\nu$ uniformément sur $V$. Soit $L(x,\nu)$ l'ensemble des états qui sont exactement les n\oe{}uds de la configuration $x$ sauf en $\nu$, écrit de la manière suivante :\\ $L(x,v) = \left\{ y : (\forall w \in V \setminus \left\{v\right\})(y(w) = x(w))\right\}.$ Pour $X_{t} = x$, l'état suivant $X_{t+1}$ est choisi selon $\pi$ conditionné à être dans $L(x,v)$.
+\\
+On présente comme exemple le modèle d'Ising précédemment vu. Une dimension est alors un n\oe{}ud de la configuration.
+On choisit donc un n\oe{}ud uniformément dans $V$, et on considère les états qui sont exactement $x$ en tous les autres n\oe{}uds autres que $\nu$. Pour le modèle d'Ising, la valeur en $\nu$ de $x$ est $1$ ou $-1$. On note ces configurations $x_{\nu \to 1}$ et $x_{\nu \to -1}$. On choisit alors l'état suivant entre $x_{\nu \to 1}$ et $x_{\nu \to -1}$, où le choix est fait proportionnellement à $\pi$. On a donc : 
+
+$$\mathbb{P}(X_{t+1} = x_{\nu \to 1})  = \frac{\pi(\left\{x_{\nu \to 1}\right\})}{\pi(\left\{x_{\nu \to 1}\right\})+\pi(\left\{x_{\nu \to -1}\right\})}$$
+
+Or, pour le modèle d'Ising,
+
+$$\pi(\left\{x\right\})= \frac{1}{Z}\prod_{i \in V} exp(\mu X(i)) \prod_{\left\{i,j\right\} \in E} exp(\beta \mathbf{1}(x(i)=x(j)).$$
+
+Après simplification, on obtient :
+\begin{align*}
+&\mathbb{P}(X_{t+1} = x_{\nu \to 1})= \\
+&= \frac{exp(\mu)\prod_{\left\{\nu,j\right\} \in E} exp(\beta \mathbf{1}(x(j)=1))}{exp(\mu)\prod_{\left\{\nu,j\right\} \in E} exp(\beta \mathbf{1}(x(j)=1)) + exp(-\mu)\prod_{\left\{\nu,j\right\} \in E} exp(\beta \mathbf{1}(x(j)=-1))}
+\\
+&= \frac{exp(\beta n_{1} + \mu)}{exp(\beta n_{1} + \mu) + exp(\beta n_{-1} - \mu)}
+\end{align*}
+Où $n_{c}$ est le nombre de voisins de $\nu$ de label c.
+Par exemple, si $\nu$ est adjacent à trois n\oe{}uds de label $1$ et un n\oe{}ud de label $-1$, alors la probabilité que $\nu$ se voit labelliser $1$ est $exp(3\beta + \mu)/(exp(3\beta + \mu)+exp(\beta - \mu))$.
+Mettre ensuite en place cette méthode algorithmiquement est très simple.\\
+Vérifions la réversibilité de la chaîne.
+\begin{proof}
+Les cas où la chaîne ne change pas d'état après un pas,(ie $X_{t} = x_{\nu \to 1}$  et $X_{t+1} = x_{\nu \to 1}$ ou $X_{t} = x_{\nu \to -1}$ et $X_{t+1} = x_{\nu \to -1}$) nous donnent immédiatement l'équation de balance détaillée, il ne reste alors qu'à traiter deux cas.
+
+Premier cas : $X_{t} = x_{\nu \to 1}$ et $X_{t+1} = x_{\nu \to -1}$.
+\\
+
+On a alors :
+
+$$\pi(\left\{x_{\nu \to 1 } \right\}) \mathbb{P}(X_{t+1} = x_{\nu \to -1} | X_{t} = x_{\nu \to 1}) = \pi(\left\{x_{\nu \to 1 } \right\}) \frac{exp(-\mu + \beta n_{-1})}{exp(-\mu + \beta n_{-1})+exp(\mu + \beta n_{1})}$$
+
+  
+D'autre part : 
+$$ \pi(\left\{x_{\nu \to -1 } \right\}) \mathbb{P}(X_{t+1} = x_{\nu \to 1} | X_{t} = x_{\nu \to -1}) =\pi(\left\{x_{\nu \to -1 } \right\}) \frac{exp(\mu + \beta n_{1} )}{exp( - \mu + \beta n_{-1})+exp(\mu + \beta n_{1} )} $$
+
+On aura donc l'égalité entre ces termes si et seulement si on a :
+
+$$ \pi(\left\{x_{\nu \to 1 } \right\})exp(-\mu + \beta n_{-1}) = \pi(\left\{x_{\nu \to -1 } \right\})exp(\mu + \beta n_{1} ) $$
+
+Les simplifications suivantes s'opèrent dans les termes en $\pi$ : 
+
+\begin{itemize}
+\item simplification des $\frac{1}{Z}$
+\item simplification des $\prod_{i \in V} exp(\mu X(i))$ sauf au n\oe{}ud $\nu$
+\item simplification des $\prod_{\left\{i,j\right\} \in E} exp(\beta \mathbf{1}(x(i)=x(j))$ sauf aux arêtes ayant $\nu$ comme extrémité
+\end{itemize}
+~\\
+On obtient alors :
+
+$$exp(\mu + \beta n_{1} ) exp(-\mu + \beta n_{-1}) = exp(-\mu + \beta n_{-1})exp(\mu + \beta n_{1} ) $$
+
+On a donc bien vérifié l'égalité et donc l'équation de balance détaillée.
+
+Le deuxième cas : $X_{t} = x_{\nu \to -1}$ et $X_{t+1} = x_{\nu \to 1}$ se vérifie de la même manière.
+
+~\\
+Ayant vérifié tous les cas possibles, on obtient donc l'équation de balance détaillée qui conduit bien à la réversibilité de la chaîne.
+
+\end{proof}
+
+On propose une mise en place de l'échantillonneur de Gibbs pour le modèle d'Ising sous R en annexe (6.1). Voici, un exemple de sortie pour $\lambda = 0.5$ ou $\lambda = 1$ et $\mu = 0$ sur un graphe carré de taille $10 \times 10$ et $\epsilon = 0.1$.
+
+
+\vspace*{-8mm}
+
+\begin{center}
+\hspace*{-5mm}
+\begin{tabular}{cc}
+\includegraphics[scale=0.7]{graphiques/Approachgibbs.jpeg}
+&
+\includegraphics[scale=0.7]{graphiques/Approachgibbs1.jpeg}
+\end{tabular}
+\end{center}
+\vspace*{-15mm}
+\captionof{table}{Exemple de sortie de IsingGibbsconditionnalstop pour $\mu = 0$, $\epsilon = 0.1$ et $\lambda = 0.5$ (à gauche) et $\lambda = 1$ (à droite). Les cases blanches sont des $1$, et les cases rouges des $-1$.}
+
+\subsubsection{Metropolis-Hastings}
+
+Pour la méthode de Metropolis-Hastings, pour chaque configuration $x$ de la chaîne, on a une densité $q_{x}$. On propose ensuite un état suivant y, selon la densité $q_{x}$. L'état suivant sera donc $x$ ou $y$. La probabilité avec laquelle est choisie la configuration $y$ est donnée de telle sorte que la réversibilité s'applique. On la donne ci-dessous. Notez que, pour que cela fonctionne, il est nécessaire que si $q_{x}(y) >0$, alors $q_{y}(x) >0$ aussi. On a alors le changement vers $y$ avec probabilité : 
+$$ min\left\{ 1, \frac{f_{\pi}(y)q_{y}(x)}{f_{\pi}(x)q_{x}(y)} \right\}$$
+
+On notera aussi que $f_{\pi}$ peut-être normalisée ou non.
+\\
+En exemple, on considère à nouveau le modèle d'Ising. A chaque pas, on choisit un n\oe{}ud uniformément dans $V$ puis un label candidat pour ce n\oe{}ud est choisi uniformément dans $\left\{ -1,1 \right\}$. On a alors $q_{x}(y) = q_{y}(x) = 1/2$. On calcule ensuite, pour $n_{c}$ le nombre de voisins de $\nu$ de label $c$ (où c est le label proposé) et $n_{x(\nu)}$ le nombre de voisins de $\nu$ de même label que $\nu$ : 
+
+$$\frac{f_{\pi}(y)}{f_{\pi}(x)} = \frac{exp(n_{c} \beta + c\mu)}{exp(n_{x(\nu)}\beta + x(\nu)\mu )}$$ 
+
+L'algorithme est alors très simple à mettre en place.
+D'abord, vérifions la réversibilité de la chaîne.
+\begin{proof}
+Les cas où la chaîne ne change pas d'état après un pas,(ie $X_{t} = x_{\nu \to 1}$  et $X_{t+1} = x_{\nu \to 1}$ ou $X_{t} = x_{\nu \to -1}$ et $X_{t+1} = x_{\nu \to -1}$) nous donnent immédiatement l'équation de balance détaillée, il ne reste alors qu'à traiter deux cas.
+
+
+Premier cas : $X_{t} = x_{\nu \to 1}$ et $X_{t+1} = x_{\nu \to -1}$.
+\\
+
+On a alors : $$ \pi(\left\{x_{\nu \to 1 } \right\}) \mathbb{P}(X_{t+1} = x_{\nu \to -1} | X_{t} = x_{\nu \to 1}) =\pi(\left\{x_{\nu \to 1 } \right\}) min\left\{ 1, \frac{exp(-\mu + \beta n_{-1})}{exp(\mu + \beta n_{1})} \right\} $$
+D'autre part : 
+$$ \pi(\left\{x_{\nu \to -1 } \right\}) \mathbb{P}(X_{t+1} = x_{\nu \to 1} | X_{t} = x_{\nu \to -1}) =\pi(\left\{x_{\nu \to -1 } \right\}) min\left\{ 1, \frac{exp(\mu + \beta n_{1})}{exp(-\mu + \beta n_{-1})} \right\} $$
+
+On aura donc l'égalité entre ces termes si et seulement si on a :
+
+$$ \pi(\left\{x_{\nu \to 1 } \right\}) min\left\{ 1, \frac{exp(-\mu + \beta n_{-1})}{exp(\mu + \beta n_{1})} \right\} = \pi(\left\{x_{\nu \to -1 } \right\}) min\left\{ 1, \frac{exp(\mu + \beta n_{1})}{exp(-\mu + \beta n_{-1})} \right\} $$
+
+Les simplifications suivantes s'opèrent dans les termes en $\pi$ : 
+
+\begin{itemize}
+\item simplification des $\frac{1}{Z}$
+\item simplification des $\prod_{i \in V} exp(\mu X(i))$ sauf au n\oe{}ud $\nu$
+\item simplification des $\prod_{\left\{i,j\right\} \in E} exp(\beta \mathbf{1}(x(i)=x(j))$ sauf aux arêtes ayant $\nu$ comme extrémité
+\end{itemize}
+~\\
+On obtient alors :
+
+$$exp(\mu + \beta n_{1}) min\left\{ 1, \frac{exp(-\mu + \beta n_{-1})}{exp(\mu + \beta n_{1})} \right\} = exp(-\mu + \beta n_{-1}) min\left\{ 1, \frac{exp(\mu + \beta n_{1})}{exp(-\mu + \beta n_{-1})} \right\} $$
+
+Par propriété du min, on obtient alors l'égalité entre les termes, qui conduit à l'équation de balance détaillée. 
+
+~\\
+Le deuxième cas : $X_{t} = x_{\nu \to -1}$ et $X_{t+1} = x_{\nu \to 1}$ se vérifie de la même manière.
+
+~\\
+Ayant vérifié tous les cas possibles, on obtient donc l'équation de balance détaillée qui conduit bien à la réversibilité de la chaîne.
+
+\end{proof}
+
+On propose une mise en place pour la méthode Métropolis-Hastings pour le modèle d'Ising sous R en annexe (6.1). Voici un exemple de sortie pour $\lambda = 0.5$,$\lambda = 1$ et $\mu = 0$ sur un graphe carré de taille $10 \times 10$ et $\epsilon = 0.1$.
+
+\vspace*{-8mm}
+
+\begin{center}
+\hspace*{-5mm}
+\begin{tabular}{cc}
+\includegraphics[scale=0.7]{graphiques/Approachmh.jpeg}
+&
+\includegraphics[scale=0.7]{graphiques/Approachmh1.jpeg}
+\end{tabular}
+\end{center}
+\vspace*{-15mm}
+\captionof{table}{Exemple de sortie de MetropolisHastingsconditionnalstop pour $\mu = 0$, $\epsilon = 0.1$ et $\lambda = 0.5$ (à gauche) et $\lambda = 1$ (à droite). Les cases blanches sont des $1$, et les cases rouges des $-1$.}
+
+
+
+\subsubsection*{Discussion du critère d'arrêt dans "IsingGibbsconditionnalstop" et "MetropolisHastingsconditionnalstop"}
+
+Le premier critère pour l'arrêt du programme est si le nombre de pas $i$ vérifie : $i>=((log(n^{2})*n^{2})/\epsilon)$, où $n^{2}$ est la taille du graphe carré considéré et $\epsilon$ est la "précision" que l'utilisateur souhaite. \\
+Le terme en $n^{2}*log(n^{2})$ provient du problème du collectionneur. En effet, on souhaite, pour atteindre un certain équilibre, avoir donné la chance à chacun des n\oe{}uds d'avoir subi un changement. Cela revient à avoir sélectionné chacun des n\oe{}uds au moins une fois, ce qui revient au problème du collectionneur, où en moyenne le temps d'obtention de tous les éléments de la collection se fait en $n*log(n)$ si $n$ est la taille de la collection complète.\\
+Le terme en $\epsilon$ permet de s'assurer d'avoir obtenu la visite complète de tous les n\oe{}uds, mais servira plus amplement dans l'autre condition d'arrêt présentée ci-après.\\
+Le second critère est si le vecteur des ratios de $1$ vérifie :
+$$|Y[i] - \frac{1}{\lfloor \frac{n}{\epsilon}\rfloor}\sum_{k=i+1-\lfloor\frac{n}{\epsilon}\rfloor}^{i}Y[k]|<\epsilon$$
+C'est-à-dire, si le ratio de $1$ n'a pas évolué de plus de $\epsilon$ en moyenne depuis le temps $i+1-\lfloor\frac{n}{\epsilon}\rfloor$.
+On parle donc de "précision" $\epsilon$ puisque plus cette valeur est petite, plus le temps requis pour que peu de changements s'effectuent en moyenne est grand.\\
+Le terme en $n$ (où $n^{2}$ est la taille de la matrice) est ajouté pour obtenir une dépendance à la dimension dans la précision.
+
+
+
+\subsubsection{Variables aléatoires auxiliaires / Auxiliary random variables}
+
+Dans la plupart des applications du MCMC, la densité ciblée $X$ a une structure multiplicative. Pour ces densités, il est possible d'ajouter un vecteur $Y$ de variables aléatoires supplémentaires telles que $(X,Y)$ a une distribution jointe plus simple.
+Par exemple, on considère à nouveau le modèle d'Ising avec $\mu = 0$. Pour chaque arête $\left\{ i,j \right\}$, on crée une variable aléatoire auxiliaire $Y(\left\{i,j\right\})$ telle que sa distribution conditionnée sur $X$ soit uniforme sur $[0,1]$ si $X(i) \neq X(j)$ et uniforme sur $[0,exp(\beta)]$ si on a l'égalité.\\
+La densité jointe est alors uniforme sur : 
+$$X \in \left\{0,1\right\}^{V} \text{et } Y \in \left\{ [0, \infty) : (\forall\left\{i,j\right\})(y\left\{i,j\right\}) \leq min(exp(\beta),1))\right\}$$
+La chaîne de Markov est alors la suivante : pour $X$ donné, il suffit de choisir une nouvelle valeur de $Y$ sachant $X$, puis choisir un nouveau $X$ conditionné sur $Y$.\\
+De par la construction de la chaîne, tirer $Y$ sachant $X$ est direct. Cependant, tirer $X$ sachant $Y$ est une autre histoire : prenons pour exemple le modèle d'Ising avec $\beta >0$. On a alors $exp(\beta) >1$. Lorsque $y(\left\{i,j\right\}) \in [0,1]$, alors il est possible que $x(i)=x(j)$ ou que $x(i) \neq x(j)$, mais lorsque $y(\left\{i,j\right\}) > 1$, alors on a forcément que $x(i)=x(j)$. Les arêtes avec  $y(\left\{i,j\right\}) > 1$ séparent le graphe en groupes de composants connectés tels que chacun des composants doivent avoir le même label.\\
+Il suffit donc de séparer le graphe en groupes de composants connectés en se servant des arêtes $y(\left\{i,j\right\}) > 1$, puis il faut choisir un label uniformément sur $\left\{-1,1\right\}$ pour les composantes de ces groupes.
+
+\subsubsection{Shift Chains}
+
+Un autre type de chaîne utile pour les modèles répulsifs est le shift. Pour illustrer le modèle, on considère le modèle hard-core où chaque n\oe{}ud du graphe est soit occupé ($x(\nu) = 1$) soit inoccupé ($x(\nu) = 0$). Chaque n\oe{}ud occupé contribue d'un facteur $\lambda$ à la densité. Construire un pas à l'aide de l'échantillonneur de Gibbs est alors très simple.
+
+\floatname{algorithm}{HCGM-Gibbs}
+\begin{algorithm}
+\caption{Entrée : état $x$ Sortie : nouvel état $x$}
+\begin{algorithmic}[1]
+\STATE Tirer $\nu \leftarrow Unif(V)$
+\STATE Tirer $U \leftarrow Unif([0,1])$
+\STATE $N_{1} \leftarrow$ nombre de voisins de $\nu$ de label $1$ dans $x$
+\IF{$U < \lambda/(\lambda + 1)$ et $n_{1} = 0$}
+\STATE $x_{\nu} \leftarrow 1$
+\ENDIF
+\end{algorithmic}
+\end{algorithm}
+
+
+Dès lors qu'un des voisins de $\nu$ est occupé, la chaîne ne peut changer la valeur de $\nu$.\\
+Le shift autorise un échange de label entre $\nu$ et son voisin occupé avec une certaine probabilité $p_{shift}$. Lorsque deux voisins de $\nu$ ou plus sont occupés, aucun changement n'est possible et $\nu$ reste inoccupé. On obtient alors l'algorithme suivant.
+
+
+\floatname{algorithm}{HCGM-Shift}
+\begin{algorithm}
+\caption{Entrée : état $x$ Sortie : nouvel état $x$}
+\begin{algorithmic}[1]
+\STATE Tirer $\nu \leftarrow Unif(V)$
+\STATE Tirer $U \leftarrow Unif([0,1])$
+\STATE $S \leftarrow Bern(p_{shift})$
+\STATE $N_{1} \leftarrow$ nombre de voisins de $\nu$ de label $1$ dans $x$
+\IF{$U < \lambda/(\lambda + 1)$ et $n_{1} = 0$}
+\STATE $x_{\nu} \leftarrow 1$
+\ELSIF{$U < \lambda/(\lambda + 1)$ et $n_{1} = 1$ et $S = 1$}
+\STATE $w \leftarrow$ l'unique voisin de $\nu$ de label $1$
+\STATE $x(\nu) \leftarrow 1$
+\STATE $x(w) \leftarrow -1$
+\ENDIF
+\end{algorithmic}
+\end{algorithm}
+
+
+
+\newpage
+~~
+\newpage
+\section{Chapitre 2 : Procédures de rejet}
+
+\subsection{Théorème et exemple simple}
+
+\begin{theorem}[Huber, p.25,théorème 2.1]
+Soit $\nu$ une mesure finie sur un ensemble $B$ et soit $A$ un sous-ensemble de $B$ tel que $\nu(A) > 0$. Soit $X_{1},X_{2},\ldots$ des variables aléatoires iid tirées selon $\nu$ sur l'ensemble $B$. Soit enfin $T = inf \left\{t :  X_{t} \in A \right\}.$ Alors : 
+
+$$ X_{T} \sim [ X_{1} | X_{1} \in A ]$$ 
+\end{theorem}
+
+
+C'est à dire, si on tire successivement des valeurs dans $B$ selon $\nu$ et que l'on rend la première valeur dans $A$, alors le résultat provient de la mesure $\nu$ conditionnée à être dans $A$.
+
+\begin{proof}
+Cela suit du théorème fondamental de la simulation parfaite en ayant $U_{1},U_{2},\dots$ des tirages dans $B$ selon $\nu$, $b(U) = \mathbf{1}(U \in A)$,$g(U) = U$ et $f(X,U) = X$.
+\end{proof}
+
+Le nombre moyen de pas nécessaire pour obtenir un tirage dans $A$ dépend de la taille de $A$ par rapport à la taille de $B$.
+
+\begin{theorem}[Huber, p.26, lemme 2.1]
+La probabilité qu'un tirage $X$ dans $B$ selon $\nu$ soit dans $A$ est $\nu(A)/\nu(B)$. Le nombre moyen de tirages nécessaires est $\nu(B)/\nu(A)$.
+\end{theorem}
+
+
+\begin{proof}
+La première moitié du théorème découle simplement de la définition de mesure de probabilité. La seconde provient du fait que $T$ soit une loi géométrique de paramètre $\nu(A)/\nu(B)$, et donc sa moyenne est $\nu(B)/\nu(A)$.
+\end{proof} 
+
+\paragraph{Exemple : tirage uniforme sur le cercle unité}
+~\\
+~\\
+On choisit $B = [-1,1] \times [-1,1]$ et $A = \left\{ (x,y) \in \mathbb{R}^{2} | x^{2} + y^{2} \leq 1 \right\}$.\\
+L'aire de $B$ est 4 tandis que l'aire du cercle unité est $\pi$. Le nombre moyen de lancers est alors $2 * (4/\pi) = 2*1.273$, où le facteur $2$ provient du nombre d'uniformes nécessaires pour obtenir un tirage dans $B$.\\
+On propose une mise en place sous R en fin de chapitre.\\
+On déduit de cette méthode un moyen de générer une réalisation de Cauchy standard : 
+
+\begin{theorem}[Voir source n°3]
+Si $(X,Y)$ est un tirage aléatoire sur le cercle unité de $\mathbb{R}^{2}$, alors $X/Y$ est un tirage aléatoire selon la loi de Cauchy standard.
+\end{theorem}
+
+
+\begin{proof}
+Soit $\phi$ une fonction borélienne bornée sur $\mathbb{R}$. On a, pour $(X,Y)$ variable aléatoire uniforme sur le disque unité : 
+
+$$ \mathbb{E}\left[\phi\left(\frac{Y}{X} \right)\right] = \frac{1}{\pi} \int_{\mathbb{R}^{2}} \phi\left( \frac{y}{x}\right)\mathbf{1}_{\left\{ x^{2} + y^{2} \leq 1 \right\}}dxdy$$
+
+On passe en coordonnées polaires : $y = r\sin(\theta)$, $x = r\cos(\theta)$. On a alors $dxdy = rdrd\theta$ et on passe d'une intégrale sur $\mathbb{R}^{2}$ vers une intégrale sur $\mathbb{R}^{+} \times [0 , 2\pi]$, d'où : 
+
+\begin{align*}
+\mathbb{E}\left[\phi\left(\frac{Y}{X} \right)\right] &= \frac{1}{\pi} \int_{\mathbb{R}^{+} \times [0 , 2\pi]} \phi(\tan(\theta))\mathbf{1}_{\left\{r \leq 1\right\}} rdrd\theta \\
+&= \frac{1}{2\pi} \int_{0}^{2\pi} \phi(\tan(\theta))d\theta \\
+&= 2 * \frac{1}{2\pi} \int_{-\pi/2}^{\pi/2} \phi(\tan(\theta))d\theta
+\end{align*}
+On pose ensuite le changement de variables $u = \tan(\theta)$ pour enfin obtenir : 
+
+$$ \mathbb{E}\left[\phi\left(\frac{Y}{X} \right)\right] = \int_{\mathbb{R}^{+}}\phi(u)\frac{1}{\pi (1+u^{2})}du$$
+
+Ce qui donne bien la densité d'une loi de Cauchy standard.
+On obtient aussi le résultat pour $X/Y$ puisque l'inverse de la loi de Cauchy standard reste la loi de Cauchy standard.
+
+\end{proof}
+
+
+\subsection{Méthode de rejet pour variables aléatoires à densité}
+
+La méthode de rejet de base n'inclut pas les variables aléatoires à densité. Cependant, celles-ci sont traitées aisément à l'aide des variables aléatoires auxiliaires. Pour cela, on considère le théorème suivant, provenant de la théorie de la mesure.
+
+\begin{theorem}[Théorème fondamental de la simulation de Monte Carlo]
+Soit $X$ variable aléatoire de densité (possiblement non-normalisée) $f_{X}$ par rapport à une mesure $\nu$ sur $\Omega$. Si on a $[Y|X] \sim Unif([0,f_{X}])$, alors $(X,Y)$ est un lancer provenant de la mesure produit $\nu ~ \times$ Unif sur l'ensemble \\ $\left\{(x,y) : x\in \Omega, 0 \leq y \leq f_{x} \right\}$.
+\end{theorem}
+
+
+Essentiellement, ce théorème nous dit que pour obtenir un lancer selon une certaine densité, il suffit de tirer selon une loi uniforme sur un espace plus grand. De plus, la densité de $X$ n'est pas forcément normalisée, ce qui sera essentiel dans les applications qui suivent. 
+\\
+~\\
+Pour comprendre comment cela fonctionne, nous allons traiter un exemple en toute généralité, puis un exemple concret. \\
+Soit $\mu$ une mesure sur un ensemble $\Omega$. On suppose que, pour une densité $g$, il est possible de générer un lancer provenant de la densité produit $\mu ~\times$ Unif sur $\Omega_{g} = \left\{ (x,y) : x \in \Omega, 0 \leq y \leq g \right\}$.\\
+Une fois que ce lancer est obtenu, $X$ provient alors de la densité $g$. Mais supposons ici que le but est d'obtenir un lancer selon une densité $f$.\\
+Notons d'abord que, si $(X,Y)$ est de mesure $\mu ~ \times$ Unif sur $\Omega_{g}$, alors $(X,2Y)$ est de mesure $\mu ~ \times$ Unif sur $\Omega_{2g} = \left\{ (x,y) : x \in \Omega, 0 \leq y \leq 2g \right\}$. On peut même généraliser : pour toute constante $c > 0$, $(X,cY)$ est de mesure $\mu ~ \times$ Unif sur $\Omega_{cg}$.\\
+Supposons alors que $c \geq sup_{x \in \Omega} f(x)/g(x)$. Alors : 
+
+$$ \Omega_{f} \subseteq \Omega_{cg}$$
+
+On peut alors utiliser une méthode de rejet pour obtenir une réalisation provenant de la densité $f$. Il suffit de générer $X$ selon la densité $g$, puis de tirer uniformément $Y$ sur $[0,c*g(X)]$. Si $Y$ est aussi dans $[0,f(X)]$ (de sorte que $(X,Y) \in \Omega_{f})$ alors on accepte $(X,Y)$, ce qui signifie que $X$ est un lancer selon la densité $f$. \\
+Pour tester si le lancer uniforme de $[0,c*g(X)]$ est dans $[0,f(X)]$, il n'est pas nécessaire de vérifier si l'uniforme tombe effectivement dedans : on peut simplement tirer une variable aléatoire $C$ suivant une loi de Bernouilli de paramètre $f(X)/[c*g(X)]$. Si $C = 1$, on considère que $X$ est un lancer provenant de la densité $f$.\\
+La probabilité d'acceptation varie inversement avec $c$, le meilleur choix possible pour $c$ étant alors $sup_{x \in \Omega} f(x)/g(x)$. La valeur de $c$ n'est pas toujours évidente à calculer. Dans ce cas, une majoration suffit : l'algorithme fera simplement plus de lancers en moyenne.\\
+Nous allons maintenant calculer la probabilité d'acceptation d'un lancer.
+
+\begin{lemme}[Huber, p.29,lemme 2.2]
+Soit $Z_{f} = \int_{x \in \Omega} f(x) \nu(dx)$ et $Z_{g} = \int_{x \in \Omega} g(x) \nu(dx)$, les constantes de normalisation pour les densités (possiblement) non-normalisées $f$ et $g$.
+Alors, pour la méthode par rejet présentée précédemment, la probabilité d'acceptation est $Z_{f}/[c*Z_{g}]$ et le nombre moyen de lancers est $c*Z_{g}/Z_{f}$.
+\end{lemme}
+
+
+
+\begin{proof}
+Pour $C$, la loi de Bernouilli présentée précédemment, le problème est de calculer $\mathbb{P}(C=1)$. 
+
+\begin{align*}
+\mathbb{P}(C=1) &= \mathbb{E}[\mathbb{E}[\mathbf{1}(C=1)|X]] \\
+&= \int_{x \in \Omega} \mathbb{P}(C=1|X=x)\mathbb{P}(X \in dx) \\
+&= \int_{x \in \Omega} f(x)/[cg(x)](g(x)/Z_{g})\nu(dx) \\
+&= [cZ_{g}]^{-1}\int_{x \in \Omega} f(x)\nu(dx) \\
+&= Z_{f}/[c*Z_{g}]
+\end{align*}
+
+\end{proof}
+
+\subsubsection{Exemple : D'une Cauchy vers une Normale}
+
+Un exemple simple est la situation suivante : on suppose qu'un utilisateur peut générer une réalisation d'une loi de Cauchy standard de densité $g(x) = [\pi(1+x^{2})]^{-1}$. Cet utilisateur souhaite générer une réalisation d'une loi Normale standard de densité $f(x) = \frac{1}{\sqrt{2\pi}} \exp(-x^{2}/2)$.
+D'abord, la normalisation n'est pas nécessaire, donc soit $g_{1}(x) = (1+x^{2})^{-1}$ et $f_{1}(x) = \exp(-x^{2}/2)$. On a que $f_{1}(x)/g_{1}(x) \leq 2 , \forall x$. \\
+On présente une implémentation de l'algorithme sous R en annexe (6.2).\\
+L'histogramme rendu après un lancer du programme est le suivant : 
+\begin{center}
+\includegraphics[scale=1]{graphiques/normaltocauchy.jpeg}
+\end{center}
+
+
+On obtient bien l'allure de la densité d'une loi normale standard.
+
+On récupère aussi le nombre moyen de lancers requis afin d'obtenir une réalisation : $2.50588$. On peut retrouver ce résultat de manière théorique en calculant la probabilité d'acceptation : 
+
+\begin{align*}
+\mathbb{P}(C=1) &= \int_{x \in \mathbb{R}} \mathbb{P}(X \in dx, C = 1) \\
+&= \int_{x \in \mathbb{R}} g(x) \frac{1}{2}(1+x^{2})\exp(-x^{2}/2)dx \\
+&= (2\pi)^{-1/2}
+\end{align*}
+
+Le nombre moyen de lancers est donc $\sqrt{2\pi} = 2.506\ldots$\\
+Il est possible d'accélérer l'algorithme : on a en fait $sup_{x} (1+x^{2})\exp(-x^{2}/2) = 2/\sqrt{e}$. En remplaçant dans l'algorithme (mais aussi en calculant exactement l'intégrale), le nombre moyen de lancers devient $\sqrt{2\pi/e} = 1.520 \ldots$
+
+\subsection{Union d'ensembles}
+
+Une autre manière d'utiliser les méthodes de rejet est de prendre en compte les multiples manières d'obtenir une réalisation. Par exemple, on considère le problème de génération selon une mesure $\nu$ sur $S_{1} \cup \ldots \cup S_{n}$, où les ensembles $S_{i}$ sont de mesure finie $\nu(S_{i})$.\\
+On considère l'algorithme suivant : on tire $I$ dans $\left\{1,2,\ldots,n\right\}$ de telle sorte que $\mathbb{P}(I=i) \propto \nu(S_{i})$. Puis, conditionnellement sur $I$, on tire $X$ dans $S_{I}$ selon la mesure $\nu$.\\
+Le problème est que $X$ n'est pas tiré selon $\nu$ sur $S_{1} \cup \ldots \cup S_{n}$, car il y a plusieurs manières pour lesquelles $X$ aurait pu être choisi. Par exemple, si $X \in S_{1}$ et $X \in S_{2}$ mais $X \notin S_{3} \ldots S_{n}$, alors $I$ aurait pu être $1$ ou $2$ lors du choix de $X$.\\
+
+\begin{lemme}[Huber, p.30, lemme 2.3]
+Pour la procédure précédente, $X$ est un tirage selon $\nu$ sur $S_{1} \cup \ldots \cup S_{n}$ avec densité $f(x) = \#\left\{i : x \in S_{i} \right\}/\nu(S_{1} \cup \ldots \cup S_{n})$
+\end{lemme}
+
+
+\begin{proof}
+Soit $x \in S_{1} \cup \ldots \cup S_{n}$ et $C = \nu(S_{1} \cup \ldots \cup S_{n})$ Alors :
+
+\begin{align*}
+\mathbb{P}(X \in dx) &= \sum_{i=1}^{n} \mathbb{P}(X \in dx, I=i) \\
+&= \sum_{i=1}^{n} \mathbb{P}(I=i)\mathbb{P}(X \in dx|I=i)\\
+&= \sum_{i=1}^{n} C^{-1}\nu(S_{i}) \mathbf{1}(x \in S_{i}) \nu(dx)\nu(S_{i})^{-1}\\
+&= C^{-1}\#\left\{i : x \in S_{i} \right\}
+\end{align*}
+
+\end{proof}
+
+Par exemple, supposons que l'on veuille tirer uniformément sur les 3 cercles unités respectivement centrés en $(0,0)$,$(1/2,0)$ et $(1/2,1/2)$.\\
+On tire alors $I \sim Unif(\{1,2,3\})$. Si $I=1$, on tire $X$ sur le cercle unité centré en $(0,0)$. Pour $I=2$ ou $I=3$, on tire $X$ sur le cercle centré en $(1/2,0)$ et $(1/2,1/2)$ respectivement. Après, avoir tiré $I$ puis $X$ conditionnellement à $I$, on accepte $X$ avec probabilité égale à l'inverse du nombre de cercles où se situe $X$.
+
+\subsection{Simulation à l'aide des inégalités de Markov et Chernoff}
+
+\subsubsection{L'inégalité de Markov en tant que procédure de rejet}
+
+\begin{lemme}[Inégalité de Markov]
+On considère une variable aléatoire $X$ non-négative avec probabilité $1$ et d'espérance finie $\mathbb{E}[X]$. Alors, pour tout $a >0$ :
+
+$$ \mathbb{P}(X \geq a) \leq \frac{\mathbb{E}[X]}{a}$$
+\end{lemme}
+
+
+
+Du point de vue simulation, l'inégalité de Markov nous permet de tirer depuis $[X|X \geq a]$. C'est à dire, si $X$ à pour densité $f_{X}(x)$ alors le but est de tirer depuis la densité non-normalisée $f_{X}(x)\mathbf{1}(x>a)$. Pour pouvoir appliquer une méthode de rejet, on utilise la densité non-normalisée $xf_{X}(x)$. On a alors que $f_{X}(x)\mathbf{1}(x \geq a)/[xf_{X}(x)]$ vaut $0$ lorsque $x<a$, et $1/x$ lorsque $x \geq a$. Le produit n'est donc jamais supérieur à $1/a$ ce qui permet d'utiliser la méthode de rejet suivante : 
+
+\floatname{algorithm}{Méthode rejet Inégalité de Markov}
+\begin{algorithm}
+\caption{Entrées : $f$,$a$ Sortie : $X \sim f$ sachant $X > a$ }
+\begin{algorithmic} 
+\WHILE{$C \neq 1$}
+
+\STATE Tirer $X$ selon la densité non-normalisée $xf(x)$
+\STATE Tirer $C \sim Bern(a\mathbf{1}(X \geq a)/x)$ 
+
+\ENDWHILE
+\end{algorithmic}
+\end{algorithm}
+
+On remarque que la constante de normalisation pour la densité $xf(x)$ est simplement : $\int xf(x)\nu(dx) = \mathbb{E}[X]$. On a alors :
+
+\begin{align*}
+\mathbb{P}(C=1) &= \int_{x \geq 0} \frac{xf_{X}(x)}{\mathbb{E}[X]} \frac{a\mathbf{1}( X > a)}{x} = \int_{x \geq a} \frac{af_{X}(x)}{\mathbb{E}[X]} = \frac{a \mathbb{P}(X > a)}{\mathbb{E}[X]}\\
+\end{align*}
+
+Puisque la chance d'accepter est au plus $1$, cette fraction est aussi au plus $1$, ce qui montre l'inégalité de Markov.
+
+\subsubsection{Les inégalités de Chernoff en tant que procédure de rejet}
+Les inégalités de Chernoff donnent des limites supérieures sur la probabilité qu'une somme de variables aléatoires est supérieure (ou inférieure) à une certaine valeur. Soit $S_{n} = X_{1} + \ldots + X_{n}$, où $X_{1},\ldots,X_{n}$ sont iid; alors le but est de générer un tirage selon $S_{n}$ tel que $S_{n} \geq a$ ou $S_{n} \leq a$.\\
+L'inégalité de Markov peut aussi être appliquée à une somme de variables aléatoires, mais la borne donnée n'est pas aussi précise que celle obtenue avec les inégalités de Chernoff.
+
+\begin{lemme}[Inégalités de Chernoff, Huber, p.40, lemme 2.9]
+Soit une variable aléatoire $X$ telle que $\mathbb{E}[e^{tX}]$ soit finie pour $t \in [a,b]$, où $a$ est négatif et $b$ positif. Alors pour un certain $c \in \mathbb{R}$, et en notant par $mgf_{X}(t)$ la fonction génératrice des moments pour la variable aléatoire $X$, 
+
+\begin{align*}
+\mathbb{P}(X \geq c) \leq mgf_{X}(t)/\exp(tc), ~\forall t \in [0,b] \\
+\mathbb{P}(X \leq c) \leq mgf_{X}(t)/\exp(tc), ~\forall t \in [a,0] 
+\end{align*}
+\end{lemme}
+
+
+\begin{proof}
+Tout d'abord : $\mathbb{P}(X \geq c) = \mathbb{P}(tX \geq tc)$ pour tout $t$ positif. De plus, $\mathbb{P}(tX \geq tc) = \mathbb{P}(\exp(tX) \geq \exp(tc))$. Enfin, on applique l'inégalité de Markov pour obtenir $\mathbb{P}(\exp(tX) \geq \exp(tc)) \leq \mathbb{E}[\exp(tX)]/\exp(tc)$. Le résultat pour l'autre inégalité est démontré de la même manière.
+\end{proof}
+
+Nous considérons à présent ce qu'il se passe lorsque l'on considère les inégalités de Chernoff pour une somme de variables aléatoires indépendantes. On rappelle d'abord un résultat sur les fonctions génératrices des moments.\\
+
+\begin{lemme}
+Soit $S_{n} = X_{1} + \ldots + X_{n}$, où les $\{X_{i}\}$ sont iid de fonction génératrice des moments finie. Alors on a : $\mathbb{E}[\exp(tS_{n})] = [\mathbb{E}[\exp(tX_{i})]]^{n}$
+\end{lemme}
+
+
+On applique ce lemme aux inégalités de Chernoff pour obtenir : 
+
+\begin{lemme}
+Soit $S_{n} = X_{1} + \ldots + X_{n}$, où les $\{X_{i}\}$ sont iid de fonction génératrice des moments $mgf_{X_{i}}(t)$ finie pour $t \in [a,b]$, où $a$ est négatif et $b$ positif. Alors on a : 
+
+\begin{align*}
+\mathbb{P}(S_{n} \geq \alpha n) \leq  \left(\frac{mgf_{X_{i}}(t)}{\exp(t \alpha)}\right)^{n}, ~\forall t \in [0,b]\\
+\mathbb{P}(S_{n} \leq \alpha n) \leq  \left(\frac{mgf_{X_{i}}(t)}{\exp(t \alpha)}\right)^{n}, ~\forall t \in [a,0]
+\end{align*}
+\end{lemme}
+
+
+Supposons que $X_{i} \sim f_{X}$. Le but est d'utiliser la fonction génératrice des moments pour obtenir un meilleur algorithme de rejet. Pour cela, il doit être possible de générer une réalisation selon la densité $g_{t}(x) \propto e^{tx}f_{x}(x)$. Lorsque $t$ est grand, cette densité aura tendance à prendre de plus grandes valeurs. Lorsque $t$ est grand dans les négatifs, $g_{t}$ tendra à prendre des valeurs plus faibles.\\
+Soit $t>0$. Pour $x \geq a$, alors $g_{t}(x) = e^{tx} f_{X}(x) \geq e^{ta}f_{X}(x)$. Alors une réalisation de $g_{t}$ peut être acceptée comme réalisation de $f_{X}$ avec probabilité $e^{ta}/e^{tx}$. Si la probabilité que $x$ soit bien plus grand que $a$ est faible, alors la probabilité d'acceptation sera très proche de $1$. Une méthode similaire s'applique lorsque $t<0$. On en déduit alors l'algorithme suivant :
+
+\floatname{algorithm}{Méthode rejet Inégalités de Chernoff}
+\begin{algorithm}[]
+\caption{\newline Entrées : $f_{X}$,$a$,$t$ \newline  Sortie : $S_{n} = X_{1} + \ldots + X_{n} $ sachant $S_{n} \geq a$ (lorsque $t >0$) ou sachant $S_{n} \leq a$ (lorsque $t<0$)}
+
+\begin{algorithmic}
+\STATE Si $t>0$, alors $A \leftarrow [a,\infty)$, sinon $(-\infty,a]$ 
+\WHILE{$C \neq 1$}
+
+\STATE Tirer $X_{1},\ldots,X_{n}$ iid selon la densité non-normalisée $e^{tx}f(x)$
+\STATE $S_{n} \leftarrow X_{1} + \ldots + X_{n}$
+\STATE Tirer $C \sim Bern(\exp(t(a-S_{n}))\mathbf{1}(S_{n}\in A))$ 
+
+\ENDWHILE
+\end{algorithmic}
+\end{algorithm}
+
+
+\newpage
+\begin{lemme}[Huber, p.41, propriété 2.5]
+Supposons que $mgf_{X_{i}}(t)\exp(-ta/n)<1$. Alors l'algorithme précédent génère une réalisation de $[S_{n}|S_{n}>a]$ lorsque $t>0$ ou de $[S_{n}|S_{n}<a]$ lorsque $t<0$.
+\end{lemme}
+
+
+\begin{proof}
+On considère tout vecteur $(x_{1},\ldots,x_{n})$ tel que $\sum x_{i} = s$. On considère $X_{1},\ldots,X_{n}$ iid de densité $f_{X}(x)$ et $X_{1}',\ldots,X_{n}'$ iid de densité $\exp(tx)f_{X}(x)$. Alors la densité de $S_{n}'  = X_{1}' + \ldots + X_{n}'$ est simplement la densité de $S_{n} = X_{1} + \ldots + X_{n}$ avec un facteur $\exp(tx_{1})\exp(tx_{2})\ldots\exp(tx_{n}) = \exp(ts)$.\\
+On génère dans l'algorithme une variable aléatoire de densité $g(s) = \exp(ts)f_{S_{n}}(s)$ et la densité ciblée est $f(s) = f_{S_{n}}(s)\mathbf{1}(s \in A)$. On a alors $f(s)/g(s)$ qui est soit $0$ lorsque $s \notin A$ soit $\exp(-ts)$ lorsque $s \in A$.\\
+Si $A = [a, \infty)$, alors $t>0$ et $\exp(-ts) \leq \exp(-ta)$. De même, lorsque $A = (-\infty, a]$, alors $t<0$  et $\exp(-ts) \leq \exp(-ta)$. On choisit donc $c = \exp(-ta)$ et on obtient $f(s)/[cg(s)] = \exp(ta)\exp(-ts)\mathbf{1}(s \in A)$ de même que dans l'algorithme. 
+\end{proof}
+
+On propose une mise en place de l'algorithme précédent sous R en annexe sur un exemple simple.
+
+
+On utilise l'exemple suivant pour tester nos algorithmes : pour $n=10$ et $p=0.1$, pour $X$ la binomiale de paramètres précisés précédemment, on veut générer une réalisation de $[X|X>=5]$. \\
+La méthode de base nous donne un nombre moyen expérimental de lancers de $610.9838$ tandis que la méthode à l'aide des inégalités de Chernoff nous donne un nombre moyen expérimental de lancers de $3.698136$.\\
+D'où l'efficacité de cette méthode.
+
+\subsection{Défaut des méthodes de rejet}
+
+Le principal défaut des méthodes de rejet concerne l'approche des problèmes considérés. On prend pour exemple la génération de la variable aléatoire uniforme dans la boule de dimension $n$.\\
+La méthode présentée précédemment dans le cas $n=2$ nécessite de tirer uniformément sur le carré $[-1,1] \times [-1,1]$. La probabilité d'acceptation $p$ est alors l'aire du cercle sur l'aire du carré, ie, $p = \pi /4$.\\
+On peut généraliser cette méthode aux dimensions supérieures : on tire uniformément dans l'hypercube unité de dimension $n$ : $[-1,1]^{n}$, le but étant d'obtenir un tirage uniforme dans la boule unité de même dimension. \\
+\begin{theorem}[Volume de la boule unité (voir source n°4)]
+Le volume de la boule unité en dimension $n$ est  \Large{$ \frac{\pi^{\frac{n}{2}}}{\Gamma(\frac{n}{2} + 1)} $}\normalsize{, où $\Gamma$ désigne la fonction Gamma.}
+\end{theorem}
+
+
+\begin{proof}
+Notons par $V^{(n)}[1]$ le volume de la boule unité de dimension $n$ et de rayon $1$. On a d'abord $V^{(1)}[1] = 2$, puis pour tout $n \geq 1$, on a par récurrence, en utilisant la relation suivante : pour $B_{d}(0,1)$ la boule unité de dimension $d$, 
+
+$$B_{d}(0,1) = \left\{ (x_{1}, \ldots, x_{d-1},h) | h \in [-1,1] , (x_{1}, \ldots, x_{d-1}) \in B_{d-1}(0,\sqrt{1 - h^{2}}) \right\}$$ 
+
+Et en utilisant le théorème de Fubini, 
+
+$$ V^{(n+1)}[1] =  \int_{-1}^{1}V^{(n)}[1]\left(\sqrt{1-x^{2}}\right)^{n}dx = V^{(n)}[1]*2\int_{0}^{1}\left(1-x^{2}\right)^{n/2}dx$$
+
+On effectue ensuite le changement de variables $u=x^{2}$ ce qui nous donne $x = \sqrt{u}$ et $dx = \frac{du}{2\sqrt{u}}$ pour obtenir :
+
+$$V^{(n+1)}[1] = V^{(n)}[1]*2\int_{0}^{1}\left(1-x^{2}\right)^{n/2}dx = V^{(n)}[1]\int_{0}^{1}\left(1-u\right)^{n/2} u^{-1/2}du$$
+
+L'intégrale à droite est connue comme la fonction bêta, d'où : 
+
+$$V^{(n+1)}(1) = V^{(n)}[1]B\left(\frac{n}{2}+1,\frac{1}{2}\right)$$
+
+Or on peut exprimer la fonction bêta par rapport à la fonction gamma pour obtenir :
+
+$$V^{(n+1)}(1) = V^{(n)}[1] \frac{\Gamma(\frac{n}{2}+1)\Gamma(\frac{1}{2})}{\Gamma(\frac{n}{2} + \frac{3}{2})}$$
+
+Enfin, en utilisant le fait que $\Gamma(\frac{1}{2}) = \sqrt{\pi}$, et à l'aide d'une simple récurrence, on a enfin que :
+
+\large{}$$V^{(n)}[1]=  \frac{\pi^{\frac{n}{2}}}{\Gamma(\frac{n}{2} + 1)} $$
+\normalsize{}
+
+\end{proof}
+
+La probabilité d'acceptation $p$ d'un tirage aléatoire dans l'hypercube unité de dimension $n$ en tant que tirage dans la boule unité de même dimension est donc le volume de la boule sur le volume de l'hypercube, soit encore : 
+
+$$ p = \frac{V^{(n)}[1]}{2^{n}} =  \frac{\pi^{\frac{n}{2}}}{2^{n}\Gamma(\frac{n}{2} + 1)} $$
+
+On en déduit le nombre moyen $k$ de lancers nécessaires à l'acceptation (par simple étude de loi géométrique) : 
+
+$$ k(n) = \frac{1}{p} = \frac{2^{n}\Gamma(\frac{n}{2} + 1)}{\pi^{\frac{n}{2}}}$$
+
+On trace ci-dessous $k$ en fonction de $n$ pour $n \leq 12$ :
+
+\begin{center}
+\includegraphics[scale=0.93]{graphiques/boule_vitesse.jpeg}
+\end{center}
+
+On remarque une augmentation très rapide du nombre de lancers nécessaires à l'obtention d'une réalisation selon que la dimension croît. \\
+La méthode de rejet n'est donc plus efficace pour des problèmes dont l'approche n'est pas connue, une étude approfondie étant nécessaire.\\
+Le code permettant d'obtenir cette courbe ainsi qu'une mise en place du problème sous R est disponible en annexe.
+
+\newpage
+\section{Chapitre 3 : Coupling From The Past}
+
+\paragraph{Définition : Fonction de mise à jour}
+~\\
+\\
+On dit que $\phi : \Omega \times [0,1] \to \Omega$ est une fonction de mise à jour pour une chaîne de Markov $\left\{X_{t} \right\}$ si, pour $U \sim$ Unif[0,1], $[X_{t+1}|X_{t}] \sim \phi (X_{t},U)$.
+\\
+La fonction $\phi$ est déterministe : tout l'aléatoire est contenu dans la variable $U$.\\
+Toute chaîne qui peut-être simulée sur ordinateur est un exemple de fonction de mise à jour.\\
+Une même chaîne de Markov peut-être représentée par plusieurs fonctions de mise à jour : la fonction de mise à jour n'est pas forcément unique.\\
+À l'aide d'une fonction de mise à jour $\phi$, on peut représenter la trajectoire d'une chaîne de Markov $\left\{ X_{t} \right\}$. En effet, soient $U_{0},U_{1},U_{2},\ldots$ iid $\sim$ Unif([0,1]). Pour un état initial $x_{0}$, on a : $X_{1} = \phi (x_{0},U_{0})$ puis pour $i>1$, $X_{i} = \phi (X_{i-1},U_{i-1})$. \\ 
+On notera alors la trajectoire jusqu'au temps t sous la forme :
+$$ \phi_{t}(x_{0},U) = \phi(\phi(\phi(\ldots(\phi(x_{0},U_{0}),U_{1}),\ldots,U_{t-1}))$$
+Ensuite, pour n'importe quels états $x_{0}$ et $y_{0}$ dans $\Omega$, on définit pour une fonction de mise à jour $\phi$ :  $X_{t} = \phi_{t}(x_{0},U)$ et $Y_{t} = \phi_{t}(y_{0},U)$ (en utilisant les mêmes valeurs de U). On appelle ce procédé un couplage. Notons qu'avec ce couplage, si il existe $t \geq 0$ tel que $X_{t} = Y_{t}$, alors on dit que les processus ont fusionné (ou se sont rejoints,etc).
+
+\paragraph{Définition : Couplage}
+~\\ 
+\\
+Soit $\mathcal{S}$ un ensemble de processus stochastiques définis sur un même ensemble d'indices $\mathcal{I}$ et un même espace d'états $\Omega$. Si il existe un indice $i \in \mathcal{I}$ et un état $x \in \Omega$ tels que pour tout $S \in \mathcal{S}$, on aie $S_{i} = x$, alors on dit que les processus stochastiques ont coalescé (ou se sont rejoints,couplés,etc). 
+
+\subsection{CFTP : approche trajectorielle (Baccelli / Brémaud)}
+
+Soit $P$ une matrice de transition ergodique sur l'espace d'état fini $E = \left\{ 1,\ldots,r\right\}$, de distribution stationnaire $\pi$. Comme définie précédemment, à l'aide d'une fonction de mise à jour $h$, on peut implémenter la chaîne de Markov de la manière suivante : 
+
+$$X_{n+1} = h(X_{n},\xi_{n})$$
+
+pour une suite de variables aléatoires $\left\{ \xi_{n} \right\}_{n \geq 1}$ iid uniformes sur $[0,1]$ et indépendantes de l'état initial.\\
+On considère à présent un tableau de choix aléatoires $\left\{ \xi_{k}(i) \right\}_{k \in \mathbb{Z}, i \in E}$ iid uniformes sur $[0,1]$. Pour tout $k \in \mathbb{Z}$ et tout $i \in E$, soit $\left\{X_{n}^{k}(i)\right\}_{n \geq k}$ définie par récurrence : 
+
+$$X_{n+1}^{k}(i) = h(X_{n}^{k}(i),\xi_{n}(X_{n}^{k}(i)),~ n \geq k,$$
+
+avec pour condition initiale $X_{k}^{k}(i) = i$, et $h$ comme définie précédemment.\\
+Pour tout $k$ et $i$, $\left\{ X_{n}^{k}(i) \right\}_{n \geq k}$ est une chaîne de Markov homogène de matrice de transition $P$. Par la structure de récurrence stochastique sous-jacente, les chaînes de la famille définie précédemment sont telles que : pour tout $k \in \mathbb{Z}$, $X_{n}^{k}(i) = X_{n}^{k}(j)$ implique que $X_{m}^{k}(i) = X_{m}^{k}(j)$, pour tout $m \geq n$.\\
+On note par : 
+
+$$ N^{+} = \inf \left\{n \geq 0 | X_{n}^{0}(1) = X_{n}^{0}(2) = \ldots = X_{n}^{0}(r) \right\}$$ 
+
+($= + \infty$ si la condition n'est jamais satisfaite) le temps de coalescence forwards de la chaîne. On notera le temps de coalescence backwards de la chaîne par : 
+
+$$ N^{-} = \inf \left\{n \geq 1 | X_{0}^{-n}(1) = X_{0}^{-n}(2) = \ldots = X_{0}^{-n}(r)\right\} $$
+
+($= + \infty$ si la condition n'est jamais satisfaite)
+
+\begin{center}
+\includegraphics[scale=0.9]{graphiques/backwards_coalescence_1.png}
+\captionof{figure}{Exemple de temps de coalescence backwards, $N^{-} = 7$}
+\end{center}
+
+\begin{center}
+\includegraphics[scale=1]{graphiques/forwards_coalescence_1.png}
+\captionof{figure}{Exemple de temps de coalescence forwards, $N^{+} = 4$}
+\end{center}
+
+\begin{theorem}[Baccelli/Brémaud, p.110, propriété 2.5.1]
+Le temps de coalescence forwards $N^{+}$ est presque sûrement fini.
+\end{theorem}
+
+\begin{proof}
+Il suffit de prouver le résultat dans le cas de $r$ chaînes de Markov homogènes, complètement indépendantes les unes des autres, de même matrice de transition. Nous n'avons pas l'hypothèse d'indépendance dans la construction des chaînes de Markov donnée précédemment. Cependant, la probabilité de coalescence (probabilité que $N^{+}$ soit fini) dans notre situation est bornée inférieurement par la probabilité de coalescence dans le cas complètement indépendant. Pour mieux le comprendre, on construit d'abord le modèle de chaînes indépendantes : 
+
+$$ \overline{X}_{n+1}(i) = h(\overline{X}_{n+1}(i),\overline{\xi}_{n,i}), ~ n \geq 0, $$
+
+(avec pour condition initiale $\overline{X}_{0}(i) = i)$, qui utilise $r$ composantes de mise à jour iid $\left\{ \overline{\xi}_{n,i} \right\}$.
+
+La différence entre ce modèle et celui que l'on a introduit réside dans le nombre de mise à jour trop élevé de notre modèle. Afin de construire un ensemble de $r$ chaînes semblable à celui de notre modèle, il suffit d'utiliser les mêmes mise à jour pour deux chaînes dès lors qu'elles se rencontrent. Il est alors clair que le temps de coalescence forwards du modèle ainsi modifié est plus petit ou égal à celui du modèle complètement indépendant.\\
+Il reste alors à prouver que pour un nombre fini de chaînes de Markov homogènes, ergodiques et indépendantes, elles finiront par se rencontrer. Cela suit du fait que le produit de chaînes ergodiques indépendantes est une chaîne ergodique.
+
+\end{proof}
+
+\begin{theorem}[Baccelli/Brémaud, p.111, propriété 2.5.2]
+Les variables aléatoires $N^{+}$ et $N^{-}$ ont la même distribution.
+\end{theorem}
+
+\begin{proof}
+Soit $k \in \mathbb{N}$. On considère le modèle modifié obtenu en remplaçant $\xi_{-k+l}(i)$ par $\xi_{l}(i)$ ,pour tout $l$ tel que $0 \leq l \leq k$ ,et pour $i \in E$.
+Notons par $N^{'}$ le temps de coalescence backwards du modèle modifié. Clairement $N^{-}$ et $N^{'}$ ont la même distribution.
+\\
+
+\begin{center}
+\includegraphics[scale=0.8]{graphiques/forwards_coalescence_2_1}
+\includegraphics[scale=0.8]{graphiques/forwards_coalescence_2_2}
+\captionof{figure}{$N^{+} \leq k$ implique $N^{'} \leq k$}
+\end{center}
+
+On suppose maintenant que $N^{+} \leq k$. Alors, dans le modèle modifié, les chaînes commençant au temps $-k$ depuis les états $1,\ldots,r$ coalescent au temps $-k + N^{+} \leq 0$ (voir figure précédente), et par conséquent $N^{'} \leq k$. Donc, $N^{+} \leq k$ implique $N^{'} \leq k$, puis :
+
+$$\mathbb{P}(N^{+} \leq k) \leq \mathbb{P}(N^{'} \leq k) = \mathbb{P}(N^{-} \leq k)$$
+
+D'autre part, on suppose que $N^{'} \leq k$. Alors, dans le modèle original, les chaînes commençant depuis les états $1, \ldots, r$ au temps $k-N^{'}$ coalesceront au temps $k$. On en déduit donc $N^{+} \leq k$ (voir figure suivante). On a alors que $N^{'} \leq k$ implique $N^{+} \leq k$, puis :
+
+$$\mathbb{P}(N^{-} \leq k) = \mathbb{P}(N^{'} \leq k) \leq \mathbb{P}(N^{+} \leq k)$$
+
+Grâce aux deux inégalités démontrées précédemment, on en déduit le résultat.
+
+\end{proof}
+
+\begin{center}
+\includegraphics[scale=0.8]{graphiques/forwards_coalescence_2_4}
+\includegraphics[scale=0.8]{graphiques/forwards_coalescence_2_3}
+\captionof{figure}{$N^{'} \leq k$ implique $N^{+} \leq k$}
+\end{center}
+
+On définit à présent la variable aléatoire suivante : 
+
+$$Z = Z(i) = X_{0}^{-N^{-}}(i)$$
+
+(la variable aléatoire $Z$ est indépendante de $i \in E$; dans la figure 1, on a $Z = 2$).
+
+On a le théorème suivant : 
+
+\begin{theorem}[Baccelli/Brémaud, p.112, théorème 2.5.1]
+Le temps de coalescence backwards $N^{-}$ est presque sûrement fini. De plus, la variable aléatoire $Z$ admet $\pi$ comme distribution. 
+\end{theorem}
+
+\begin{proof}
+Puisque, pour tout $k \in \mathbb{N}$, $\mathbb{P}(N^{-} \leq k) = \mathbb{P}(N^{+} \leq k)$ (d'après le résultat précédent), le fait que $N^{-}$ soit fini provient directement du fait que $N^{+}$ soit fini (théorème 10).\\
+D'autre part, puisque pour $n \geq N^{-}$, on a $X_{0}^{-n}(i) = Z$, 
+
+$$\mathbb{P}(Z = j) = \lim_{n \rightarrow \infty } \mathbb{P}(X_{0}^{-n}(i) = j) = \lim_{n \rightarrow \infty } p_{ij}(n) = \pi(j),$$
+
+où la dernière égalité provient du théorème ergodique pour les chaînes de Markov.
+\end{proof}
+
+\newpage
+\paragraph{Exemple : distribution stationnaire et temps de coalescence forwards}~\\
+
+Le théorème précédent montre qu'en utilisant le temps de coalescence backwards, on obtient une réalisation de la loi stationnaire par la méthode CFTP. La question est alors la suivante : pourquoi ne pas utiliser le temps de coalescence forwards ? La réponse à cette question s'obtient en étudiant l'exemple simple suivant :\\
+On considère $\left\{X_{n}\right\}$ la chaîne de Markov à deux états de matrice de transition 
+$P = \left( \begin{matrix}
+0 ~~ 1 \\
+\frac{1}{2} ~~  \frac{1}{2} 
+\end{matrix}\right) $.\\ 
+On remarque que cette chaîne a pour loi stationnaire $\pi = (\frac{1}{3} ~ \frac{2}{3})$.\\
+ On remarque ensuite que, pour $N^{+}$ le temps de coalescence forwards, on a $X_{0}^{N^{+}}(1)= X_{0}^{N^{+}}(2) = 2$ presque sûrement. En effet, par l'absurde, si les deux chaînes issues des états $1$ et $2$ s'étaient rejointes au temps $N^{+}$ à l'état $1$, alors on aurait deux cas possibles : \\
+
+\begin{itemize}
+\item Au temps $N^{+}-1$, la chaîne issue de l'état $1$ se déplace à l'état $1$ au temps suivant : une absurdité par la structure de la chaîne ($P_{1,1} = 0$)
+\item Au temps $N^{+}-1$, les deux chaînes ont déjà coalescé, d'où la coalescence au temps $N^{+}$ : une absurdité par la définition de $N^{+}$\\
+\end{itemize}
+
+Cependant le temps de coalescence forwards n'est pas une cause perdue : certains modèles permettent d'utiliser la méthode CFTP en conjugaison avec celui-ci pour obtenir une réalisation de la loi stationnaire, comme le montre l'exemple suivant :\\ 
+
+On considère $\left\{X_{n}\right\}$ la chaîne de Markov à deux états de matrice de transition 
+$P = \left( \begin{matrix}
+\frac{1}{2} ~~  \frac{1}{2}\\
+\frac{1}{2} ~~  \frac{1}{2} 
+\end{matrix}\right) $.\\ 
+
+On remarque facilement que la loi stationnaire est $\pi = (\frac{1}{2} ~ \frac{1}{2})$, puis que, au temps $N^{+}$ :
+
+$$ \mathbb{P}(X_{0}^{N^{+}}(1) = X_{0}^{N^{+}}(2) = 1) = \mathbb{P}(X_{0}^{N^{+}}(1) = X_{0}^{N^{+}}(2) = 2) = \frac{1}{2}$$
+
+car les deux évènements sont équiprobables et que l'on sait que l'on coalesce forcément pour la première fois au temps $N^{+}$.\\
+\newline
+La méthode présentée précédemment est particulièrement coûteuse lorsque l'espace d'états est grand (puisqu'il faut faire évoluer des trajectoires à partir de chaque état). On propose une mise en place de l'algorithme sous R en annexe, partie $3$. Cependant, si la méthode ne requerrait la coalescence que de $2$ chaînes et non plus $r$, celle-ci serait bien plus efficace. Propp et Wilson ont montré comment utiliser cela dans le cas monotone suivant.\\
+On suppose qu'il existe une relation d'ordre partiel sur l'espace d'état $E$ que l'on notera par $\preceq$.\\
+On suppose ensuite que la fonction de mise à jour préserve cette relation d'ordre, ie, 
+
+$$ i \preceq j \Rightarrow h(i,\xi) \preceq h(j,\xi) ~~ \forall \xi $$
+
+On suppose ensuite que $1  \preceq 2 \preceq \ldots \preceq r$ et on considère le modèle avec une seule mise à jour commune (ie, $\xi_{n}(i) = \xi_{n}$ pour tout $n$ et tout $i$). On définit à présent le temps de coalescence backwards monotone :
+
+$$ M = \inf \left\{n\geq 1 | X_{0}^{-n}(1) = X_{0}^{-n}(r) \right\} $$
+
+($ = + \infty$ si, pour tout $n \geq 1$ la condition n'est pas satisfaite). La procédure de samplage correspondant est appelée algorithme monotone de Propp-Wilson.
+
+\begin{center}
+\includegraphics[scale=1]{graphiques/monotonic}
+\captionof{figure}{Algorithme monotone de Propp-Wilson; ici $M = 6$}
+\end{center}
+
+\begin{theorem}[Baccelli/Brémaud, p.113, théorème 2.5.2]
+Le temps de coalescence backwards monotone $M$ est presque sûrement fini. De plus, les variables aléatoires $X_{0}^{-M}(1) = X_{0}^{-M}(r)$ sont de distribution $\pi$.
+\end{theorem}	 
+
+\begin{proof}
+On appelle $N^{+}$ le temps de couplage forwards des deux chaînes $\left\{ X_{n}^{0}(1) \right\}$ et $\left\{ X_{n}^{0}(r) \right\}$. La preuve que $N^{+}$ est fini est immédiate dans notre cas puisque $N^{+}$ est majoré par le premier temps $n \geq 0$ tel que $X_{n}^{0}(r) = 1$ qui est fini. Ayant cela, la preuve se déroule comme dans celle du théorème $12$ grâce à la propriété de funneling de la chaîne, ie, pour tout $n \in \mathbb{Z}$, pour tout $i \in E$, $X^{k}_{n}(1) \preceq X^{k}_{n}(i) \preceq X^{k}_{n}(r)$ (voir notamment la figure précédente).
+\end{proof}
+
+\newpage
+
+\subsection{CFTP : approche par blocs (Huber)}
+On considère un état stationnaire $X$. Puis, pour $t$ fixé, soit $Y = \phi_{t}(X,U)$, où $\phi$ est la fonction de mise à jour de la chaîne considérée et $U \in [0,1]^{t}$ sont les choix aléatoires effectués. Alors $Y$ est aussi stationnaire, car c'est la composition de $t$ états stationnaires. \\
+La sortie de l'algorithme de CFTP sera toujours $Y$. On considère ensuite \\ $W = (U_{1}, U_{2}, \ldots, U_{t})$ uniforme sur $[0,1]^{t}$ puis un ensemble mesurable $A \subset [0,1]^{t}$. Alors soit $W \in A$, soit $W \notin A$. D'où :
+\begin{align}
+Y = \phi_{t}(X,W)\mathbf{1}(W \in A) + \phi_{t}(X,W)\mathbf{1}(W \notin A)
+\end{align}
+
+
+Supposons qu'on puisse trouver un ensemble $A$ tel que lorsque $W \in A$, $\phi(X,W)$ ne dépende pas de $X$. C'est à dire, dès lors que $W \in A$, on ait $\phi(x,w) = \phi(x',w)$ pour tout $x,x' \in \Omega$. Une telle chaîne à "oublié" son point de départ lors de son déplacement. Si cela arrive, il n'y a alors pas besoin de connaître la valeur de $X$ pour obtenir $Y$ dans la formule précédente.\\
+Pour voir cela, on considère l'exemple suivant :  
+
+\paragraph{Exemple}
+~\\
+\\
+Soit $\Omega = \left\{0,1,2\right\}$. Soit une fonction de mise à jour $\phi$ telle que :
+$$ \phi(x,U) = x + \mathbf{1}(x<2,U>\frac{1}{2}) - \mathbf{1}(x>0,U \leq \frac{1}{2}).$$
+Soient $\left\{X_{t}\right\}$ et $\left\{Y_{t}\right\}$ deux chaînes de Markov ayant $\phi$ comme fonction de mise à jour et telles que $X_{0} = 0$ et $Y_{0} = 2$. On suppose que $U_{0} = 0.64 , U_{1} = 0.234$ et $U_{2} = 0.1 $. On a donc les trajectoires suivantes : $(X_{0},X_{1},X_{2},X_{3}) = (0,1,0,0)$ et $(Y_{0},Y_{1},Y_{2},Y_{3}) = (2,2,1,0)$.\\
+Les deux chaînes ont donc fusionné au temps $t=3$.
+
+Pour cet exemple, on a donc :
+
+$$\phi_{3}(0,W) = \phi_{3}(1,W) = \phi_{3}(2,W) = 0$$
+
+D'où : $\phi_{3}(\left\{0,1,2\right\},W) = \left\{0\right\}$\\
+Supposons que les 3 premiers pas étaient (haut,bas,bas). Cette suite de mouvements correspond à l'ensemble des valeurs appartenant à $A_{1} = (\frac{1}{2},1] \times [0,\frac{1}{2}] \times [0,\frac{1}{2}]$. Si $W \in A_{1}$, alors $\phi_{3}(\left\{0,1,2\right\},W) = \left\{ 0 \right\}$.\\
+Une autre suite de mouvements valide est (bas,bas,bas) ce qui correspond à $A_{2} = [0,\frac{1}{2}] \times [0,\frac{1}{2}] \times [0,\frac{1}{2}]$. Bien sûr, si $A_{1}$ et $A_{2}$ fonctionnent, alors $A_{3} = A_{1} \cup A_{2}$ fonctionne aussi. D'où $\phi_{3}(\left\{0,1,2\right\},W) = \left\{0\right\}$ pour tout $W \in A_{3}$. \\
+Le but ici est de montrer que $A$ n'a pas besoin d'être exactement l'ensemble de tous les mouvements qui coalesceront en un point. Cependant, plus $A$ sera grand, plus la probabilité que $W$ soit dans $A$ sera grande.\\ 	 
+Retour à l'équation (2). Dans le premier terme, la valeur de $X$ n'est pas importante, alors on peut écrire : $\phi_{t}(X,W)\mathbf{1}(W \in A) = \phi_{t}(x_{0},W)\mathbf{1}(W \in A)$, où $x_{0}$ est un élément arbitraire de l'espace d'états. On a alors :
+
+$$Y = \phi_{t}(x_{0},W)\mathbf{1}(W \in A) + \phi_{t}(X,W)\mathbf{1}(W \notin A)$$
+
+Donc lorsque $W \in A$, il n'y a pas besoin de connaître la valeur de $X$ afin de calculer $Y$. Cependant, lorsque $W \notin A$, on doit évaluer $\phi_{t}(X,W)$ pour obtenir $Y$. L'idée principale du CFTP est de trouver $X \sim \pi$ en appelant récursivement le CFTP (c'est la partie "from the past" de l'algorithme) puis en calculant $Y$ comme précédemment. Alors par définition de $Y$, on générera éventuellement un $W \in A$ tel qu'on ait pas besoin de connaître $X$, et il ne restera plus qu'à dérouler tous les appels récursifs effectués. \\
+Pour comprendre cela en pratique, on altère légèrement notre notation en ajoutant un indice de temps. Soit $Y_{0} = Y$, $W_{0} = W$, et $Y_{-1} = W$. Avec cette notation : 
+
+$$ Y_{0} = \phi_{t}(x_{0}, W_{0})\mathbf{1}(W_{0} \in A) + \phi_{t}(Y_{-1},W_{0})\mathbf{1}(W_{0} \notin A)$$
+
+Donc si $W_{0} \in A$, on s'arrête, sinon, on doit générer $Y_{-1}$. Ce sera fait de la même manière que lorsque l'on à généré $Y_{0}$ : 
+
+$$ Y_{-1} = \phi_{t}(x_{0}, W_{-1})\mathbf{1}(W_{-1} \in A) + \phi_{t}(Y_{-2},W_{1})\mathbf{1}(W_{1} \notin A)$$
+
+où $W_{-1} \sim Unif([0,1])^{t}$ et est indépendant de $W_{0}$.\\
+En général, 
+$$ Y_{-i} = \phi_{t}(x_{0}, W_{-i})\mathbf{1}(W_{-i} \in A) + \phi_{t}(Y_{-i-1},W_{-i})\mathbf{1}(W_{-i} \notin A)$$
+
+\begin{theorem}[Théorème CFTP (Coupling From The Past), Huber, p.46, théorème 3.1]
+On suppose que $\phi$ est une fonction de mise à jour pour une chaîne de Markov définie sur $\Omega$, telle que pour $U = (U_{0},U_{-1},\ldots,U_{-t-1}) \sim$ Unif($[0,1]^{t}$) on ait :\\
+\begin{itemize}
+\item Pour $Y \sim \pi, \phi (Y,U_{0}) \sim \pi$
+\item Il existe un ensemble $A \subseteq [0,1]^{t}$ tel que $\mathbb{P}(U \in A) > 0$ et $\phi_{t}(\Omega,A) = \left\{ x \right\}$ pour un certain $x \in \Omega$
+\end{itemize}
+Posons alors, pour tout $x \in \Omega$,
+
+\begin{align*}
+Y_{0} = \phi_{t}(x_{0},U_{0})\mathbf{1}(U_{0} \in A) + \phi_{t}(\phi_{t}(x_{0},U_{-1}),U_{0})\mathbf{1}(U_{-1} \in A) 
+&+ \\ \phi_{t}(\phi_{t}(\phi_{t}(x_{0},U_{-2}),U_{-1}),U_{0})\mathbf{1}(U_{-2} \in A) + \ldots 
+\end{align*}
+ 
+
+Alors $Y_{0} \sim \pi$.
+\end{theorem}
+
+
+
+\begin{proof}
+Soit $x_{0} \in \Omega$. Le résultat est immédiat en utilisant le théorème fondamental de la simulation parfaite, en posant $g(U) = \phi_{t}(x_{0},U)$,$b(U) = \mathbf{1}(U \in A)$, et $f(X,U) = \phi_{t}(X,U)$.
+\end{proof}
+
+L'idée clé qu'ont eu Propp et Wilson est qu'il n'est pas nécessaire de connaître tous les termes de la suite pour trouver $Y_{0}$. Il suffit en effet de connaître $U_{0},\ldots,U_{-T}$, où $U_{T} \in A$. Tant que $\mathbb{P}(U \in A) > 0$, alors $T$ suivra une loi géométrique de paramètre $\mathbb{P}(U \in A)$. Le pseudo-code suivant accomplit alors cette tâche : 
+
+
+\floatname{algorithm}{Coupling-from-the-past}
+\begin{algorithm}
+\caption{Sortie : $Y \sim \pi$ }
+\begin{algorithmic}[1]
+\STATE Tirer $U \sim Unif([0,1]^{t})$
+\IF{$U \in A$}
+\STATE Rendre $\phi_{t}(x_{0},U)$ (où $x_{0}$ est un élément arbitraire de $\Omega$)
+\ELSE
+\STATE $X \leftarrow $ Coupling-from-the-past
+\STATE Rendre $\phi_{t}(X,U)$
+\ENDIF
+\end{algorithmic}
+\end{algorithm}
+
+Cet algorithme est un algorithme récursif, autorisé à s'appeler à nouveau en ligne $5$. Lorsque cela arrive, les valeurs de $U$ ne sont pas passées en paramètre : le nouvel appel génère en ligne $1$ ses propres valeurs de $U$ indépendantes des précédentes. C'est une étape importante, car sinon le théorème fondamental de la simulation parfaite  ne s'appliquerait pas. On propose une mise en place de cet algorithme sur un exemple simple en annexe, partie $3$.\\
+On considère à présent le temps d'exécution de l'algorithme mesuré par le nombre d'appels à $\phi$.
+
+\begin{lemme}[Huber, Adaptation du lemme 3.1, p.48]
+Le nombre d'appels à $\phi$ dans l'algorithme Coupling-from-the-past est en moyenne \large{}$\frac{t}{\mathbb{P}(U \in A)}$.\normalsize{}
+\end{lemme}
+
+\begin{proof}
+Soit $T = \inf\left\{\tau \geq 1 | U_{\tau}^{t} \in A\right\}$. $T$ suit par définition la loi géométrique de paramètre $\mathbb{P}(U \in A)$
+
+Alors, l'algorithme s'arrête au temps $T$ après être passé $T-1$ fois dans la partie ELSE puis une fois dans la première partie. \\
+Dans la partie ELSE, l'algorithme fait appel $t$ fois à $\phi$, d'où : $(T-1)*t$ appels à $\phi$.\\
+La première partie fait aussi $t$ appels à $\phi$. En sommant, on obtient le nombre total d'appels : $T*t$.\\
+Or, on connaît la loi de $T$, donc, en prenant l'espérance, on obtient :
+
+$$ \mathbb{E}[T*t] = t*\mathbb{E}[T] = \frac{t}{\mathbb{P}(U \in A)} $$
+
+\end{proof}
+
+Pour garder le temps d'exécution suffisamment bas, il est important que $t$ soit suffisamment grand pour que $\mathbb{P}(U \in A)$ soit raisonnablement élevé. Dès lors que cette condition est achevée, $t$ devra être le plus petit possible, afin de garder un nombre de mise à jour faible.\\
+Cependant, il existe un moyen de contourner ce problème.
+
+\subsubsection*{Variation de la taille des blocs}
+
+Lors de la construction du CFTP, une fonction de mise à jour à été composée avec elle-même $t$ fois. On appelle cet ensemble de $t$ pas un bloc.\\
+On suppose qu'il y ait un seuil $t'$ tel que $\mathbb{P}(U \in A) = 0$ si $t < t'$. En pratique, un tel seuil est très difficile à calculer : il est donc commun d'utiliser des blocs de taille qui augmente afin d'être sûr que $t$ dépassera éventuellement ce seuil.\\
+En général, il n'y a aucune raison pour que le même nombre de pas soit utilisé pour chaque bloc.\\
+Le théorème fondamental de la simulation parfaite s'adapte facilement au cas où $b,g$ et $f$ changent à chaque étape de la récursion.
+
+\begin{theorem}[Théorème fondamental de la simulation parfaite (seconde forme), Huber, p.48, théorème 3.2]
+On suppose que pour $U_{1},U_{2},\ldots$ iid, on ait des suites de fonctions calculables $\left\{b_{t} \right\}$,$\left\{g_{t} \right\}$ et $\left\{f_{t} \right\}$ telles que chaque $\left\{b_{t} \right\}$ ait pour image $\left\{0,1\right\}$ et que $\prod_{t=1}^{\infty} \mathbb{P}(b_{t}(U) =0) =0$. Soit $X$ la variable aléatoire telle que, pour tout $t$ :
+
+$$ X \sim b_{t}(U)g_{t}(U) + (1-b_{t}(U))f_{t}(X,U)$$
+
+Soit $T = \inf\left\{t : b_{t}(U_{t}) = 1 \right\}$. Alors, 
+
+$$ Y = f_{0}(\ldots f_{T-2}(f_{T-1}(g_{T}(U_{T}),U_{T}),U_{T-1}),\ldots,U_{1})$$
+
+a la même distribution que $X$ et $\mathbb{E}[T] = \frac{1}{\mathbb{P}(b_{t}(U_{t}) = 1)}$
+
+\end{theorem}
+
+\begin{proof}
+La preuve est presque identique à celle du théorème fondamental de la simulation parfaite présentée dans le chapitre $1$.
+\end{proof}
+
+On utilise cette forme du théorème fondamental de la simulation parfaite pour obtenir le résultat suivant :
+
+\begin{theorem}[]
+Soit $t(0) < t(1) < t(2) < \ldots$ des entiers positifs. Soit $W_{0},W_{1},\ldots$ indépendants tels que $W_{-i} \sim Unif([0,1]^{t(i)})$, et $A_{t(i)}$ un ensemble mesurable de $[0,1]^{t(i)}$ tel que $\phi_{t(i)}(\Omega,W_{-i}) = \left\{ y \right\}$. On suppose que $\prod_{i=1}^{\infty} \mathbb{P}(W_{-i} \in A) = 0$. Alors pour tout $x_{0} \in \Omega$,
+
+\begin{align*}
+Y_{0} &= \phi_{t(0)}(x_{0},W_{0})\mathbf{1}(W_{0} \in A_{t(0)}) + \phi_{t(0)}(\phi_{t(1)}(x_{0},W_{-1}),W_{0})\mathbf{1}(W_{-1} \in A_{t(1)})\\
+&+ \phi_{t(0)}(\phi_{t(1)}(\phi_{t(2)}(x_{0},W_{-2}),W_{-1}),W_{0})\mathbf{1}(W_{-2} \in A_{t(2)}) + \ldots
+\end{align*}
+
+est tel que $Y_{0} \sim \pi$.
+ 
+\end{theorem}
+
+Un choix usuel est de poser $t(i) = 2*t(i-1)$ afin que le nombre de pas double à chaque étape de l'algorithme. Si le $t$ initial est $t(0) = 1$, alors doubler le nombre de pas à chaque itération nous permettra d'atteindre $t'$ après un nombre logarithmique de récursions. De plus le travail total effectué dans tous les blocs sera de $1 + 2 + 4 + \ldots + t' = 2*t' - 1$. On utilise ce choix de $t(i)$ pour obtenir l'algorithme suivant :
+
+\floatname{algorithm}{Doubling-Coupling-from-the-past}
+\begin{algorithm}
+\caption{Entrée : t, Sortie : $Y \sim \pi$ }
+\begin{algorithmic}[1]
+\STATE Tirer $U \sim Unif([0,1]^{t})$
+\IF{$U \in A_{t}$}
+\STATE Rendre $\phi_{t}(x_{0},U)$ (où $x_{0}$ est un élément arbitraire de $\Omega$)
+\ELSE
+\STATE $X \leftarrow $ Doubling-Coupling-from-the-past($2*t$)
+\STATE Rendre $\phi_{t}(X,U)$
+\ENDIF
+\end{algorithmic}
+\end{algorithm}
+ 
+On notera que le choix $t(i) = 2*t(i-1)$ n'est pas mandatoire, d'autres choix sont valides. Seul le nombre de pas pris par l'algorithme (en moyenne) sera affecté.
+
+\subsection{CFTP monotone}
+
+La partie difficile permettant d'utiliser le CFTP est de créer les ensembles $A_{t(i)}$ ainsi qu'une méthode permettant de déterminer si $U \in A_{t(i)}$.\\
+C'est cette difficulté qui empêche d'utiliser le CFTP dans toutes les applications de Monte Carlo.\\
+On présentera ici une méthode permettant de trouver de tels $A_{t(i)}$ dans différentes applications.\\
+L'idée est la suivante. On suppose que $\Omega$ est un espace d'états admettant un ordre partiel (voir définition $11$).\\
+Comme exemple, on considère le modèle d'Ising et deux configurations $x$ et $y$. On dit  que $x \preceq y$ si pour tout n\oe{}ud $\nu$ on a $x(\nu) \leq y(\nu)$. Par exemple, si on a $4$ n\oe{}uds, $ (-1,-1,-1,1) \preceq (-1,-1,1,1)$. D'autre part, les configurations $(-1,-1,1,1)$ et \\$(1,1,-1,-1)$ ne sont pas comparables.\\
+Ensuite, on supposera que $\Omega$ est doté d'un plus grand élément $x_{max}$, et d'un plus petit élément $x_{min}$. Pour continuer avec l'exemple du modèle d'Ising, la configuration n'ayant que des $-1$ est le plus petit élément, celle n'ayant que des $1$, le plus grand.
+
+\begin{definition}[Fonction de mise à jour monotone]
+Soit $\phi$ une fonction de mise à jour pour un pas d'une chaîne de Markov. Si $\phi$ est telle que, pour tout $x \preceq y$, et $u \in [0,1]$, on ait $\phi(x,u) \preceq \phi(y,u)$, alors on dit que $\phi$ est monotone.
+\end{definition}
+
+On considère à présent deux chaînes de Markov $\left\{X_{t} \right\}$ et $\left\{Y_{t} \right\}$ telles que $X_{0} = x_{0}$ et $Y_{0} = y_{0}$ où $x_{0} \preceq y_{0}$. On suppose qu'à chaque pas, $X_{t+1} = \phi(X_{t},U_{t})$ et $Y_{t+1} = \phi(Y_{t},U_{t})$ où $U_{1},U_{2},\ldots$ sont iid telles que $U_{1} \sim Unif([0,1])$.\\
+On en déduit simplement que $X_{t+1} \preceq Y_{t+1}$ pour tout $t$.\\
+On suppose de plus que $x_{0} = x_{min}$ et $y_{0} = x_{max}$. Alors tout autre état $w_{0}$ vérifie $x_{0} \preceq w_{0} \preceq y_{0}$ et on construit alors de manière similaire une chaîne de Markov $W_{t}$ qui donnera $X_{t} \preceq W_{t} \preceq Y_{t}$ pour tout $t$.\\
+On suppose maintenant que $X_{t} = Y_{t}$. Les propriétés d'ordre partiel impliquent alors que $X_{t} = W_{t} = Y_{t}$. L'état de départ de $W_{t}$ était arbitraire, donc pour tout état de départ $w_{0} \in \Omega$, $\phi_{t}(w_{0},u) = X_{t} = Y_{t}$\\
+En d'autres termes, si après un nombre fixé de pas, les états extrémaux ont atteint le même état, alors tous les autres états ont été "piégés" entre ceux-ci et ont donc aussi atteint le même état.\\
+On obtient alors une variante importante du CFTP : le CFTP monotone.
+
+\floatname{algorithm}{Monotonic-Coupling-from-the-past}
+\begin{algorithm}
+\caption{Entrée : t Sortie : $Y$}
+\begin{algorithmic}[1]
+\STATE Tirer $U \sim Unif([0,1]^{t})$
+\STATE Soit $X_{t} \leftarrow \phi_{t}(x_{max},U)$ et $Y_{t} \leftarrow \phi_{t}(x_{min},U)$
+\IF{$X_{t} = Y_{t}$}
+\STATE Rendre $X_{t}$
+\ELSE
+\STATE Tirer $X \leftarrow $ Monotonic-Coupling-from-the-past($2*t$)
+\STATE Rendre $\phi_{t}(X,U)$
+\ENDIF
+\end{algorithmic}
+\end{algorithm}
+
+\subsubsection{Modèle D'Ising}
+
+On considère la mise à jour de Gibbs pour le modèle d'Ising de la section $1.4.1$, pour $\mu = 0$\\
+Lors de la mise à jour, un n\oe{}ud $\nu$ était choisi uniformément aléatoirement et $U \sim Unif([0,1])$. On note $N_{c}$ le nombre de voisins de $\nu$ de label $c$. Si $U < \exp(N_{1}\beta)/[\exp(N_{1}\beta + \exp(N_{-1}\beta)]$, alors le n\oe{}ud devenait de label $1$, sinon de label $-1$.\\
+Afin de pouvoir utiliser cette mise à jour pour la simulation parfaite, on doit l'écrire comme fonction de mise à jour, c'est-à-dire, l'état actuel et les choix aléatoires doivent être des paramètres d'entrée.
+
+\floatname{algorithm}{Ising-Gibbs}
+\begin{algorithm}
+\caption{Entrée : $x \in \left\{ -1,1 \right\}^{V}, u \in [0,1], \nu \in V$ Sortie : $x \in \left\{ -1,1 \right\}^{V} $}
+\begin{algorithmic}[1]
+\STATE $N_{1} \leftarrow$ nombre de voisins de $\nu$ de label $1$ dans $x$
+\STATE $N_{-1} \leftarrow$ nombre de voisins de $\nu$ de label $-1$ dans $x$
+\IF{$U < \exp(N_{1}\beta)/[\exp(N_{1}\beta + \exp(N_{-1}\beta)]$}
+\STATE $x(\nu) \leftarrow 1$
+\ELSE
+\STATE $x(\nu) \leftarrow -1$
+\ENDIF
+\end{algorithmic}
+\end{algorithm}
+
+\begin{lemme}[Huber, p.51, propriété 3.1]
+La fonction créée précédemment est monotone lorsque $\beta > 0$
+\end{lemme}
+
+\begin{proof}
+Soit $x \preceq y$. Soit $\nu$ un n\oe{}ud du graphe considéré et la fonction $N_{c}(z)$ notant le nombre de voisins de $\nu$ de label $c$ dans la configuration $z$. Alors tout voisin de $\nu$ dans $x$ de label $1$ est aussi de label $1$ dans $y$, donc $N_{1}(x) \leq N_{1}(y)$. De manière similaire, on a $N_{-1}(x) \leq N_{-1}(y)$.\\
+Soit $f(n_{1},n_{-1}) = \exp(N_{1}(x)\beta)/[\exp(N_{1}(x)\beta + \exp(N_{-1}\beta)]$. Puisque $\beta >0$, $f(n_{1},n_{-1})$ est croissant en $n_{1}$ et décroissant en $n_{-1}$. Donc si $U < f(N_{1}(x),N_{-1}(x))$ alors on aura $U < f(N_{1}(y),N_{-1}(y))$. C'est-à-dire, si $x(\nu)$ est changé en $1$, alors $y(\nu)$ aussi.\\
+De même, si $U > f(N_{1}(y),N_{-1}(y))$, alors $U > f(N_{1}(x),N_{-1}(x))$. C'est-à-dire, si $y(\nu)$ devient $0$, alors $x(\nu)$ aussi.\\
+Enfin, si $f(N_{1}(x),N_{-1}(x)) < U < f(N_{1}(y),N_{-1}(y))$, alors seul le n\oe{}ud $x(\nu)$ est changé en $-1$, $y(\nu)$ devient $1$, l'ordre n'est alors pas changé.\\
+Donc, peu importe le choix de $\nu$ et $U$ dans la mise à jour, si $x \preceq y$, alors $\phi(x,\nu,U) \preceq \phi(y,\nu,U)$.
+\end{proof}
+
+Cela signifie que le CFTP monotone peut-être utilisé pour générer un échantillon aléatoire de la distribution stationnaire. On propose une mise en place du pseudo-code suivant sous R en annexe, partie $3$.
+
+\floatname{algorithm}{Monotonic-Ising-Gibbs}
+\begin{algorithm}
+\caption{Entrée : $t$ Sortie :$X \sim \pi$}
+\begin{algorithmic}[1]
+\STATE Tirer $(U_{1},\ldots,U_{t}) \leftarrow Unif([0,1]^{t})$
+\STATE Tirer $(V_{1},\ldots,V_{t}) \leftarrow Unif(V^{t})$
+\STATE $x_{max} \leftarrow (1,\ldots,1)$, $x_{min} \leftarrow (0,\ldots,0)$
+\FOR{i allant de $1$ à $T$}
+\STATE $x_{max} \leftarrow$ Ising-Gibbs($x_{max}$,$U_{i}$,$V_{i}$)
+\STATE $x_{min} \leftarrow$ Ising-Gibbs($x_{min}$,$U_{i}$,$V_{i}$)
+\ENDFOR
+\IF{$x_{max} \ne x_{min}$}
+\STATE $x_{max} \leftarrow$ Monotonic-Ising-Gibbs($2*t$)
+\FOR{i allant de $1$ à $t$}
+\STATE $x_{max} \leftarrow$ Ising-Gibbs($x_{max}$,$U_{i}$,$V_{i}$) 
+\ENDFOR
+\ENDIF
+\STATE $X \leftarrow x_{max}$
+\end{algorithmic}
+\end{algorithm}
+
+\subsubsection{Modèle gas Hard-core sur graphe biparti}
+
+On considère maintenant la mise-à-jour HCGM-Gibbs de la section $1.4.4$. Cette fonction de mise-à-jour n'est pas monotone en utilisant l'ordre partiel $x \preceq y \leftrightarrow (\forall \nu \in V)(x(\nu) \leq y(\nu))$.\\
+Il est alors nécessaire de trouver une autre fonction de mise-à-jour ou un autre ordre partiel. Le problème est que la chaîne est répulsive,ie, deux n\oe{}uds voisins ne peuvent avoir le label $1$. Cependant, si le graphe est biparti, il est possible de construire un nouvel ordre partiel tel que l'on ait une fonction de mise-à-jour monotone.
+
+\begin{definition}[Graphe biparti]
+On dit qu'un graphe est biparti lorsque l'ensemble des n\oe{}uds $V$ peut être partitionné en deux ensembles $V_{1}$ et $V_{2}$ tels que pour toute arête $e$, un n\oe{}ud appartienne à $V_{1}$ et l'autre à $V_{2}$.
+\end{definition}
+
+Pour les configurations sur graphe biparti, on utilise l'ordre partiel suivant (similaire à l'ordre partiel défini précédemment) :
+
+$$x \preceq y \leftrightarrow (\forall \nu_{1} \in V_{1})(\forall \nu_{2} \in V_{2}) (x(\nu_{1}) \leq y(\nu_{1}) \land x(\nu_{2}) \geq y(\nu_{2}))$$
+
+\begin{lemme}[Huber,p.52,propriété 3.2]
+HCGM-Gibbs est monotone relativement à l'ordre partiel ci-dessus
+\end{lemme}
+
+\begin{proof}
+Si $x \preceq y$ et le n\oe{}ud $i \in V_{2}$ est choisi pour être mis-à-jour, alors si un voisin $w$ de $i$ est tel que $x(w) = 1$, alors $y(w) = 1$ aussi. Donc $x(i)$ et $y(i)$ resteront tous deux à $0$. La seule manière pour que $y(i)$ soit changé en $1$ est si $y(w) = 0$ pour tout voisin $w$ de $i$. Dans ce cas, tout voisin vérifie aussi $x(w) = 0$. D'où : $x(i) = y(i) = \mathbf{1}(U < \lambda / (\lambda + 1))$.\\
+L'analyse pour $i \in V_{1}$ est similaire.
+\end{proof}
+
+L'état "le plus grand" est alors celui dont tous les n\oe{}uds de $V_{2}$ sont de label $1$ et tous les n\oe{}uds de $V_{1}$ sont de label $0$.\\ L'état "le plus petit" voit ses labels inversés par rapport au plus grand. On propose une mise en place sous R pour ce modèle en annexe, partie $3$.
+
+\subsubsection{Monotonie et temps de mélange}
+
+Une des raisons pour lesquelles la monotonie est importante est que le CFTP monotone ne prendra pas plus de temps à fonctionner  
+que le temps de mélange de la chaîne de Markov.
+
+\begin{definition}[Chaîne en ordre partiel]
+Une chaîne de longueur $l$ en ordre partiel est un sous-ensemble de $l+1$ éléments tels que $ x_{0} \prec x_{1} \prec x_{2} \prec \ldots \prec x_{l}$
+\end{definition}
+
+On présente ensuite une propriété importante de la distance en variation totale : celle-ci permet la représentation de deux variables aléatoires en utilisant une troisième variable aléatoire commune.
+
+\begin{lemme}[Adaptation de la propriété 3.3, p.53, Huber]
+On suppose que $d_{TV}(X,Y) = d$, où $X,Y$ sont des variables aléatoires de densités respectives $f_{X}$ et $f_{Y}$ par rapport à la mesure $\mu$ sur $\Omega$. Alors il existe des variables aléatoires $W_{1},W_{2},W_{3}$ et $B \sim Bern(d)$ indépendantes telles que :
+
+$$ X \sim (1-B)W_{1} + BW_{2}$$
+$$ Y \sim (1-B)W_{1} + BW_{3}$$
+\end{lemme}
+
+\begin{proof}
+On procède ici par disjonction de cas sur $d$.
+
+\begin{itemize}
+\item $d=0$. Alors les variables aléatoires $X$ et $Y$ sont égales, on pose $W_{1} = X (= Y)$ et $W_{2},W_{3}$ ont n'importe quelle distribution (car $B = 0$).
+
+\item $d=1$. Il suffit alors de poser $W_{2} = X$ et $W_{3} = Y$ puisque $B = 1$.
+
+\item $0 < d < 1$. On pose alors $g(s) = \min(f_{X}(s),f_{Y}(s))$ puis à $W_{1}$ on donne la densité $g/\int_{\Omega}g d\nu$,à $W_{2}$ la densité $[f_{X}(s) - g(s)]/\int_{\Omega}(f_{X}(r) - g(r))d\nu(r)$ et à $W_{3}$ la densité $[f_{Y}(s) - g(s)]/\int_{\Omega}(f_{Y}(r) - g(r))d\nu(r)$.\\
+Il reste à voir maintenant que $\int_{\Omega}g d\nu = 1 - d$. Pour le montrer, on rappelle d'abord que la distance en variation totale est $d = \sup_{D} |\mathbb{P}(Y \in D) - \mathbb{P}(X \in D)|$. Puisque $|\mathbb{P}(Y \in D) - \mathbb{P}(X \in D)| = |\mathbb{P}(Y \in D^{C}) - \mathbb{P}(X \in D^{C})|$, le supremum peut être considéré sur les ensembles $D$ tels que $\mathbb{P}(Y \in D) \geq \mathbb{P}(X \in D)$.\\
+Soit à présent $C = \left\{ s \in \Omega | f_{X}(s) \leq f_{Y}(s) \right\}$. Soit $D$ un ensemble mesurable tel que $\mathbb{P}(Y \in D) \geq \mathbb{P}(X \in D)$. On a, pour toute variable aléatoire $W$, $\mathbb{P}(W \in D) = \mathbb{P}(W \in C) - \mathbb{P}(W \in C \cap D^{C}) + \mathbb{P}(W \in C^{C} \cap D)$.\\
+Pour voir cela, il suffit de voir que, pour une mesure $\mu$ et des ensembles mesurables $C$ et $D$ :
+
+$$\mu(D \cap C) = \mu(C \setminus (D^{C} \cap C)) = \mu(D \setminus (D \cap C^{C}))$$
+
+puis que, 
+$$\mu(C) - \mu(D^{C} \cap C) = \mu(D) - \mu(D \cap C^{C})$$
+
+On définit ensuite, pour toute variable aléatoire $W$, $h(W) = \mathbb{P}(W \in C \cap D^{C}) - \mathbb{P}(W \in C^{C} \cap D)$. On a alors : 
+
+$$\mathbb{P}(Y \in D) - \mathbb{P}(X \in D) = \mathbb{P}(Y \in C) - \mathbb{P}(X \in C) - h(Y) + h(X)$$
+
+Or, 
+
+$$-h(Y) + h(X) = [\mathbb{P}(X \in C \cap D^{C}) - \mathbb{P}(Y \in C \cap D^{C})] + [\mathbb{P}(Y \in C^{C} \cap D) - \mathbb{P}(X \in C^{C} \cap D)]$$
+
+De la manière dont $C$ a été choisi, les deux termes entre crochets sont non-positifs ou nuls, on a donc :
+
+$$ 0 \leq \mathbb{P}(Y \in D) - \mathbb{P}(X \in D) \leq \mathbb{P}(Y \in C) - \mathbb{P}(X \in C)$$
+
+Puisque $D$ était un ensemble arbitraire tel que $\mathbb{P}(Y \in D) \leq \mathbb{P}(X \in D)$, la distance de variation totale est alors $d = \mathbb{P}(Y \in C) - \mathbb{P}(X \in C)$.\\
+On considère à présent la constante de normalisation de $W_{2}$.
+
+\begin{align*}
+\int_{\Omega}f_{X}(s) - g(s) d\nu(s) &= \int_{C} f_{X}(s) - g(s)d\nu(s) + \int_{C^{C}} f_{X}(s) - g(s)d\nu(s)\\
+&= 0 + \int_{C^{C}} f_{X}(s) - f_{Y}(s)d\nu(s) \\
+&= \mathbb{P}(X \in C^{C}) - \mathbb{P}(Y \in C^{C}) = \mathbb{P}(Y \in C^{C}) - \mathbb{P}(X \in C^{C}) = d
+\end{align*}
+La densité de $(1-B)W_{1} + BW_{2}$ est : 
+
+$$(1-d)\frac{\min(f_{X}(s),f_{Y}(s))}{1-d} + d\frac{f_{X} - \min(f_{X}(s)(s),f_{Y}(s))}{d} = f_{X}(s)$$
+
+la même densité que $X$. Un résultat similaire vaut pour $Y$.
+
+
+\end{itemize}
+
+\end{proof}
+
+Nous utilisons ce résultat dans le théorème suivant :\\
+
+\begin{theorem}[Propp et Wilson (Huber, p.54, théorème 3.4]
+Pour un ensemble discret $\Omega$, soit $l$ la longueur de la chaîne la plus longue en ordre partiel de $\Omega$. Soit $p$ la probabilité qu'un appel à Monotonic-coupling-from-the-past($t$) doive s'appeler récursivement. Notons $d_{t} = \sup_{x \in \Omega} d_{TV}([X_{t} | X_{0} = x], \pi)$. On a alors :
+
+$$ \frac{p}{l} \leq d_{t} \leq p$$
+
+\end{theorem} 
+
+\begin{proof}
+Le fait que $d_{t} \leq p$ provient du Lemme de couplage (voir chapitre $1$ théorème 4).\\
+On va montrer ici que $\frac{p}{l} \leq d_{t}$. Pour un élément $x \in \Omega$, soit $h(x)$ la longueur de la chaîne la plus longue ayant pour plus grand élément $x$. Si $X_{t}$ est la chaîne commençant en $x_{min}$, et $Y_{t}$ celle commençant en $x_{max}$, alors on aura toujours $X_{t} \preceq Y_{t}$. On notera que si $X_{t} \prec Y_{t}$, alors $h(X_{t}) + 1 \leq h(Y_{t})$, mais si $X_{t} = Y_{t}$ alors $h(X_{t}) = h(Y_{t})$. On en conclut donc que $h(Y_{t}) - h(X_{t})$ est une variable aléatoire entière positive ou nulle qui vaut au moins $1$ lorsque $X_{t} \neq Y_{t}$. On obtient, d'après l'inégalité de Markov : 
+
+$$p = \mathbb{P}(X_{t} \neq Y_{t}) \leq \mathbb{E}[h(Y_{t}) - h(X_{t})]$$
+
+En utilisant le lemme $12$, on sait qu'il existe $W_{1},W_{2},W_{3}$ et $B \sim Bern(d_{t})$ indépendants tels que $X_{t} \sim (1-B)W_{1} + BW_{2}$ et $Y_{t} \sim (1-B)W_{1} + BW_{3}$. D'où : 
+
+$$p \leq \mathbb{E}[h(Y_{t}) - h(X_{t})] = \mathbb{E}[B(h(W_{2}) - h(W_{3}))] = d_{t}l$$
+\end{proof}
+
+La distance de variation totale tend à décroître très rapidement car c'est un exemple de fonction sous-multiplicative.
+
+\begin{lemme}
+La distance de variation totale $d_{t}$ vérifie $d_{t+s} \leq d_{t}d_{s}$.
+\end{lemme}
+
+La preuve comprend l'utilisation du lemme de couplage cité dans le théorème $17$. La propriété énoncée permet de montrer que la taille d'un bloc dans le CFTP monotone nécessaire à la coalescence n'est pas plus grand que le temps que met la chaîne de Markov à commencer à se mélanger.
+
+\begin{lemme}[Huber, p.54, lemme 3.3]
+On suppose que $d_{t} \leq e^{-1}$. Alors pour un bloc de taille $t[k+ln(l)]$, la probabilité $p$ qu'un bloc ne coalesce pas est au plus $e^{-k}$.
+\end{lemme}
+
+\begin{proof}
+Par la propriété de sous-multiplicativité, $d_{t[k + ln(k)]} \leq [e^{-1}]^{k+ln(l)} = l^{-1}e^{-k}$. En utilisant le théorème précédent cela donne : $p \leq ll^{-1}e^{-k} = e^{-k}$.
+\end{proof}
+
+\begin{lemme}[Huber, p.54, lemme 3.4]
+On suppose que dans le CFTP monotone lancé pour un bloc de taille $t$, on ait $\mathbb{P}(X_{t} \ne Y_{t}) \leq e^{-1}$. Alors le nombre moyen de pas de la chaîne de Markov utilisé par Monotonic-Coupling-from-the-past($t$) est au plus de $19.2t$.
+\end{lemme}
+
+\begin{proof}
+Un appel à Monotonic-Coupling-from-the-past avec pour entrée $s$ requiert au plus $2s$ pas de la chaîne de Markov : $s$ pas pour déterminer si $X_{t} = Y_{t}$ puis $s$ autres pas après l'appel récursif si $X_{t} = Y_{t}$\\
+Notons $R_{k}$ l'évènement suivant : le $k$ème appel à Monotonic-Coupling-from-the-past ne vérifie pas $X_{t} = Y_{t}$. Si le premier appel utilise un seul pas et que le nombre de pas double à chaque appel, alors après $\lceil log_{2}(t) \rceil$ appels, le prochain appel a un paramètre d'au moins $t$, et n'échoue donc qu'avec probabilité au plus $e^{-1}$. D'où : 
+
+\begin{align*}
+\mathbb{E}[2S] &= \sum_{k=1}^{\infty} 2*2^{k}\mathbb{P}(R_{1}R_{2}\ldots R_{k-1})\\
+&\leq 2*(2t) + \sum_{k= \lceil log_{2}(t) \rceil +1}^{\infty}2^{k+1}(e^{-1})^{k-1-\lceil log_{2}(t) \rceil} \\
+&\leq 4t + 4t/(1-2/e) \leq 19.2t \\
+\end{align*}
+
+\end{proof}
+
+Comme exemple, considérons le modèle d'Ising. La taille maximale d'une chaîne est $\#V$, le nombre de n\oe{}uds du graphe. Donc, si $t$ est le temps nécessaire pour que la distance de variation totale descende en dessous de $e^{-1}$, alors $O(tln(\#V))$ pas sont nécessaires en moyenne pour générer une simulation exacte du modèle. D'autre part, o($t$) pas sont aussi nécessaires pour générer une sortie avec la simulation exacte : le CFTP ne fait donc pas converger la chaîne de Markov plus vite qu'il ne faut.\\
+La partie importante du CFTP ici est que la connaissance du $t$ pour lequel la distance de variation totale est au plus $e^{-1}$ n'est pas nécessaire pour utiliser la procédure. Lorsque l'algorithme s'arrête, le résultat est garanti d'avoir été généré selon la distribution ciblée.
+
+\subsection{Inconvénients du CFTP}
+
+Bien que le CFTP soit un outil puissant pour créer des algorithmes de simulation exacte, il a quand même des défauts. Les deux principaux problèmes sont la non-interruptibilité et la lecture double.
+
+\subsubsection{Non-interruptibilité}
+
+Considérons d'abord un exemple. On veut générer une loi géométrique à partir de $B_{1},B_{2}, \ldots$ des réalisations de $Bern(p)$, puis en posant $T = \inf \left\{ t | B_{t} = 1 \right\}$ et \\ $f_{T}(B_{1},\ldots,B_{T}) = T$. Alors $T \sim Geom(p)$. Bien sûr ici $T$ et $f_{T}$ ne sont pas indépendants puisqu'ils sont de même valeur. Donc, d'après la définition $5$ du chapitre $1$, cet algorithme est non-interruptible.\\
+On considère ce problème du point de vue d'une personne souhaitant simuler ce problème. Peut-être que celle-ci, en mettant en place ce problème veut inconsciemment que si  l'algorithme prend trop de temps (ou de pas, par exemple, $5$ millions de pas), alors la personne fait preuve d'impatience et interrompt l'algorithme.\\
+Cette décision est en fait une partie non-reconnue de l'algorithme, et signifie que l'on obtient pas d'échantillon suivant une loi $Geom(p)$ mais plutôt une loi $Geom(p)$ conditionné à être dans $\left\{ 1, \ldots, 5*10^{6} \right\}$. Dans notre cas, c'est peut-être anodin, sauf si $p$ est très petit. Le potentiel est là, et la volonté de la personne à vouloir arrêter l'algorithme fait que celui-ci n'est plus un algorithme de simulation exacte.\\
+On donne à présent un exemple d'algorithme interruptible. Considérons la méthode de rejet permettant de tirer selon une mesure $\nu$ sur un ensemble $A$ sachant que l'on sait tirer selon la mesure $\nu$ sur $B$, et sachant que $A$ est contenu dans $B$.
+
+\begin{lemme}[Huber, p.58, lemme 3.5]
+On suppose que $\nu$ est une mesure finie sur $B$, que $A \subset B$ et $\nu (A) >0$. Pour des variables iid$X_{1},X_{2},\ldots \sim \nu(B)$ et $T = \inf \left\{ t | X_{t} \in A \right\}$, on a que $T$ et $f_{T}(X_{1},\ldots,X_{T}) = X_{T}$ sont des variables aléatoires indépendantes. Et donc, la méthode de rejet est un algorithme interruptible.
+\end{lemme}  
+
+\begin{proof}
+Soit $C$ un sous-ensemble mesurable de $A$ et $i \in \left\{ 1,2,\ldots \right\}$. Alors : 
+
+\begin{align*}
+\mathbb{P}(X_{T} \in C, T = i) &= \mathbb{P}(X_{1},\ldots,X_{i-1} \notin C, X_{i} \in C)\\
+&= \left(1 - \frac{\nu(A)}{\nu(B)}\right)^{i-1} \left(\frac{\nu(C}{\nu(B)}\right)\\
+&= \left(1 - \frac{\nu(A)}{\nu(B)}\right)^{i-1} \left(\frac{\nu(A)}{\nu(B)}\right)\left(\frac{\nu(C)}{\nu(A)}\right)\\
+&= \mathbb{P}(X_{1},\ldots,X_{i-1} \notin C, X_{i} \in A)\mathbb{P}(X_{T} \in C)\\
+&= \mathbb{P}(T = i) \mathbb{P}(X_{T} \in C)
+\end{align*}
+
+où $\mathbb{P}(X_{T} \in A) = \frac{\nu(A)}{\nu(B)}$ est le théorème $6$ du chapitre $2$. 
+
+\end{proof}
+
+L'avantage d'un algorithme interruptible est que l'utilisateur peut l'arrêter puis le relancer sans changer la sortie de l'algorithme. L'utilisateur n'a donc pas à se soucier de possibles limitations (connues ou non) sur le temps de calcul de l'algorithme.\\
+Le problème est le suivant : en général, le CFTP est non-interruptible.\\
+On rappelle d'abord que le CFTP décrit la distribution ciblée $\pi$ comme un mélange de deux autres distributions. Soit $A$ l'évènement tel que si $U \in A$, alors $\phi(x,U) = \left\{y\right\} ~ \forall x \in \Omega$. Alors, pour $Y \sim \pi$ et pour tout ensemble mesurable $C$, 
+
+$$ \mathbb{P}(Y \in C) = \mathbb{P}(Y \in C | A)\mathbb{P}(A) + \mathbb{P}(Y \in C | A^{C}) \mathbb{P}(A^{C})$$
+
+Lorsque que $A$ se réalise, $\phi(x,U) = \left\{y\right\}$, et on rend $y$. Lorsque $A^{C}$ se réalise, on utilise une récursion pour tirer $X \sim \pi$ puis $\phi(X,U)$ donne $[Y | A^{C}]$.\\
+On suppose à présent que l'utilisateur n'a pas le temps d'effectuer la récursion. Alors le résultat n'est pas $Y \sim \pi$ mais plutôt $[Y | A]$.
+Comme exemple, on considère le problème de tirer uniformément sur $\left\{1,2,3\right\}$ en utilisant la fonction de mise à jour de la chaîne de Markov suivante : 
+
+$$ \phi_{1}(x,U) = x + \mathbf{1}(x < 3 , U > 1/2) - \mathbf{1}(x > 1, U \leq 1/2)$$
+
+On suppose que $\phi_{2}(x,U_{1},U_{2}) = \phi_{1}(\phi_{1}(x,U_{1}),U_{2})$,ie, $\phi_{2}$ effectue deux pas dans la chaîne de Markov. Dans quel cas avons nous $\phi_{2}(\Omega,U_{1},U_{2}) = \left\{y\right\}$? Seulement dans le cas où $U_{1}$ et $U_{2}$ tombent tout deux dans $(1/2,1]$ ou $[0,1/2]$. Dans le premier cas $\phi_{2}(\Omega,U_{1},U_{2}) = \left\{3\right\}$ et dans le second $\phi_{2}(\Omega,U_{1},U_{2}) = \left\{1\right\}$. En aucun cas avons nous $\phi_{2}(\Omega,U_{1},U_{2}) = \left\{2\right\}$ donc le résultat ne peut-être uniforme sur $\left\{1,2,3\right\}$.\\
+Des raisons connues (temps de calcul, temps autorisé par l'utilisateur) et des raisons inconnues (coupure de courant) signifient qu'en somme, chaque simulation est lancée avec une borne supérieure aléatoire sur le temps d'arrêt de l'algorithme. Si il y a une limite sur le temps pour lequel l'algorithme peut-être lancé, celui-ci cesse d'être un algorithme de simulation exacte.
+
+\subsubsection{Lecture double}
+
+L'autre problème du CFTP provient de sa structure. Lorsque les variables aléatoires $U$ sont générées, si la récursion s'opère, alors ces variables $u$ doivent être utilisées à nouveau. Donc, elle doivent en théorie être stockées, ce qui peut imposer un problème sur la mémoire. \\
+Il y a deux moyens de pallier à ce défaut. Premièrement, on peut simplement ne garder en mémoire que la "seed" utilisée pour générer les choix alétoires.\\
+De plus, il existe une variante du CFTP telle que les choix aléatoires n'ont pas à être stockés. Cette variante s'appelle le CFTP à lecture unique, que le livre d'Huber (Chapitre 5) aborde.
+
+
+\newpage
+\section{Chapitre 4 : Bounding chains}
+
+\subsection{Qu'est-ce qu'une bounding chain ?}
+
+On suppose que les états de la chaîne de Markov sous-jacente possèdent des n\oe{}uds, eux-même ayant chacun un label. \\
+La bounding chain (littéralement chaîne liante ou chaîne bornante) tient compte de tous les labels possibles pour chaque n\oe{}ud. Cette bounding chain est liée à la chaîne de Markov sous-jacente si il est possible de s'assurer que les labels de chaque n\oe{}ud de la chaîne sous-jacente tombent dans l'ensemble des labels de la bounding chain.\\
+Soit $\Omega = C^{V}$ l'espace d'états de la chaîne de Markov sous-jacente. Par exemple, pour le modèle d'Ising, $C = \left\{ -1,1 \right\}$ et $V$ est la configurations des arêtes (et donc n\oe{}uds) du graphe.\\
+À chaque n\oe{}ud de $V$, la bounding chain contient un sous-ensemble de $C$ qui représentent les labels permis pour la chaîne de Markov sous-jacente. \\
+Par exemple, pour le modèle d'Ising, une bounding chain peut avoir $\left\{-1\right\}$,$\left\{1\right\}$ ou $\left\{-1,1\right\}$ comme label pour un n\oe{}ud. Le véritable challenge est de mettre à jour la bounding chain.\\
+Soit $X_{t}$ l'état de la chaîne de Markov sous-jacente au temps $t$ et $Y_{t}$ l'état de la bounding chain au temps $t$. Si $X_{t}(\nu) \in Y_{t}(\nu)$ pour chaque n\oe{}ud $\nu$, alors on voudra aussi que $X_{t+1}(v) \in Y_{t+1}(\nu)$ pour chaque $\nu$. Soit $2^{C}$ l'ensemble des parties de $C$.
+
+\begin{definition}
+On dit que $y \in (2^{C})^{V}$ lie $x \in C^{V}$ si pour tout $\nu \in V$, $x(\nu) \in y(\nu)$.
+\end{definition}
+
+
+\begin{definition}[Bounding chain]
+On dit que le processus Markovien $Y_{t}$ sur $(2^{C})^{V}$ est une bounding chain pour la chaîne de Markov $\left\{X_{t} \right\}$ sur $C^{V}$ si il existe un couplage en $X_{t}$ et $Y_{t}$ tel que si $Y_{t}$ lie $X_{t}$, alors $Y_{t+1}$ lie $X_{t+1}$.
+\end{definition}
+
+La manière la plus simple de créer un tel couplage est d'utiliser une fonction de mise-à-jour.
+
+\begin{theorem}[Construction de bounding chain]
+Soit $X_{t+1} = \phi(X_{t},U_{t})$ pour tout $t$, où $U_{0},U_{1},\ldots$ sont iid de loi $Unif([0,1])$. On créé alors $y' = \phi_{t}^{BC}(y,u)$ comme suit. Pour tout $\nu \in V$, on pose :
+
+$$y'(\nu) = \left\{c | \exists x \text{ lié par } y \text{ tel que } \phi_{t}(x,u) \text{ ait le label } c \text{ au n\oe{}ud } \nu \right\} $$  
+
+Alors $\phi^{BC}$ donne une bounding chain pour $X_{t}$
+\end{theorem}
+
+En d'autres termes, on considère tous les états possibles $x$ qui sont liés par l'état $y$. On effectue un pas dans chacun de ces chaînes, l'ensemble des labels résultants pour $\nu$ devient le nouvel état $y(\nu)$.\\
+Lorsque la fonction de mise-à-jour a été créée, le CFTP peut être utilisé comme dans l'algorithme ci-après : 
+
+\floatname{algorithm}{Bounding-chain-cftp}
+\begin{algorithm}
+\caption{Entrée : $t$ Sortie : $X$}
+\begin{algorithmic}[1]
+\STATE Tirer $U_{1},U_{2},\ldots,U_{t}$
+\STATE Pour tout $\nu \in V$, poser $Y(\nu) = C$
+\FOR{i de 1 à t}
+\STATE $Y \leftarrow$ Bounding-chain-update($Y$,$U_{i}$)
+\ENDFOR
+\IF{$\#Y(\nu) > 1$ pour un certain $\nu$}
+\STATE $X \leftarrow$ Bounding-chain-cftp($2t$)
+\STATE Pour tout $\nu$, $Y(\nu) \leftarrow \left\{X(\nu)\right\}$
+\FOR{i de 1 à t}
+\STATE $Y \leftarrow$ Bounding-chain-update($Y$,$U_{i}$)
+\ENDFOR
+\ELSE
+\STATE Pour tout $\nu$, $X(\nu)$ est l'unique élément de $Y(\nu)$
+\ENDIF
+\end{algorithmic}
+\end{algorithm}
+
+Le cadre général maintenant mis en place, on va considérer différents exemples.
+
+\newpage
+\subsection{Modèle hard-core gas}
+
+On considère le modèle hard-core gas (vu au chapitre $1$, section $1.2$) où chaque n\oe{}ud peut-être de label $0$ ou $1$, deux n\oe{}uds adjacents ne peuvent être tout deux de label $1$ et le poids d'une configuration dans la densité est proportionnel à $\lambda$ puissance le nombre de n\oe{}uds de label $1$.  Lorsque le graphe est biparti, on a vu qu'il était possible d'utiliser une chaîne monotone en utilisant le bon ordre partiel. On considère maintenant un graphe non-biparti. \\
+Dans la mise-à-jour de Gibbs vue section $1.4.4$, un n\oe{}ud était choisi uniformément ainsi que $U \sim Unif([0,1])$. Si $U < \lambda/(1+\lambda)$, et qu'aucun voisin du n\oe{}ud choisi n'est de label $1$, alors le n\oe{}ud choisi obtient le label $1$, sinon, il reste ou devient $0$.\\
+Pour la bounding chain, les n\oe{}uds sont labellisés $\left\{0\right\}$,$\left\{1\right\}$ ou $\left\{0,1\right\}$. Si un n\oe{}ud $\nu$ a un voisin $w$ de label $\left\{1\right\}$, alors cela signifie pour la bounding chain que $y(\nu) = \left\{0\right\}$. Si tous les voisins de $\nu$ sont de label $\left\{0\right\}$, alors seul $U$ déterminera si $y(\nu)$ sera de label $\left\{0\right\}$ ou $\left\{1\right\}$. \\
+Mais si certains voisins sont de label $\left\{0\right\}$ et d'autres sont de label $\left\{0,1\right\}$ alors on ne peut avoir que $y(\nu) = \left\{0,1\right\}$. En effet, il y aurait un état $x$ lié par $y$ tel que $x(w) = 1$ et un autre $x'$ où $x'(w) = 0$ (on admet que $y(w) = \left\{0,1\right\}$). Donc selon la situation, on aurait $x(\nu) = 0$ ou $x'(\nu) =1$ d'où $y(\nu) = \left\{0,1\right\}$. \\
+Le pseudo-code suivant formalise cette idée. On propose une mise en place sous R d'une méthode de bounding chain pour le modèle HCGM en annexe, partie 4.
+
+\floatname{algorithm}{HCGM-bounding-chain-Gibbs-update}
+\begin{algorithm}
+\caption{Entrée : $y$,$\nu \in V$,$U \in [0,1]$ Sortie : $y$}
+\begin{algorithmic}[1]
+\STATE $N_{\left\{1\right\}} \leftarrow$ nombre de voisins de $\nu$ de label $\left\{1\right\}$ dans $y$
+\STATE $N_{\left\{0,1\right\}} \leftarrow$ nombre de voisins de $\nu$ de label $\left\{0,1\right\}$ dans $y$
+\IF{$U > \lambda/(1+\lambda)$ ou $N_{\left\{1\right\}} >0$}
+\STATE $y(\nu) \leftarrow \left\{0\right\}$
+\ELSIF{$N_{\left\{0,1\right\}} = 0$}
+\STATE $y(\nu) \leftarrow \left\{0\right\}$
+\ELSE
+\STATE $y(\nu) \leftarrow \left\{0,1\right\}$
+\ENDIF
+\end{algorithmic}
+\end{algorithm}
+
+On peut alors utiliser la bounding chain avec le CFTP pour générer des échantillons exactement selon la loi cible. On veut à présent savoir combien de temps met le CFTP dans ce cas pour fonctionner. Pour cela, on doit borner le temps moyen pour que tous les labels $\left\{0,1\right\}$ disparaissent dans la bounding chain. 
+
+\newpage
+\begin{lemme}[Huber, p.63, lemme 4.1]
+Notons $\phi_{t}^{BC}$ comme étant $t$ pas effectués à l'aide de HCGM-bounding-chain-Gibbs-update. Pour $\lambda < 1/(\Delta -1)$,où $\Delta$ est le degré du graphe, la probabilité pour que la bounding chain lie plus d'un état est au plus de 
+
+$$\# V \exp(-t(\# V)^{-1}(1- \lambda \Delta(1+\lambda)))$$
+\end{lemme}
+
+\begin{proof}
+Pour voir la preuve complète, on se réfère au lemme $4.1$ du livre d'Huber.
+La preuve étudie le comportement de la variable aléatoire \\ $W_{t} = \left\{ \nu | Y_{t}(\nu) = \left\{ 0,1\right\} \right\}$ qui compte le nombre de n\oe{}uds ayant pour label $\left\{0,1\right\}$. Il suffit alors d'énumérer les cas pouvant se produire : sélection d'un n\oe{}ud ayant le label $\left\{0,1\right\}$, tentative de modification de label,etc et de majorer l'espérance conditionnelle $\mathbb{E}[W_{t+1}|W_{t}]$ La preuve se termine à l'aide de l'inégalité de Markov avec $\mathbb{P}(W_{t} >0) \leq \mathbb{E}[W_{t}]$
+\end{proof}
+
+\subsubsection*{Shift chain}
+
+On considère le modèle shift introduit en $1.4.4$. La chaîne introduite peut donner le label $1$ à un n\oe{}ud $\nu$ ayant exactement un voisin $w$ de label $1$ selon une Bernouilli $S \sim Bern(p_{swap})$. Lorsque celle-ci vaut $1$, on a alors $x(\nu) =1$ et $x(w) = 0$. Lorsque $S = 1$, la valeur de $x(w)$ est déplacée/shiftée vers $x(\nu)$.\\
+Pour la bounding chain $y$, cela soulève de nombreux cas à gérer. L'ensemble de ces cas sont traités dans le tableau suivant. On notera $(N_{\left\{0\right\}},N_{\left\{1\right\}},N_{\left\{0,1\right\}})$ respectivement le nombre de voisins du n\oe{}ud $\nu$ sélectionné de label $\left\{0\right\}$,$\left\{1\right\}$ et $\left\{0,1\right\}$. Lorsque $N_{\left\{1\right\}}$ ou $N_{\left\{0,1\right\}}$ vaut $1$, on notera $w$ l'unique voisin de $\nu$ ayant ce label. Le caractère $*$ désigne un caractère joker, pouvant se voir affecter n'importe quel entier positif ou nul inférieur ou égal à $\Delta$. On propose une mise en place de méthode de bounding chain sous R pour ce modèle en annexe, partie 4.
+
+
+\begin{center}
+\begin{tabular}{ccccc}
+Cas n° & $(N_{\left\{0\right\}},N_{\left\{1\right\}},N_{\left\{0,1\right\}})$ & $U < \lambda/(1+\lambda)$ ? & $S$ & Bounding chain \\
+\hline
+$1$ & $(*,*,*)$ & Non & $0$ ou $1$ & $y(\nu) = \left\{0\right\}$ \\
+$2$ & $(*,0,0)$ & Oui & $0$ ou $1$ & $y(\nu) = \left\{1\right\}$ \\
+$3$ & $(*,0,1)$ & Oui & $0$  & $y(\nu) = \left\{0,1\right\}$ \\
+$4$ & $(*,0,1)$ & Oui & $1$  & $y(\nu) = \left\{1\right\}$,$y(w_{\left\{0,1\right\}}) = \left\{0\right\}$ \\
+$5$ & $(*,1,*)$ & Oui & $0$  & $y(\nu) = \left\{0\right\}$ \\
+$6$ & $(*,1,0)$ & Oui & $1$  & $y(\nu) = \left\{1\right\}$,$y(w_{\left\{1\right\}}) = \left\{0\right\}$\\
+$7$ & $(*,1,\geq 1)$ & Oui & $1$  & $y(\nu) = \left\{0,1\right\}$,$y(w_{\left\{1\right\}}) = \left\{0,1\right\}$\\
+$8$ & $(*,\geq 2,*)$ & Oui & $0$ ou $1$ & $y(\nu) = \left\{0\right\}$
+\end{tabular}
+\end{center}
+
+\begin{lemme}[Huber, p.65, lemme 4.2]
+Notons $\phi_{t}^{BC}$ comme étant $t$ pas effectués par la bounding chain du modèle shift avec $p_{swap} = 1/4$. Si $\lambda < 2/(\Delta - 2)$, alors la probabilité que la bounding chain lie plus d'un état est d'au plus :
+
+$$\# V \exp(-t(\# V)^{-1}(1-\lambda\Delta/[2(1+\lambda)])$$ 
+\end{lemme}
+
+\begin{proof}
+La preuve complète se situe dans le livre d'Huber : lemme $4.2$. La preuve se déroule de la même façon, en étudiant $W_{t} = \left\{ \nu : Y_{t}(\nu) = \left\{0,1\right\} \right\}$ à l'aide du tableau de cas précédent.
+\end{proof}
+
+\subsection{Modèle d'Ising}
+
+On considère le modèle d'Ising (vu au chapitre $1$, section $1.2$). Ayant vu maintenant quelques disjonctions de cas, la mise à jour du modèle d'Ising s'effectue de la manière suivante : pour un n\oe{}ud $\nu \in V$, et pour $U \sim Unif([0,1])$, si $U < \exp(\beta*N_{1} + \mu)/[\exp(\beta*N_{1} + \mu) + \exp(\beta*N_{-1} - \mu)]$, alors $\nu$ prend le label $1$, sinon, il prend le label $-1$.\\
+Ici, à cause des labels d'états inconnus $\left\{-1,1\right\}$, on ne peut pas appliquer directement cette mise à jour. On peut cependant procéder de la manière suivante : si au moins un des voisins du n\oe{}ud $\nu$ est de label inconnu, il suffit alors de vérifier la condition suivante : si $U < \exp(\beta*N_{1} + \mu)/[\exp(\beta*N_{1} + \mu) + \exp(\beta*(N_{-1}+N_{-1,1}) - \mu)]$, alors $\nu$ prend le label $1$ sinon, si $U > \exp(\beta*(N_{1} + N_{-1,1}) + \mu)/[\exp(\beta*(N_{1} + N_{-1,1}) + \mu) + \exp(\beta*N_{-1} -\mu)]$, alors $\nu$ prend le label $-1$, sinon, $\nu$ prend le label inconnu. C'est-à-dire : lorsqu'on choisit un n\oe{}ud ayant au moins un voisin de label inconnu, on se place dans les cas extrémaux qui nous permettent de déduire des informations. D'une part, tous les labels inconnus sont de label $-1$,d'autre part tous les labels inconnus sont de label $1$. Les cas intermédiaires ne nous permettent pas de déduire d'informations sur le prochain état puisque l'on remarque simplement que : 
+
+\footnotesize{}
+$$\frac{\exp(\beta*N_{1} + \mu)}{\exp(\beta*N_{1} + \mu) + \exp(\beta*(N_{-1}+N_{-1,1}) - \mu)}< \ldots < \frac{\exp(\beta*(N_{1} + N_{-1,1}) + \mu)}{\exp(\beta*(N_{1} + N_{-1,1}) + \mu) + \exp(\beta*N_{-1} -\mu)}$$
+\normalsize{}
+
+où $\ldots$ représente toutes les possibilités pour les labels $\left\{-1,1\right\}$.
+
+On en déduit alors le pseudo-code suivant : 
+
+\floatname{algorithm}{Bounding-chain-update-Ising-Gibbs}
+\begin{algorithm}
+\caption{Entrée : $y$,$\nu \in V$,$U \in [0,1]$ Sortie : $y$}
+\begin{algorithmic}[1]
+\STATE $N_{\left\{1\right\}} \leftarrow$ nombre de voisins de $\nu$ de label $\left\{1\right\}$ dans $y$
+\STATE $N_{\left\{-1,1\right\}} \leftarrow$ nombre de voisins de $\nu$ de label $\left\{-1,1\right\}$ dans $y$
+\STATE $N_{\left\{-1\right\}} \leftarrow$ nombre de voisins de $\nu$ de label $\left\{-1\right\}$ dans $y$
+\IF{$U < \exp(\beta*N_{1} + \mu)/[\exp(\beta*N_{1} + \mu) + \exp(\beta*(N_{-1}+N_{-1,1}) - \mu)]$}
+\STATE $y(\nu) \leftarrow \left\{1\right\}$
+\ELSIF{$U > \exp(\beta*(N_{1} + N_{-1,1}) + \mu)/[\exp(\beta*(N_{1} + N_{-1,1}) + \mu) + \exp(\beta*N_{-1} -\mu)]$}
+\STATE $y(\nu) \leftarrow \left\{-1\right\}$
+\ELSE
+\STATE $y(\nu) \leftarrow \left\{-1,1\right\}$
+\ENDIF
+\end{algorithmic}
+\end{algorithm}
+
+On propose une mise en place de méthode de bounding chain pour le modèle d'Ising sous R en annexe, partie 4.
+
+\newpage
+\subsection{Problème d'initialisation}
+
+Pour beaucoup de modèles, l'état initial de la bounding chain est clair  : imposer le label comportant tous les états possibles à chaque n\oe{}ud. Le problème survient lorsque qu'il faut avancer dans la chaîne : comment avancer sans aucune information à propos de la chaîne ?\\
+Pour certains modèles, ce problème n'existe pas, comme par exemple le modèle gas hardcore pour un $\lambda$ tel que $\mathbb{P}(U > \lambda/(1+\lambda))$ (pour $U \sim Unif([0,1])$) soit suffisamment grand. En effet, au vu de l'algorithme de mise à jour de la bounding chain, on obtiendrait couramment de nouvelles informations sur la configuration en cours, dans notre cas, des obtentions d'état $\left\{0\right\}$.\\
+Le problème se pose notamment dans le modèle que l'on étudie dans la suite.
+
+\subsubsection*{Modèles d'orientation sink-free}
+
+On considère un graphe non-dirigé $G = (V,E)$. Les arêtes sont des sous-ensembles de taille deux de l'ensemble des n\oe{}uds, où l'ordre n'a pas d'importance. Ainsi, l'arête $\left\{i,j\right\}$ et l'arête $\left\{j,i\right\}$ sont identiques. Orienter une arête signifie lui donner une direction, soit de $i$ vers $j$, soit de $j$ vers $i$.
+
+\begin{definition}
+L'orientation d'un graphe est une labellisation où chaque arête est soit de label $(i,j)$ soit de label $(j,i)$. On dit qu'une arête de label $(i,j)$ est dirigée de $i$ vers $j$. On appelle alors $i$ la queue et $j$ la tête.
+\end{definition}
+
+\begin{definition}
+On dit qu'une orientation possède un puits (venant de sink = couler) au n\oe{}ud $i$ si chacune des arêtes de la forme $\left\{i,j\right\}$ est orientée $(j,i)$. Une orientation où aucun des n\oe{}uds n'est un puits est dite sink-free.
+\end{definition}
+
+Lorsque le degré d'un n\oe{}ud est $1$, il n'y a qu'une seule manière d'orienter l'arête afin de ne pas créer un puits. On oriente alors cette arête de la dite manière puis on ne prend plus en considération ces n\oe{}ud et arête pour la suite. On répète ce processus pour chaque n\oe{}ud de degré $1$ ainsi créé. On peut donc considérer en toute généralité les graphes ou chaque n\oe{}ud est de degré au moins $2$.\\
+De la même manière, si un graphe est déconnecté, alors chaque composante sera orientée séparément. On peut donc considérer en toute généralité seulement les graphes connectés.\\
+On considère l'ensemble des orientations sink-free d'un graphe. Un sampler de Gibbs choisit une arête uniformément au hasard puis choisit une orientation pour l'arête choisie uniformément dans les orientations qui ne créé pas de puits. Un pseudo-code pour cette mise-à-jour est comme suit : 
+
+\floatname{algorithm}{Sink-free-orientation-Gibbs-chain}
+\begin{algorithm}
+\caption{Entrée : $x$,$\left\{i,j\right\} \in E$,$B \in \left\{0,1\right\}$ Sortie : $x$}
+\begin{algorithmic}[1]
+\STATE Si $B=1$ alors $a \leftarrow (i,j)$, sinon, $a \leftarrow (j,i)$
+\STATE $n_{out} \leftarrow \# \left\{w | x( \left\{a(2),w\right\}) = (a(2),w)\right\}$
+\STATE Si $n_{out} \geq 1$, alors $x(\left\{i,j\right\}) \leftarrow a$
+\end{algorithmic}
+\end{algorithm}
+
+C'est-à-dire : si l'orientation choisie laisse au moins une autre arête quitter la tête de l'arête choisie, alors on effectue le changement dans l'orientation.\\
+Bubley et Dyer ont notamment montré que si deux chaînes $X$ et $X'$ sont passées à travers le pseudocode précédent en utilisant le même choix d'arête et de $B$, alors après $O(\# E^{3})$ pas, il y a une forte probabilité que les deux chaînes aient coalescé (voir lemme $4.5$ du livre d'Huber).\\
+Il est donc possible de faire coalescer deux états. Cependant, pour utiliser le CFTP, il est nécessaire de faire coalescer tous les états. Le problème de la chaîne que l'on considère est qu'il n'est pas possible d'utiliser les bounding chain dans leur état actuel : à l'état initial, la bounding chain que l'on considère aura chaque arête de la forme $(i,j)$ ayant le label $\left\{(i,j),(j,i)\right\}$. Avancer dans la chaîne n'aide pas à réduire le nombre de ces labels : le fait que les orientations des arêtes soient inconnues empêche de déduire des informations sur la bounding chain.\\
+La solution est alors la suivante : d'abord faire coalescer les états en 2 états puis utiliser le résultat qu'on montré Bubley et Dyer pour coalescer ces deux états.\\
+Pour cela, choisissons une arête $\left\{i,j\right\}$. On note par $\Omega_{1}$ l'ensemble des orientations où l'arête $\left\{i,j\right\}$ est orientée $(i,j)$. On note de plus par $\Omega_{2}$ l'ensemble des orientations telles que l'arête $\left\{i,j\right\}$ soit orientée $(j,i)$.\\
+La chaîne choisira alors uniformément aléatoirement une arête autre que $\left\{i,j\right\}$ puis choisira uniformément dans les orientations où cette arête ne créé pas de puits.\\
+Puisque l'arête $\left\{i,j\right\}$ ne sera jamais choisie, la bounding chain pour $\Omega_{1}$ peut maintenant progresser puisque l'orientation de $\left\{i,j\right\}$ est fixée à $(i,j)$, et alors le n\oe{}ud $i$ ne sera jamais un puits peu importe l'orientation des arêtes voisines.\\
+On effectue de même cette procédure pour la bounding chain dans $\Omega_{2}$. Après $O(\# E^{3})$ pas, il est très probable que chacune des deux chaînes aie coalescé vers une configuration chacune. On utilise alors le résultat montré par Bubley et Dyer pour coalescer ces deux états vers un seul.\\
+On accomplit l'opération précédente à l'aide du pseudo-code suivant : 
+
+\floatname{algorithm}{Sink-free-orientation-bounding-chain}
+\begin{algorithm}
+\caption{Entrée : $y$,$\left\{i,j\right\} \in E$,$B \in \left\{0,1\right\}$ Sortie : $y$}
+\begin{algorithmic}[1]
+\STATE Si $B=1$ alors $a \leftarrow (i,j)$, sinon, $a \leftarrow (j,i)$
+\STATE $n_{out} \leftarrow \# \left\{w | y( \left\{a(2),w\right\}) = (a(2),w)\right\}$
+\STATE $n_{inconnu} \leftarrow \# \left\{w | y( \left\{a(2),w\right\}) = \left\{(a(2),w),(w,a(2))\right\}\right\}$
+\STATE Si $n_{out} \geq 1$, alors $y(\left\{i,j\right\}) \leftarrow a$
+\STATE Sinon, si $n_{inconnu} > 0$, $y(\left\{i,j\right\}) \leftarrow  y(\left\{i,j\right\}) \cup \left\{(a(2),a(1))\right\}$
+\end{algorithmic}
+\end{algorithm}
+
+\begin{lemme}[Huber, p.78, lemme 4.6]
+On suppose qu'il existe une arête $e$ telle que $\# Y_{0}(e) = 1$, que $e_{1},e_{2},\ldots,e_{t}$ soient iid uniformes sur $E \setminus \left\{ e \right\}$, et que $B_{1},\ldots,B_{t}$ soient iid uniformes sur $\left\{0,1\right\}$. Alors, si $Y_{t+1} =$ Sink-free-orientation-bounding-chain($Y_{t}$,$e_{t+1}$,$B_{t+1}$), la probabilité qu'il existe une arête $e'$ telle que $\# Y_{t}(e') > 1$ est au plus 
+
+$$ \exp\left(-t\left[ \frac{1}{2\# E^{3}} + \frac{1}{24 \# E^{4}} \right]\right)$$
+
+En particulier, avoir que la probabilité qu'une arête reste inconnue soit au plus $\delta$ requiert $(2\# E^{3} + O(\# E))\log(\delta^{-1})$ pas.
+\end{lemme}
+
+\begin{proof}
+Voir lemme $4.6$ du livre d'Huber pour plus de détails. La preuve étudie le comportement de la variable aléatoire $D_{t} = \# \left\{ e | \# Y(e) > 1 \right\}$ qui compte le nombre d'arête de label non unique dans la bounding chain.
+\end{proof}
+
+\newpage
+\section{Chapitre 5 : Comparaison de méthodes}
+
+\subsection{CFTP : Comparaison entre la méthode de Baccelli/Brémaud et Huber}
+
+La comparaison ici est très simple : l'approche de Baccelli/Brémaud demande de calculer toutes les trajectoires à partir de tous les états initiaux possibles, et demande donc un nombre de calculs bien plus élevé que la méthode d'Huber.\\
+La méthode d'Huber ne requiert de connaître qu'une simple condition sur les choix aléatoires effectués. \\
+Bien qu'au final il faille calculer la trajectoire complète, il n'est pas nécessaire de calculer de trajectoire à chaque fois que l'on tire des choix aléatoires, d'où un nombre de calculs et finalement un temps de calcul réduit.\\
+De plus, la méthode de Baccelli/Brémaud n'est pas adaptée à tous les problèmes : certains d'entre eux sont trop compliqués pour qu'on puisse considérer tous les états initiaux possibles (par exemple, tout modèle se basant sur des graphes aura un nombre d'états initiaux augmentant exponentiellement selon le nombre de n\oe{}uds).\\
+Cependant, la mise en place de Baccelli/Brémaud est conceptuellement plus simple que celle d'Huber : il suffit de connaître tous les états possibles, de connaître la fonction de mise à jour et de faire alors évoluer toutes les trajectoires selon des choix aléatoires; la méthode de Huber requiert de connaître suffisamment le comportement de la chaîne étudiée afin de déterminer un ensemble dans lequel les choix aléatoires effectués permettent d'obtenir le même état final, peu importe le choix initial effectué.\\
+En somme, si la chaîne est suffisamment simple et que vous ne la connaissez pas suffisamment, utilisez plutôt la méthode Baccelli/Brémaud, sinon, si vous avez la connaissance de l'ensemble des choix aléatoires résultant en un même état final, utilisez la méthode d'Huber.
+\newline
+La comparaison n'est au final valable que pour les modèles "simples" (comme l'exemple avec les états $\left\{0,1,2\right\}$ donné par Huber) puisque ensuite se retrouve avec la méthode de CFTP monotone ou les bounding chains que l'on analyse dans la suite.
+
+\subsection{Comparaison entre CFTP monotone et bounding chains}
+
+Pour comparer les deux méthodes, il faut d'abord pouvoir adapter un modèle aux deux méthodes.\\
+On considère donc ici le modèle hardcore gas sur graphe biparti, dont on peut échantillonner de la distribution stationnaire selon les deux méthodes : CFTP monotone ou bounding chain. On considèrera ensuite le modèle d'Ising avec $\mu = 0$.
+
+\subsubsection{Modèle HCGM sur graphe biparti}
+
+Une analyse plus extensive serait nécessaire pour confirmer l'intuition que nous donne les modèles étudiés ici : nous allons nous intéresser à deux graphes bipartis tels que $\# V = 8$. On considère d'abord le graphe suivant : 
+
+\begin{center}
+\includegraphics[scale=0.125]{graphiques/biparti1.png}
+\captionof{figure}{Graphe biparti à n\oe{}uds numérotés de 1 à 8 : 1 à 5 (en haut), 6 à 8 (en bas)}
+\end{center}
+
+De matrice d'adjacence $A =  \begin{pmatrix}
+0 & 0 & 0 & 0 & 0 & 1 & 1 & 0 \\
+0 & 0 & 0 & 0 & 0 & 1 & 1 & 0 \\
+0 & 0 & 0 & 0 & 0 & 0 & 1 & 1 \\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 \\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 \\
+1 & 1 & 0 & 0 & 0 & 0 & 0 & 0 \\
+1 & 1 & 1 & 0 & 0 & 0 & 0 & 0 \\
+0 & 0 & 1 & 1 & 1 & 0 & 0 & 0 
+\end{pmatrix}$.\\
+
+
+On compare les méthodes de CFTP et de bounding chain en lançant un nombre élevé de fois chacun des programmes qui rendra alors le nombre de lancers uniformes effectués sur la plus grande récursion (le travail effectué est alors de deux fois ce nombre d'uniformes moins un). Une mise en place sous R de la méthode de bounding chain pour le modèle HCGM sur graphe biparti est proposée en annexe, partie 5.\\
+Dans les graphes qui suivent, suite à un trop grand travail effectué dans la méthode CFTP, on a décidé ici d'arrêter le programme si le nombre d'uniformes lancées est $8192$, on assume donc que le nombre d'uniformes nécessaire pour l'obtention d'un échantillon de la loi stationnaire dépasserait ce montant.
+Par exemple, pour $\lambda = 0.5$, sur $10^{3}$ lancers on obtient, pour la méthode CFTP : 
+
+\begin{center}
+\includegraphics[scale=0.6]{graphiques/comptage05.jpeg}
+\captionof{figure}{Histogramme du nombre de lancers aléatoires nécessaires à l'obtention d'une sortie pour la méthode CFTP}
+\end{center}
+
+
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|}
+\hline
+$8$ & $16$ & $32$ & $64$ & $128$ & $256$ & $512$ & $1024$ & $2048$ & $4096$ & $8192$ \\
+\hline
+$1$ & $22$ & $21$ & $24$ & $22$ & $16$ & $22$ & $23$ & $22$ & $19$ & $808$ \\
+\hline
+\end{tabular}
+\captionof{table}{Données de l'histogramme précédent}
+\end{center}
+
+
+Alors que, pour $\lambda = 0.5$, pour la méthode de bounding chains, sur $10^{4}$ lancers, on obtient : 
+
+\begin{center}
+\includegraphics[scale=0.6]{graphiques/bcomptage05.jpeg}
+\captionof{figure}{Histogramme du nombre de lancers aléatoires nécessaires à l'obtention d'une sortie pour la méthode de bounding chains}
+\end{center}
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|}
+\hline
+$8$ & $16$ & $32$ & $64$ & $128$ & $256$ \\
+\hline
+$2$ & $832$ & $4870$ & $3998$ & $297$ & $1$ \\
+\hline
+\end{tabular}
+\captionof{table}{Données de l'histogramme précédent}
+\end{center}
+
+\textbullet ~~ On effectue de même pour $\lambda = 1$ pour obtenir : 
+
+\begin{center}
+\begin{tabular}{cc}
+
+\\
+\includegraphics[scale=0.5]{graphiques/comptage1.jpeg} & \includegraphics[scale=0.5]{graphiques/bcomptage1.jpeg} \\
+
+\begin{tabular}{|c|c|c|c|c|c|}
+\hline
+$16$ à $256$ & $512$ & $1024$ & $2048$ & $4096$ & $8192$ \\
+\hline
+$67$ & $17$ & $14$ & $18$ & $15$ & $869$ \\
+\hline
+\end{tabular} & \begin{tabular}{|c|c|c|c|c|c|}
+\hline
+$8$ & $16$ & $32$ & $64$ & $128$ & $256$ \\
+\hline
+$2$ & $832$ & $4870$ & $3998$ & $297$ & $1$ \\
+\hline
+\end{tabular}\\
+
+\end{tabular}
+\end{center}
+
+\textbullet ~~ Puis enfin pour $\lambda = 2$ :
+
+\begin{center}
+\begin{tabular}{cc}
+
+\\
+\includegraphics[scale=0.5]{graphiques/comptage2.jpeg} & \includegraphics[scale=0.5]{graphiques/bcomptage2.jpeg} \\
+
+\begin{tabular}{|c|c|c|c|c|c|}
+\hline
+$16$ à $256$ & $512$ & $1024$ & $2048$ & $4096$ & $8192$ \\
+\hline
+$90$ & $23$ & $30$ & $25$ & $20$ & $812$ \\
+\hline
+\end{tabular} & \begin{tabular}{|c|c|c|c|c|c|}
+\hline
+$16$ & $32$ & $64$ & $128$ & $256$ & $512$ \\
+\hline
+$52$ & $991$ & $3907$ & $4166$ & $859$ & $25$ \\
+\hline
+\end{tabular}\\
+
+\end{tabular}
+\end{center}
+
+\textbullet ~~ On effectue ensuite une analyse similaire pour le graphe suivant : 
+
+\begin{center}
+\includegraphics[scale=0.125]{graphiques/biparti2.png}
+\captionof{figure}{Graphe biparti à n\oe{}uds numérotés de 1 à 8 : 1 à 5 (en haut), 6 à 8 (en bas)}
+\end{center}
+
+De matrice d'adjacence $A1 =  \begin{pmatrix}
+0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 \\
+0 & 0 & 0 & 0 & 0 & 1 & 1 & 1 \\
+0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 \\
+0 & 0 & 0 & 0 & 0 & 1 & 1 & 1 \\
+0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 \\
+0 & 1 & 1 & 1 & 1 & 0 & 0 & 0 \\
+1 & 1 & 1 & 0 & 0 & 0 & 0 & 0 \\
+0 & 1 & 0 & 1 & 0 & 0 & 0 & 0 
+\end{pmatrix}$.\\
+
+\textbullet ~~ On obtient alors, pour $\lambda = 0.5$ : 
+
+\begin{center}
+\begin{tabular}{cc}
+\\
+\includegraphics[scale=0.5]{graphiques/A1comptage05.jpeg} & \includegraphics[scale=0.5]{graphiques/A1bcomptage05.jpeg} \\
+
+\begin{tabular}{|c|c|c|c|c|c|}
+\hline
+$16$ à $256$ & $512$ & $1024$ & $2048$ & $4096$ & $8192$ \\
+\hline
+$123$ & $25$ & $20$ & $21$ & $29$ & $782$ \\
+\hline
+\end{tabular} & \begin{tabular}{|c|c|c|c|c|}
+\hline
+$8$ & $16$ & $32$ & $64$ & $128$ \\
+\hline
+$1$ & $781$ & $4860$ & $3997$ & $361$ \\
+\hline
+\end{tabular}\\
+
+\end{tabular}
+\end{center}
+
+\textbullet ~~ Puis, pour $\lambda = 1$ : 
+
+\begin{center}
+\begin{tabular}{cc}
+
+\\
+\includegraphics[scale=0.5]{graphiques/A1comptage1.jpeg} & \includegraphics[scale=0.5]{graphiques/A1bcomptage1.jpeg} \\
+
+\begin{tabular}{|c|c|c|c|c|c|}
+\hline
+$8$ à $256$ & $512$ & $1024$ & $2048$ & $4096$ & $8192$ \\
+\hline
+$59$ & $21$ & $14$ & $16$ & $17$ & $873$ \\
+\hline
+\end{tabular} & \begin{tabular}{|c|c|c|c|c|}
+\hline
+$16$ & $32$ & $64$ & $128$ & $256$  \\
+\hline
+$311$ & $2956$ & $5097$ & $1592$ & $44$ \\
+\hline
+\end{tabular}\\
+
+\end{tabular}
+\end{center}
+
+\textbullet ~~ Et enfin, pour $\lambda = 2$ : 
+
+\begin{center}
+\begin{tabular}{cc}
+
+\\
+\includegraphics[scale=0.5]{graphiques/A1comptage2.jpeg} & \includegraphics[scale=0.5]{graphiques/A1bcomptage2.jpeg} \\
+
+\begin{tabular}{|c|c|c|c|c|c|}
+\hline
+$16$ à $256$ & $512$ & $1024$ & $2048$ & $4096$ & $8192$ \\
+\hline
+$100$ & $39$ & $21$ & $31$ & $21$ & $788$ \\
+\hline
+\end{tabular} & \begin{tabular}{|c|c|c|c|c|c|}
+\hline
+$16$ & $32$ & $64$ & $128$ & $256$ & $512$  \\
+\hline
+$82$ & $1265$ & $4301$ & $3763$ & $584$ & $5$\\
+\hline
+\end{tabular}\\
+
+\end{tabular}
+\end{center}
+
+Au vu des résultats précédents, nous pouvons émettre la supposition suivante : la méthode de bounding chains semble être bien meilleure que la méthode de CFTP pour le modèle hardcore gas sur graphe biparti. D'autres test seraient nécessaire pour confirmer cette supposition (notamment en augmentant la taille du graphe, en testant la plupart des configurations possible, en variant plus $\lambda$,etc).
+
+\subsubsection{Modèle d'Ising}
+
+On considère maintenant le modèle d'Ising ayant pour paramètres $\mu = 0$ et $\beta > 0$ (tel que la fonction de mise à jour soit monotone, voir section $3.3.1$). On utilise pour la méthode CFTP la fonction de mise à jour présentée en $3.3.1$, puis pour la méthode de bounding chain, la fonction de mise à jour présentée en $4.3$.\\
+Une analyse plus poussée serait nécessaire pour affiner les résultats suivants.
+On considèrera différentes tailles de graphes rectangulaires (variant entre $5 \times 5$ et $8 \times 8$) ainsi que différents $\beta$ ($0.5$,$1$, et $1.5$).
+
+D'abord pour un graphe de taille $5 \times 5$ et $\beta =0.5$, pour le modèle CFTP on obtient :   
+
+\begin{center}
+\includegraphics[scale=0.6]{graphiques/Isingcomptage5505.jpeg}
+\end{center}
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|}
+\hline
+$256$ & $512$ & $1024$ & $2048$ & $4096$ & $8192$ \\
+\hline
+$7$ & $102$ & $376$ & $402$ & $109$ & $4$  \\
+\hline
+\end{tabular}
+\captionof{table}{Données de l'histogramme précédent}
+\end{center}
+
+Alors que pour la méthode de bounding chains, on obtient : 
+
+\begin{center}
+\includegraphics[scale=0.6]{graphiques/Isingbcomptage5505.jpeg}
+\end{center}
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|}
+\hline
+$128$ & $256$ & $512$ & $1024$ \\
+\hline
+$65$ & $590$ & $333$ & $12$  \\
+\hline
+\end{tabular}
+\captionof{table}{Données de l'histogramme précédent}
+\end{center}
+
+\textbullet ~~ Puis, pour $\beta = 1$ : 
+
+\begin{center}
+\begin{tabular}{cc}
+
+\\
+\includegraphics[scale=0.5]{graphiques/Isingcomptage551.jpeg} & \includegraphics[scale=0.5]{graphiques/Isingbcomptage551.jpeg} \\
+
+\begin{tabular}{|c|c|c|c|c|c|}
+\hline
+$256$ & $512$ & $1024$ & $2048$ & $4096$ & $8192$ \\
+\hline
+$6$ & $100$ & $376$ & $410$ & $107$ & $1$ \\
+\hline
+\end{tabular} & \begin{tabular}{|c|c|c|c|c|c|}
+\hline
+$256$ & $512$ & $1024$ & $2048$ & $4096$ & $8192$ \\
+\hline
+$7$ & $87$ & $386$ & $409$ & $107$ & $4$\\
+\hline
+\end{tabular}\\
+
+\end{tabular}
+\end{center}
+
+\textbullet ~~ Et enfin, pour $\beta = 1.5$ :
+
+
+\begin{center}
+\begin{tabular}{cc}
+
+\\
+\includegraphics[scale=0.5]{graphiques/Isingcomptage5515.jpeg} & \includegraphics[scale=0.5]{graphiques/Isingbcomptage5515.jpeg} \\
+
+\begin{tabular}{|c|c|c|c|c|c|c|}
+\hline
+$2^{11}$ & $2^{12}$ & $2^{13}$ & $2^{14}$ & $2^{15}$ & $2^{16}$ & $2^{17}$ \\
+\hline
+$3$ & $15$ & $22$ & $18$ & $25$ & $16$ & $1$ \\
+\hline
+\end{tabular} & \begin{tabular}{|c|c|c|c|c|c|c|}
+\hline
+$2^{10}$ & $2^{11}$ & $2^{12}$ & $2^{13}$ & $2^{14}$ & $2^{15}$ & $2^{16}$ \\
+\hline
+$3$ & $3$ & $12$ & $30$ & $19$ & $22$ & $11$\\
+\hline
+\end{tabular}\\
+
+\end{tabular}
+\end{center}
+
+\textbullet ~~ On effectue une analyse similaire pour les graphes rectangulaires de taille $8 \times 8$.\\
+D'abord, pour $\beta = 0.5$ :
+
+
+
+
+\begin{center}
+\begin{tabular}{cc}
+
+\\
+\includegraphics[scale=0.5]{graphiques/Isingcomptage8805.jpeg} & \includegraphics[scale=0.5]{graphiques/Isingbcomptage8805.jpeg} \\
+
+\begin{tabular}{|c|c|c|c|}
+\hline
+$512$ & $1024$ & $2048$ & $4096$ \\
+\hline
+$29$ & $643$ & $322$ & $6$ \\
+\hline
+\end{tabular} & \begin{tabular}{|c|c|c|c|}
+\hline
+$512$ & $1024$ & $2048$ & $4096$ \\
+\hline
+$36$ & $663$ & $298$ & $3$ \\
+\hline
+\end{tabular}\\
+
+
+
+\end{tabular}
+\end{center}
+
+\textbullet Puis, pour $\beta = 1$ :
+
+\begin{center}
+\begin{tabular}{cc}
+
+\\
+\includegraphics[scale=0.5]{graphiques/Isingcomptage881.jpeg} & \includegraphics[scale=0.5]{graphiques/Isingbcomptage881.jpeg} \\
+
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+$2^{12}$ & $2^{13}$ & $2^{14}$ & $2^{15}$ & $2^{16}$ \\
+\hline
+$7$ & $25$ & $47$ & $20$ & $1$  \\
+\hline
+\end{tabular} & \begin{tabular}{|c|c|c|c|c|}
+\hline
+$2^{12}$ & $2^{13}$ & $2^{14}$ & $2^{15}$ & $2^{16}$ \\
+\hline
+$5$ & $29$ & $45$ & $20$ & $1$ \\
+\hline
+\end{tabular}\\
+
+\end{tabular}
+\end{center}
+
+On n'effectuera pas de comparaison pour $\beta = 1.5$. En effet, les algorithmes prennent beaucoup trop de temps d'exécution pour obtenir une seule sortie.\\
+Le problème pour la méthode de CFTP survient lorsque la taille du graphe augmente : les états extrémaux prennent trop de temps pour se rejoindre. Le problème pour la méthode de bounding chain est le suivant : pour démarrer, n'ayant que des états inconnus dans la bounding chain, il faut absolument que $U < \exp(\beta*N_{1} + \mu)/[\exp(\beta*N_{1} + \mu) + \exp(\beta*(N_{-1}+N_{-1,1}) - \mu)]$ ou que $U > \exp(\beta*(N_{1} + N_{-1,1}) + \mu)/[\exp(\beta*(N_{1} + N_{-1,1}) + \mu) + \exp(\beta*N_{-1} -\mu)]$ afin de pouvoir en déduire des informations sur la chaîne. N'ayant que des états inconnus, et ayant $\lambda = 1.5$, ces conditions sont alors, pour un graphe carré : $U < \frac{1}{1 + \exp^{1.5*4}} = 0.002472623$ ou encore $U > \frac{exp^{4*1.5}}{exp^{4*1.5} + 1} = 0.9975274$. Ces conditions sont difficiles à atteindre, et donc augmentent le temps d'obtention d'une sortie pour la méthode de bounding chains.\\
+
+La comparaison entre les deux méthodes pour le modèle d'Ising est peu concluante, les résultats indiquant que les deux méthodes sont plus ou moins équivalentes.
+
+\newpage
+\section*{Conclusion personnelle}
+
+Les méthodes présentées dans ce mémoire ne sont que les prémices des méthodes de simulation parfaite : d'autres méthodes plus efficaces existent, d'autres méthodes adaptées à des modèles plus compliqués existent,etc. \\
+Ce mémoire aide à entrer dans ce monde aussi complexe qu'intéressant, de nombreuses applications peuvent découler de ces méthodes et idées exposées ici. \\
+Ce stage m'a permis d'en apprendre plus sur le travail de recherche ainsi que sur le domaine de la simulation, j'ai pu faire la connaissance de personnes expérimentées qui m'ont apporté de nombreux conseils avisés que je tente au mieux de suivre. J'ai appris énormément de ce stage, que ce soit au niveau des modèles jusqu'alors inconnus ou que ce soit des techniques et méthodes de simulation. \\
+J'ai aussi pu approfondir les résultats présentés par Huber et j'ai apporté une certaine analyse des méthodes proposées. \\
+
+
+
+\newpage
+\section{Annexe : programmes}
+
+\subsection{Chapitre 1}
+
+\paragraph{\underline{\textbf{Programmation sous R : échantillonneur de Gibbs}}}
+~\\
+
+
+\begin{lstlisting}
+## X = graphe (rectangulaire ou carré), u = lancer uniforme sur [0,1], v = noeud de X ##
+IsingGibbsUpdate <- function(X,u,v,beta,mu){ ## Permet de faire un pas de la chaîne de Markov associée selon le Gibbs Sampler##
+  
+  ##On entoure la matrice de valeurs aberrantes pour la manipuler plus facilement##
+  ##On change les indices du point considéré pour se conformer à la nouvelle matrice##
+  
+  i = v[1] + 1
+  j = v[2] + 1
+  
+  X = rbind(rep(0,dim(X)[2]),X)
+  X = rbind(X,rep(0,dim(X)[2]))
+  X = cbind(rep(0,dim(X)[1]),X)  
+  X = cbind(X,rep(0,dim(X)[1]))
+
+##Les indicatrices permettent de vérifier quelles valeurs ont les voisins du point considéré ##
+
+  if(u< exp(mu + beta*((X[i+1,j]==1)*1 + (X[i-1,j]==1)*1 +(X[i,j+1]==1)*1 + (X[i,j-1]==1)*1))/((exp(mu + beta*((X[i+1,j]==1)*1 + (X[i-1,j]==1)*1 +(X[i,j+1]==1)*1 + (X[i,j-1]==1)*1))) + exp(-mu + beta*((X[i+1,j]==-1)*1 + (X[i-1,j]==-1)*1 +(X[i,j+1]==-1)*1 + (X[i,j-1]==-1)*1)))){
+    X[i,j] =  1
+  }
+  else{
+    X[i,j] = -1
+  }
+  
+  ##On supprime les valeurs insérées##
+  X=X[,-1]
+  X=X[,-dim(X)[2]]
+  X=X[-1,]
+  X=X[-dim(X)[1],]
+  
+  X
+}
+
+\end{lstlisting}
+
+\newpage
+
+\begin{lstlisting}
+IsingGibbssteps <- function(X,beta,mu,n){ ##effectue n pas de la chaîne de Markov pour le sampler de Gibbs, pour un graphe rectangulaire X##  
+
+  for (i in 1:n){
+  
+  ##choix uniforme du noeud considéré##
+    k = sample(1:dim(X)[1],1)
+    l = sample(1:dim(X)[2],1)
+  ##lancer uniforme sur [0,1]##
+    u = runif(1)
+  ##mise à jour du point##
+    X=IsingGibbsUpdate(X,u,c(k,l),beta,mu)
+    
+  }
+
+  X
+}
+\end{lstlisting}
+
+\newpage
+
+\begin{lstlisting}
+IsingGibbsconditionnalstop <- function(X,beta,epsilon){ ##effectue un nombre aléatoire de pas de la chaîne de Markov pour le sampler de Gibbs, pour un graphe carré X##  
+  
+  ##On créé le vecteur Y qui contiendra les ratios de 1 pour chaque graphe##  
+  Y=c(mean(X==1))
+  bol = TRUE
+  i=1
+  
+  while (bol){
+	
+	##Choix uniforme du noeud considéré##
+    k = sample(1:dim(X)[1],1)
+    l = sample(1:dim(X)[2],1)
+	
+	##lancer uniforme sur [0,1]##    
+    u = runif(1)
+    
+    ##Mise à jour du noeud considéré##
+    X=IsingGibbsUpdate(X,u,c(k,l),beta)
+    
+    ##Mise à jour du vecteur des ratios##
+    Y = c(Y,mean(X==1))
+    
+    ##Si la ligne est décommentée, on obtient une représentation de la configuration X tout les (dim(X)[1]**2)/epsilon pas##
+    ##if ((i%%((dim(X)[1]**2)/epsilon)==0)){image(X)}
+
+	##Si on a effectué un nombre de pas suffisant, et que le nombre de 1 n'a pas varié énormément durant un certain nombre d'itérations, on s'arrête##
+    if ((i>=((log(dim(X)[1]**2)*dim(X)[1]**2)/epsilon)) && ((mean(Y[i+1-floor((dim(X)[1]**(1/2))/epsilon):i])-Y[i])<epsilon)){
+      break()
+    }
+    i=i+1
+  }
+  
+  return(list(X,i))
+  
+}
+\end{lstlisting}
+\newpage
+
+\newpage
+\paragraph{\underline{\textbf{Programmation sous R : Métropolis-Hastings}}}
+~\\
+
+
+\begin{lstlisting}
+## X = graphe (rectangulaire ou carré), u = lancer uniforme sur [0,1], v = noeud de X ##
+
+MetropolisHastingsUpdate <- function(X,u,v,beta){  ## Permet de faire un pas de la chaîne de Markov associée selon Metropolis-Hastings     
+  
+  ##On entoure la matrice de valeurs aberrantes pour la manipuler plus facilement##
+  ##On change les indices du point considéré pour se conformer à la nouvelle matrice##
+  
+  i = v[1] + 1
+  j = v[2] + 1
+  
+  X = rbind(rep(0,dim(X)[2]),X)
+  X = rbind(X,rep(0,dim(X)[2]))
+  X = cbind(rep(0,dim(X)[1]),X)  
+  X = cbind(X,rep(0,dim(X)[1]))
+  
+  ##On choisit une couleur candidate pour le noeud v##
+  
+  c=sample(c(-1,1),1,prob=c(1/2,1/2))
+  
+  ##Les indicatrices permettent de vérifier quelles valeurs ont les voisins du point considéré ##
+  
+  if(u< exp(beta*((X[i+1,j]==c)*1 + (X[i-1,j]==c)*1 +(X[i,j+1]==c)*1 + (X[i,j-1]==c)*1))/exp(beta*((X[i+1,j]==X[i,j])*1 + (X[i-1,j]==X[i,j])*1 +(X[i,j+1]==X[i,j])*1 + (X[i,j-1]==X[i,j])*1))){
+    X[i,j] =  c
+  }
+  
+  ##On supprime les valeurs insérées##
+  X=X[,-1]
+  X=X[,-dim(X)[2]]
+  X=X[-1,]
+  X=X[-dim(X)[1],]
+  
+  X
+} 
+\end{lstlisting}
+
+\newpage
+\begin{lstlisting}
+MetropolisHastingssteps <- function(X,beta,n){ ##effectue n pas de la chaîne de Markov pour Metropolis-Hastings, pour un graphe rectangulaire X##  
+  
+  for (i in 1:n){
+  
+  ##choix uniforme du noeud##
+    k = sample(1:dim(X)[1],1)
+    l = sample(1:dim(X)[2],1)
+    
+  ##lancer uniforme sur [0,1]##
+    u = runif(1)
+    
+  ##mise à jour de la configuration X##
+    X=MetropolisHastingsUpdate(X,u,c(k,l),beta)
+  }
+  
+  X
+  
+}
+
+\end{lstlisting}
+
+\newpage
+\begin{lstlisting}
+
+MetropolisHastingsconditionnalstop <- function(X,beta,epsilon){ ##effectue un nombre aléatoire de pas de la chaîne de Markov pour Metropolis-Hastings, pour un graphe carré X## 
+
+ ##On créé le vecteur Y qui contiendra les ratios de 1 pour chaque graphe##  
+  Y=c(mean(X==1))
+  bol = TRUE
+  i=1
+  
+  
+  while (bol){
+  
+  ##Choix uniforme du noeud considéré##
+    k = sample(1:dim(X)[1],1)
+    l = sample(1:dim(X)[2],1)
+    
+  ##lancer uniforme sur [0,1]##  
+    u = runif(1)
+   
+  ##Mise à jour du noeud considéré##
+    X=MetropolisHastingsUpdate(X,u,c(k,l),beta)
+    
+  ##Mise à jour du vecteur des ratios##
+    Y = c(Y,mean(X==1))
+    
+  ##Si la ligne est décommentée, on obtient une représentation de la configuration X tout les (dim(X)[1]**2)/epsilon pas##
+  ##if ((i%%((dim(X)[1]**2)/epsilon)==0)){image(X)}##
+  
+  ##Si on a effectué un nombre de pas suffisant, et que le nombre de 1 n'a pas varié énormément durant un certain nombre d'itérations, on s'arrête##
+    if ((i>=((log(dim(X)[1]**2)*dim(X)[1]**2)/epsilon)) && ((mean(Y[i+1-floor((dim(X)[1]**(1/2)))/epsilon:i])-Y[i])<epsilon)){
+      break()
+    }
+    i=i+1
+  }
+  
+  return(list(X,i))
+  
+}
+
+
+\end{lstlisting}
+
+\newpage
+\subsection{Chapitre 2}
+
+\paragraph{\underline{\textbf{Mise en place de la méthode de rejet sous R : d'une Cauchy vers une Normale}}}
+\begin{lstlisting}
+normalfromcauchy <- function(){## Fonction permettant de générer une réalisation de la loi normale standard à partir de la loi de Cauchy standard par méthode de rejet ##
+
+##penser à changer le return pour obtenir une réalisation (return(x)) ou le temps mis à l'obtenir (return(n))##
+  
+  ##On initialise les valeurs ##
+  C=0
+  x=0
+  n=0
+  
+  ##Tant que la bernouilli n'est pas 1##
+  while(C!=1){
+    
+    ##On génère une Cauchy standard##
+    x = rcauchy(1)
+    
+    ##On génère une Bernouilli du paramètre indiqué##
+    C = rbinom(1,1,((sqrt(exp(1))/2)*(1+x^2)*exp(-(1/2)*x^2)))
+    
+    ##mise à jour du nombre de lancers##
+    n=n+1
+  }
+  return(x)
+}
+
+
+
+##On calcule le nombre moyen de lancers nécessaires pour atteindre la sortie de l'algorithme précédent##
+
+##On initialise le nombre moyen##
+s=0
+
+##On lance 10^6 fois l'algorithme qui retourne le nombre de lancers effectué ##
+for (i in 1:10^6) {
+  s=s+normalfromcauchy()
+}
+
+##On moyenne sur les 10^6 lancers
+s = s/10^6
+
+
+
+##On créé un histogramme illustrant 10^5 lancers de l'algorithme rendant une réalisation de la normale standard##
+
+##On initialise le tableau qui contiendra les 10^5 lancers
+t = matrix(0,1,10^5)
+
+##On remplit le tableau en lançant 10^5 fois l'algorithme##
+for (i in 1:10^5) {   #changer le return pour obtenir des réalisations
+  t[i]=normalfromcauchy()
+
+}
+
+##On produit l'histogramme du tableau t et on rajoute la courbe de la densité de la loi normale standard##
+hist(t,prob=T)
+
+curve(dnorm(x, 0, 1), col="red",xlim=c(-4,4),add=T)
+
+
+\end{lstlisting}
+
+\newpage
+\paragraph{\underline{\textbf{Mise en place de la méthode de rejet sour R :}}}
+\paragraph{\underline{\textbf{Inégalités de Chernoff et queue de loi binomiale}}}
+~\\
+
+\begin{lstlisting}
+AR_chernoffs <- function(n,p,a){ ##fonction permettant de générer une réalisation de la loi binomiale de paramètres n et p, conditionnellement à être supérieure où égale à a en utilisant les inégalités de Chernoff##
+  
+  
+  ##On initialise la Bernouilli##
+  C=0
+  
+  ##On créé la valeur gamma présentée précédemment##
+  gam = (a/n)*(1-p)/(p*(1-(a/n)))
+  
+  ##On initialise la Binomiale de paramètres n et p
+  t = 0
+  
+  ##On initialise le nombre de lancers##
+  k = 0
+  
+  ##Tant que la Bernouilli n'est pas 1##
+  while (C != 1){
+    
+    ##On génère n Bernouillis de paramètres a/n## 
+    t = rbinom(n,1,a/n)
+    
+    ##On effectue la somme pour obtenir la binomiale considérée##
+    x = sum(t)
+    
+    ##On génère une réalisation de la Bernouilli du paramètre indiqué
+    C = rbinom(1,1,(x>=a)*1*gam**(a-x))
+    
+    ##On met à jour le nombre de lancers effectués##
+    k=k+1
+  }
+  
+  ##On rend soit le nombre de lancers, soit la réalisation de la loi demandée (ie, k ou x))##
+  return(k)
+  
+}
+
+
+##On calcule ici le nombre moyen de lancers nécessaires pour sortir de l'algorithme précédent
+
+s2=0
+for (i in 1:10^5) {   #changer le return pour obtenir le nombre moyen de lancers nécessaires
+  s2=s2 + AR_chernoffs(10,0.1,5)
+}
+s2 = s2/10^5
+\end{lstlisting}
+
+\newpage
+\begin{lstlisting}
+AR_basic <- function(n,p,a){##fonction permettant de générer une réalisation de la loi binomiale de paramètres n et p, conditionnellement à être supérieure où égale à a en utilisant la méthode de rejet basique##
+  
+  ##On initialise le critère d'arrêt##
+  C=0
+  
+  ##On initialise la Binomiale de paramètres n et p##
+  t = 0
+  
+  ##On initialise le nombre de lancers##
+  k = 0
+  
+  ##Tant que le critère d'arrêt n'est pas 1##
+  while (C != 1){
+    
+    ##On génère une réalisation de la Binomiale de paramètres n et p##
+    t = rbinom(1,n,p)
+    
+    ##On met à jour le critère d'arrêt selon que la binomiale soit supérieure à a ou non##
+    C = (t>=a)*1
+    
+    ##On met à jour le nombre de lancers##
+    k=k+1
+  }
+  
+  ##On rend soit le nombre de lancers, soit la réalisation de la loi demandée (ie, k ou t))##
+  return(k)
+  
+}
+
+
+##On calcule ici le nombre moyen de lancers nécessaires pour sortir de l'algorithme précédent
+s1=0
+for (i in 1:10^6) {   #changer le return pour obtenir le nombre moyen de lancers nécessaires
+  s1=s1+ AR_basic(10,0.1,5)
+}
+s1= s1/10^6
+\end{lstlisting}
+
+\newpage
+\begin{lstlisting}
+AR_boule_unite <- function(n){ ##Génère un tirage alétoire sur la boule unité de dimension n selon la méthode de rejet présentée dans le chapitre 2##
+  
+  u = runif(n,-1,1)
+  s = u**2
+  s = sum(s)
+  i=1
+  while(s>1){
+    u = runif(n,-1,1)
+    s=u**2
+    s = sum(s)
+    i=i+1
+  }
+  
+  ##return u pour avoir l'échantillon, return i pour avoir le nombre de lancers nécessaires à l'obtention de l'échantillon##
+  return(u)
+  
+  
+}
+
+
+s3=0
+for (i in 1:10^6) {   #changer le return pour obtenir le nombre moyen de lancers nécessaires
+  s3=s3+ AR_boule_unite(5)
+}
+s3= s3/10^6
+
+
+##Trace la courbe de croissance du temps d'obtention d'un échantillon selon la dimension##
+curve((gamma(1+x/2)*2**x)/(pi**(x/2)),0,12, xlab = NULL)
+\end{lstlisting}
+
+\subsection{Chapitre 3}
+
+\paragraph{Exemple simple pour la méthode Baccelli/Brémaud et Huber}
+
+\begin{lstlisting}
+simple_update <- function(x,u,t){##fonction d'update présentée comme exemple par Huber##
+  
+  for (i in 1:t){
+      
+    if (u[i]<=0.5 && x>0){
+      x = x-1
+    }
+    else if(u[i]>0.5 && x<2){
+      x = x+1
+    }
+    
+  }
+  
+  return(x)
+
+}
+\end{lstlisting}
+
+\paragraph{Méthode présentée par Baccelli/Brémaud}
+
+\begin{lstlisting}
+Coupling_from_the_past_Bacc <- function(){  ##effectue le CFTP pour la fonction d'update donnée plus haut, par la méthode donnée dans Baccelli et Bremaud##
+  
+  ##changer le return pour obtenir une réalisation ou le nombre de pas utilisé (ie, a ou dim(u)[2])##
+  
+  
+  u = NULL  ##on initalise les choix aléatoires##
+  
+  
+  while (TRUE) {
+    
+    u = cbind(t(t(runif(3))),u) ##on ajoute de nouveaux choix alétoires##
+    
+    ## on réinitialise les états de départ ##
+    a=0
+    b=1
+    c=2
+    
+    
+    ##on met à jour les états de départ selon les choix aléatoires dans u et la fonction d'update##
+    for (i in 1:dim(u)[2]){
+     
+      a = simple_update(a,u[a+1,i],1)
+      b = simple_update(b,u[b+1,i],1)
+      c = simple_update(c,u[c+1,i],1)
+      
+    }
+   
+    ##si les trajectoires se sont rejointes en un même point, on rend ce point (ou le nombre de choix aléatoires pour l'obtenir##
+    if(a==b && b==c){
+      return(dim(u)[2])
+    }
+    
+  }
+  
+}
+\end{lstlisting}
+
+\paragraph{Méthode présentée par Huber}
+
+\begin{lstlisting}
+Coupling_from_the_past_Huber <- function(){  ##effectue le CFTP pour la fonction d'update donnée plus haut, par la méthode donnée par Huber##
+  
+  ##Cet algorithme rend une réalisation de CFTP##
+  
+  u = runif(2)
+  
+  if (u[1]<0.5 && u[2]<0.5){
+    
+    return(0)
+    
+  }
+  else{
+    
+    x = Coupling_from_the_past_Huber()
+    return(simple_update(x,u,2))
+  }
+  
+}
+
+Coupling_from_the_past_counting <- function(i=2){##effectue le CFTP pour la fonction d'update donnée plus haut, par la méthode donnée par Huber##
+  
+  
+  ##Cet algorithme rend le nombre d'appels à la fonction d'update nécessaires à l'obtention d'une réalisation de CFTP##
+  
+  u = runif(2)
+  
+  if (u[1]<0.5 && u[2]<0.5){
+    
+    return(i)
+    
+  }
+  else{
+    
+    i = Coupling_from_the_past_counting(i+2)
+    return(i)
+  }
+  
+}
+\end{lstlisting}
+
+\paragraph{CFTP monotone pour le modèle d'Ising}
+
+\begin{lstlisting}
+IsingGibbsUpdate <- function(X,u,v,beta){       ## X = graphe (rectangulaire ou carré), u = lancé uniforme sur [0,1], v = noeud de X ##
+  
+  ##On entoure la matrice de valeurs aberrantes pour la manipuler plus facilement##
+  ##On change les indices pour s'y conformer##
+  
+  i = v[1] + 1
+  j = v[2] + 1
+  
+  X = rbind(rep(0,dim(X)[2]),X)
+  X = rbind(X,rep(0,dim(X)[2]))
+  X = cbind(rep(0,dim(X)[1]),X)  
+  X = cbind(X,rep(0,dim(X)[1]))
+  
+  ##On applique la fonction de mise à jour selon le sampler de Gibbs, donnée par Huber##
+  if(u< exp(beta*((X[i+1,j]==1)*1 + (X[i-1,j]==1)*1 +(X[i,j+1]==1)*1 + (X[i,j-1]==1)*1))/((exp(beta*((X[i+1,j]==1)*1 + (X[i-1,j]==1)*1 +(X[i,j+1]==1)*1 + (X[i,j-1]==1)*1))) + exp(beta*((X[i+1,j]==-1)*1 + (X[i-1,j]==-1)*1 +(X[i,j+1]==-1)*1 + (X[i,j-1]==-1)*1)))){
+    X[i,j] =  1
+  }
+  else{
+    X[i,j] = -1
+  }
+  
+  ##On retire les valeurs aberrantes puis on rend la matrice##
+  X=X[,-1]
+  X=X[,-dim(X)[2]]
+  X=X[-1,]
+  X=X[-dim(X)[1],]
+  
+  return(X)
+} 
+
+Monotonic_Ising_Gibbs <- function(t,a,b,bet){ ##t = nombre de pas effectués, a = dim(X)[1], b = dim(X)[2]
+  
+  
+  ##On tire t choix aléatoires##
+  u = runif(t)
+  
+  ##On tire t noeuds du graphe rectangulaire##
+  i = sample(1:a,t,replace = TRUE)
+  j = sample(1:b,t,replace = TRUE)
+  
+  ##On initialise les états extremaux##
+  xmin = matrix(-1,a,b)
+  xmax = list(matrix(1,a,b),t)
+  
+  ##On fait évoluer les états extrémaux selon les mêmes choix aléatoires##
+  for (k in 1:t){
+    xmax[[1]] = IsingGibbsUpdate(xmax[[1]],u[k],c(i[k],j[k]),bet)
+    xmin = IsingGibbsUpdate(xmin,u[k],c(i[k],j[k]),bet)
+  }
+  ##si les fins de trajectoires résultant des mises à jour des états extrémaux sont différentes, on fait une récursion##
+  if (sum(xmax[[1]] != xmin)>=1){     
+    xmax = Monotonic_Ising_Gibbs(2*t,a,b,bet)
+    
+    ##après récursion, xmax est un état tel que les états extrémaux se sont rejoints, on le met alors à jour selon les choix aléatoires effectués pré-récursion##
+    for (m in 1:t){
+    
+      xmax[[1]] = IsingGibbsUpdate(xmax[[1]],u[m],c(i[m],j[m]),bet)  
+      
+    }
+    
+  }  
+  
+  return(xmax)
+  
+}
+
+##permet d'effectuer les histogrammes obtenus en partie 5##
+Isingcomptage8815 = NULL
+for(i in 1:10^2){
+  
+  X = Monotonic_Ising_Gibbs(1,8,8,1.5)[[2]]  
+  Isingcomptage8815 = c(Isingcomptage8815,X)
+  print(i)
+}
+
+table(Isingcomptage8815)
+hist(Isingcomptage8815)
+\end{lstlisting}
+
+\paragraph{CFTP monotone pour modèle HCGM sur graphe biparti}
+
+\begin{lstlisting}
+voisins_1 <- function(Y,A,k){ ## Entrée : état du modèle HCGM,matrice d'adjacence,numéro du noeud du graphe. Sortie : nombre de voisins de label 1 du noeud choisi##
+  
+  X = Y
+  V1 = X[[1]]
+  V2 = X[[2]]
+  N1 = 0
+  
+  ##numvoisin contiendra les numéros des noeuds voisins de k##
+  numvoisin = (A[k,] == 1)
+  a = 1:dim(A)[2]
+  numvoisin = a[numvoisin]
+  
+  ##On compte le nombre de 1 autour du noeud considéré selon qu'il soit dans une partie du graphe ou l'autre##
+  
+  if(k <= dim(V1)[2]){
+    
+    for (i in numvoisin){
+      
+      N1 = N1 + 1*(V2[i - length(V1)]==1)
+      
+    }
+  }else{
+    
+    for (i in numvoisin){
+      
+      N1 = N1 + 1*(V1[i]==1)
+      
+    }
+  }
+  
+  return(N1)
+  
+}
+
+HCGM_Gibbs_update <- function(X,A,lambda,u){ ##met à jour un état X de la chaine pour le modèle HCGM biparti de matrice d'adjacence A
+  
+  for(i in 1: length(u)){
+    ##tirage d'un noeud aléatoire uniformément##
+    ij = sample(1:dim(A)[1],1,replace = TRUE)
+    
+    ##On compte les voisins de label 1##
+    N1 = voisins_1(X,A,ij)
+    
+    ##On effectue la mise à jour pour le modèle HCGM donnée par Huber##
+    if((u[i] < lambda/(lambda +1)) && (N1==0)){
+      if(ij <= length(X[[1]])){X[[1]][ij] = 1}else{X[[2]][ij - length(X[[1]])] = 1}
+    }else{if(ij <= length(X[[1]])){X[[1]][ij] = 0}else{X[[2]][ij - length(X[[1]])] = 0}}
+  }
+  return(X)
+}
+
+Monotonic_HCGM_Bipartite_Gibbs <- function(t,A,lV1,lV2,lambda){ ##t = nombre de pas effectués, A = matrice d'adjacence du graphe biparti, V1 = ensemble des noeuds d'un côté du graphe biparti, V2 = ensemble des noeuds de l'autre côté du graphe biparti
+  
+  ##On effectue les choix aléatoires##
+  u = runif(t)
+  
+  ##On initialise les états extremaux##
+  V1 = matrix(1,1,lV1)
+  V2 = matrix(0,1,lV2)
+  V3 = matrix(0,1,lV1)
+  V4 = matrix(1,1,lV2)
+
+  xmin = list(V1,V2)
+  xmax = list(V3,V4)
+  
+  ##On fait évoluer les trajectoires selon les choix aléatoires##
+    xmin = HCGM_Gibbs_update(xmin,A,lambda,u)
+    xmax = HCGM_Gibbs_update(xmax,A,lambda,u)
+    
+  ##si les fins de trajectoires résultant des mises à jour des états extrémaux sont différentes, on fait une récursion##
+  if ((sum(xmin[[1]]!=xmax[[1]])>=1 | sum(xmin[[2]]!=xmax[[2]])>=1) && t<8192){  
+    
+    xmax = Monotonic_HCGM_Bipartite_Gibbs(2*t,A,lV1,lV2,lambda)
+      
+    ##après récursion, on met à jour la sortie selon les choix aléatoires effectués pré-récursion##
+    xmax[1:2] = HCGM_Gibbs_update(xmax,A,lambda,u)  
+      
+  
+  }
+  return(c(xmax,t,(sum(xmin[[1]]!=xmax[[1]])>=1 | sum(xmin[[2]]!=xmax[[2]])>=1)))
+  
+}
+
+##On compte le nombre de choix aléatoires nécessaires à la sortie d'un algorithme, permet d'obtenir les histogrammes données en chapitre 5##
+
+A1comptage2 = NULL
+for(i in 1:10^3){
+  
+  X = Monotonic_HCGM_Bipartite_Gibbs(t,A1,lV1,lV2,2)  
+  if(X[[4]] == TRUE){A1comptage2 = c(A1comptage2,8192)}
+  else{A1comptage2= c(A1comptage2,X[[3]]) }
+  print(i)
+}
+
+table(A1comptage2)
+hist(A1comptage2)
+\end{lstlisting}
+
+\subsection{Chapitre 4}
+
+\paragraph{Méthode de bounding chain pour le modèle HCGM}
+
+\begin{lstlisting}
+Bounding_chain_voisins_1 <- function(Y,k,l){ ## Entrée : bounding chain, coordonnées d'un noeud du graphe. Sortie : nombre de voisins de label 1 du noeud choisi##
+  
+  X = Y
+  
+  ##On entoure la matrice de valeurs aberrantes##
+  X = rbind(rep(-99,dim(X)[2]),X)
+  X = rbind(X,rep(-99,dim(X)[2]))
+  X = cbind(rep(-99,dim(X)[1]),X)  
+  X = cbind(X,rep(-99,dim(X)[1]))
+  
+  ##On change les coordonnées du noeud d'entrée en conséquence##
+  k = k+1
+  l = l+1
+  
+  ##On compte le nombre de 1 autour du noeud considéré##
+  
+  N1 = 1*(X[k-1,l]==1) + 1*(X[k,l+1]==1) + 1*(X[k+1,l]==1) + 1*(X[k,l-1]==1)
+  
+  return(N1)
+  
+}
+
+Bounding_chain_voisins_01 <- function(Y,k,l){ ## Entrée : bounding chain, coordonnées d'un noeud du graphe. Sortie : nombre de voisins de label 1 du noeud choisi##
+  
+  
+  X = Y
+
+  ##On entoure les matrices de valeurs aberrantes##
+  X = rbind(rep(-99,dim(X)[1]),X)
+  X = rbind(X,rep(-99,dim(X)[2]))
+  X = cbind(rep(-99,dim(X)[1]),X)  
+  X = cbind(X,rep(-99,dim(X)[1]))
+  
+  ##On change les coordonnées du noeud d'entrée en conséquence##
+  k = k+1
+  l = l+1
+  
+  ##On compte le nombre de 2 autour du noeud considéré##
+  
+  N01 = 1*(X[k-1,l]==2) + 1*(X[k,l+1]==2) + 1*(X[k+1,l]==2) + 1*(X[k,l-1]==2)
+  
+  return(N01)
+  
+  
+}
+
+
+
+Bounding_chain_update_HCGM <- function(Y,u,lambda){##mise à jour d'un noeud pour la bounding chain du modèle hard core gas##
+  
+  for(i in 1:length(u)){
+    
+    ##On tire un noeud uniformément dans le graphe##
+    k = sample(1:dim(Y)[1],1)
+    l = sample(1:dim(Y)[2],1)
+    
+    ##On compte le nombre de voisins de label {1} et de label {0,1} = 2##
+    
+    N1 = Bounding_chain_voisins_1(Y,k,l)
+    
+    N01 = Bounding_chain_voisins_01(Y,k,l)
+    
+    ##mise à jour selon le pseudo code fourni par Huber##
+    
+    if((u[i] > lambda/(1+lambda)) | (N1>0)){
+      
+      Y[k,l] = 0
+      
+    }else if(N01 == 0){
+      
+      Y[k,l] = 1
+      
+    }else{
+      
+      Y[k,l] = 2
+      
+    }
+  }
+  
+  return(Y)
+  
+}
+
+
+Bounding_chain_cftp_HCGM <- function(t,lambda,Nrows,Ncols){##Effectue la méthode de bounding chains pour l'obtention d'un échantillon de la loi stationnaire pour le modèle hardcore gas de paramètre lambda et une mise à jour de type Gibbs pour un graphe de taille Nrows*Ncols##
+  
+  a = 1
+  ##tirage des aléatoires##
+  u = runif(t)
+  
+  ##état initial de la bounding chain##
+  Y = matrix(2,Nrows,Ncols) 
+  
+  ##on met à jour la bounding chain selon les choix aléatoires u##
+
+  Y = Bounding_chain_update_HCGM(Y,u,lambda)
+
+  
+  ##si la bounding chain a plus d'un état sur au moins un des noeuds##
+  
+  if(sum(Y==2)!=0){
+    
+    
+    ##après récursions, X sera la bounding chain où tout noeud n'aura qu'un élément##
+    X = Bounding_chain_cftp_HCGM(2*t,lambda,Nrows,Ncols)
+    a = 2*X[[2]]
+    
+    ##on représente la bounding chain par une matrice remplie de 0,1 et 2, où 2 représente le label {0,1}$##
+    Y = X[[1]]
+    
+    Y = Bounding_chain_update_HCGM(Y,u,lambda)
+  
+  }
+    return(list(Y,a))
+  
+}
+\end{lstlisting}
+
+\paragraph{Mise en place d'une méthode de bounding chain pour le modèle HCGM shift}
+
+\begin{lstlisting}
+Bounding_chain_update_shift <- function(Y,u,lambda,pshift){##mise à jour d'un noeud pour la bounding chain du modèle hard core gas shift##
+  
+  
+  for(i in 1:length(u)){
+    
+    ##On génère une réalisation de la Bernouilli de paramètre pshift##
+    S = rbinom(1,1,pshift)
+    
+    ##On tire un noeud uniformément dans le graphe##
+    k = sample(1:dim(Y)[1],1)
+    l = sample(1:dim(Y)[2],1)
+    
+    ##On compte le nombre de voisins (du noeud de coordonnées k,l) de label {1} et de label {0,1}##
+    
+    N1 = Bounding_chain_voisins_1(Y,k,l)
+    
+    N01 = Bounding_chain_voisins_01(Y,k,l)
+    
+    ##On vérifie le tableau des cas donné dans le chapitre d'Huber associé##
+    
+    if(u[i]>=lambda/(1 + lambda)){
+      
+      Y[k,l] = 0
+      
+    }else if((N1 == 0) && (N01 == 0)){
+      
+      Y[k,l] = 1
+      
+    }else if((N1 == 0) && (N01 == 1) && (S == 0)){
+      
+      Y[k,l] = 2
+
+    }else if ((N1 == 1) && (S==0)){
+      
+      Y[k,l] = 0
+      
+    }else if(N1>=2){
+      
+      Y[k,l] = 0
+      
+    }else if((N1 == 0) && (N01 == 1) && (S==1)){
+      
+      k = k+1
+      l = l+1
+      
+      X = Y
+      
+      X = rbind(rep(-99,dim(X)[1]),X)
+      X = rbind(X,rep(-99,dim(X)[2]))
+      X = cbind(rep(-99,dim(X)[1]),X)  
+      X = cbind(X,rep(-99,dim(X)[1]))
+      
+      w = c(k-1,l)*(X[k-1,l] == 2) + c(k,l+1)*(X[k,l+1] == 2) + c(k+1,l)*(X[k+1,l] == 2) + c(k,l-1)*(X[k,l-1] == 2)
+      
+      w = w - c(1,1)
+      k=k-1
+      l=l-1
+      Y[w[1],w[2]] = 0
+      Y[k,l] = 1
+      
+    }else if((N1==1) && (N01 == 0) && (S == 1)){
+      
+      k = k+1
+      l = l+1
+      
+      X = Y
+      
+      X = rbind(rep(-99,dim(X)[1]),X)
+      X = rbind(X,rep(-99,dim(X)[2]))
+      X = cbind(rep(-99,dim(X)[1]),X)  
+      X = cbind(X,rep(-99,dim(X)[1]))
+      
+      w = c(k-1,l)*(X[k-1,l] == 1) + c(k,l+1)*(X[k,l+1] == 1) + c(k+1,l)*(X[k+1,l] == 1) + c(k,l-1)*(X[k,l-1] == 1)
+      
+      w = w - c(1,1)
+      k = k-1
+      l = l-1
+      Y[w[1],w[2]] = 0
+      Y[k,l] = 1
+      
+      
+    }else if((N1==1) && (N01 >= 1) && (S == 1)){
+      
+      k = k+1
+      l = l+1
+      
+      X = Y
+      
+      X = rbind(rep(-99,dim(X)[1]),X)
+      X = rbind(X,rep(-99,dim(X)[2]))
+      X = cbind(rep(-99,dim(X)[1]),X)  
+      X = cbind(X,rep(-99,dim(X)[1]))
+      
+      w = c(k-1,l)*(X[k-1,l] == 1) + c(k,l+1)*(X[k,l+1] == 1) + c(k+1,l)*(X[k+1,l] == 1) + c(k,l-1)*(X[k,l-1] == 1)
+      
+      w = w - c(1,1)
+      k =k-1
+      l =l-1
+      Y[w[1],w[2]] = 2
+      Y[k,l] = 2
+      
+    }
+    
+  }
+  
+  return(Y)
+  
+}
+
+Bounding_chain_cftp_shift <- function(t,lambda,pshift,Nrows,Ncols){##Effectue la méthode de bounding chains pour l'obtention d'un échantillon de la loi stationnaire pour le modèle hardcore gas shift de paramètre lambda et une mise à jour de type Gibbs pour un graphe de taille Nrows*Ncols##
+  a = 1
+  ##tirage des aléatoires##
+  u = runif(t)
+  
+  ##état initial de la bounding chain##
+  Y = matrix(2,Nrows,Ncols) 
+  
+  ##on met à jour la bounding chain selon les choix aléatoires u##
+  
+  Y = Bounding_chain_update_shift(Y,u,lambda,pshift)
+  
+  
+  ##si la bounding chain a plus d'un état sur au moins un des noeuds##
+  
+  if(sum(Y==2)!=0){
+    
+    
+    ##après récursions, X sera la bounding chain où tout noeud n'aura qu'un élément##
+    X = Bounding_chain_cftp_shift(2*t,lambda,pshift,Nrows,Ncols)
+    a = 2*X[[2]]
+    ##on représente la bounding chain par une matrice remplie de 0,1 et 2, où 2 représente le label {0,1}$##
+    Y = X[[1]]
+    
+    Y = Bounding_chain_update_shift(Y,u,lambda,pshift)
+      
+  }
+  return(list(Y,a))
+  
+}
+\end{lstlisting}
+
+\paragraph{Méthode de bounding chain pour modèle d'Ising}
+
+\begin{lstlisting}
+Bounding_chain_update_ising <- function(Y,u,mu,beta){
+  
+  for(i in 1:length(u)){
+    
+    ##On tire un noeud uniformément dans le graphe##
+    k = sample(1:dim(Y)[1],1)
+    l = sample(1:dim(Y)[2],1)
+    
+    ##On compte le nombre de voisins de label {1} et de label {-1,1} = 2##
+    
+    N1 = Bounding_chain_voisins_1(Y,k,l)
+    
+    N01 = Bounding_chain_voisins_01(Y,k,l)
+    
+    
+    ##On prépare l'entourage de la matrice par des valeurs aberrantes##
+    k = k+1
+    l = l+1
+    
+    X = Y
+    
+    X = rbind(rep(-99,dim(X)[1]),X)
+    X = rbind(X,rep(-99,dim(X)[2]))
+    X = cbind(rep(-99,dim(X)[1]),X)  
+    X = cbind(X,rep(-99,dim(X)[1]))
+    
+    
+    ##On calcule le degré du noeud choisi en comptant les valeurs aberrantes autour de celui-ci##
+    w = 1*(X[k-1,l] == -99) + 1*(X[k,l+1] == -99) + 1*(X[k+1,l] == -99) + 1*(X[k,l-1] == -99)
+    
+    
+    ##On met à jour selon le degré du noeud, le nombre de valeurs aberrantes et le nombre d'états inconnus##
+    if(N01 == 0){
+      
+      if(u[i] < exp(mu + beta*N1)/(exp(mu + beta*N1) + exp(beta*(4 - N1 - w) - mu))){
+        
+        Y[k-1,l-1] = 1
+        
+      }else{
+        
+        Y[k-1,l-1] = -1
+        
+      }
+      
+      
+    }else if(w == 0){
+      
+      if(u[i] < exp(beta*N1 + mu)/(exp(beta*N1 + mu) + exp(beta*(4-N1) - mu))){
+        
+        Y[k-1,l-1] = 1
+        
+      }else if(u[i] > exp(beta*(N1 + N01) + mu)/(exp(beta*(N1+N01) + mu) + exp(beta*(4-N1-N01) - mu))){
+        
+        Y[k-1,l-1] = -1
+        
+      }else{
+        
+        Y[k-1,l-1] = 2
+        
+      }
+      
+      
+    }else if (w==1){
+      
+      if(u[i] < exp(beta*N1 + mu)/(exp(beta*N1 + mu) + exp(beta*(3-N1) - mu))){
+        
+        Y[k-1,l-1] = 1
+        
+      }else if(u[i] > exp(beta*(N1 + N01) + mu)/(exp(beta*(N1+N01) + mu) + exp(beta*(3-N1-N01) - mu))){
+        
+        Y[k-1,l-1] = -1
+        
+      }else{
+        
+        Y[k-1,l-1] = 2
+        
+      }
+      
+    }else if (w==2){
+      
+      if(u[i] < exp(beta*N1 + mu)/(exp(beta*N1 + mu) + exp(beta*(2-N1) - mu))){
+        
+        Y[k-1,l-1] = 1
+        
+      }else if(u[i] > exp(beta*(N1 + N01) + mu)/(exp(beta*(N1+N01) + mu) + exp(beta*(2-N1-N01) - mu))){
+        
+        Y[k-1,l-1] = -1
+        
+      }else{
+        
+        Y[k-1,l-1] = 2
+        
+      }
+      
+    }
+  }
+    
+  return(Y)
+}
+
+Bounding_chain_cftp_ising <- function(t,mu,beta,Nrows,Ncols){##Effectue la méthode de bounding chains pour l'obtention d'un échantillon de la loi stationnaire pour le modèle d'Ising de paramètre mu et beta et une mise à jour de type Gibbs pour un graphe rectangulaire de taille Nrows*Ncols##
+  
+  a = 1
+  
+  ##tirage des aléatoires##
+  u = runif(t)
+  
+  ##état initial de la bounding chain##
+  Y = matrix(2,Nrows,Ncols) 
+  
+  ##on met à jour la bounding chain selon les choix aléatoires u##
+  
+  Y = Bounding_chain_update_ising(Y,u,mu,beta)
+  
+  
+  ##si la bounding chain a plus d'un état sur au moins un des noeuds##
+  
+  if(sum(Y==2)!=0){
+    ##après récursions, X sera la bounding chain où tout noeud n'aura qu'un élément##
+    X = Bounding_chain_cftp_ising(2*t,mu,beta,Nrows,Ncols)
+    a = 2*X[[2]]
+    ##on représente la bounding chain par une matrice remplie de -1,1 et 2, où 2 représente le label {-1,1}##
+    Y = X[[1]]
+    
+    Y = Bounding_chain_update_ising(Y,u,mu,beta)
+    
+  }
+  return(list(Y,a))
+  
+}
+
+##permet l'obtention des histogrammes obtenus pour la comparaison de méthodes##
+Isingbcomptage881 = NULL
+for(i in 1:10^2){
+  
+  X = Bounding_chain_cftp_ising(1,0,1.5,8,8)[[2]]  
+  Isingbcomptage881 = c(Isingbcomptage881,X)
+  print(i)
+}
+
+table(Isingbcomptage881)
+hist(Isingbcomptage881)
+\end{lstlisting}
+
+
+\subsection{Chapitre 5}
+
+\paragraph{Méthode de bounding chain pour modèle HCGM sur graphe biparti}
+
+\begin{lstlisting}
+Bounding_chain_voisins_1_bipartite <- function(Y,A,k){ ## Entrée : bounding chain, coordonnées d'un noeud du graphe. Sortie : nombre de voisins de label 1 du noeud choisi##
+  
+    ##On récupère des informations sur l'état actuel## 
+    X = Y
+    V1 = X[[1]]
+    V2 = X[[2]]
+    
+    ##On initialise le compteur d'états 1##
+    N1 = 0
+    
+    ##numvoisin contiendra les numéros des noeuds voisins de k##
+    numvoisin = (A[k,] == 1)
+    a = 1:dim(A)[2]
+    numvoisin = a[numvoisin]
+    
+    ##On compte le nombre de 1 autour du noeud considéré selon qu'il soit dans une partie du graphe ou l'autre##
+    
+    if(k <= dim(V1)[2]){
+      
+      for (i in numvoisin){
+        
+        N1 = N1 + 1*(V2[i - length(V1)]==1)
+        
+      }
+    }else{
+      
+      for (i in numvoisin){
+        
+        N1 = N1 + 1*(V1[i]==1)
+        
+      }
+    }
+    
+    return(N1)
+  
+}
+
+
+
+Bounding_chain_voisins_01_bipartite <- function(Y,A,k){ ## Entrée : bounding chain, coordonnées d'un noeud du graphe. Sortie : nombre de voisins de label 1 du noeud choisi##
+  
+    ##On récupère des informations sur l'état actuel##  
+    X = Y
+    V1 = X[[1]]
+    V2 = X[[2]]
+    
+    ##On initialise le compteur d'états inconnus##
+    N01 = 0
+    
+    ##numvoisin contiendra les numéros des noeuds voisins de k##
+    numvoisin = (A[k,] == 1)
+    a = 1:dim(A)[2]
+    numvoisin = a[numvoisin]
+    
+    ##On compte le nombre de 1 autour du noeud considéré selon qu'il soit dans une partie du graphe ou l'autre##
+    
+    if(k <= dim(V1)[2]){
+      
+      for (i in numvoisin){
+        
+        N01 = N01 + 1*(V2[i - length(V1)]==2)
+        
+      }
+    }else{
+      
+      for (i in numvoisin){
+        
+        N01 = N01 + 1*(V1[i]==2)
+        
+      }
+    }
+    
+    return(N01)
+    
+}
+  
+
+Bounding_chain_update_HCGM_bipartite <- function(Y,A,u,lambda){
+  
+  for(i in 1:length(u)){
+    
+    ##On tire un noeud uniformément dans le graphe##
+    ij = sample(1:dim(A)[1],1,replace = TRUE)
+    
+    ##On compte le nombre de voisins de label {1} et de label {0,1} = 2##
+    
+    N1 = Bounding_chain_voisins_1_bipartite(Y,A,ij)
+    
+    N01 = Bounding_chain_voisins_01_bipartite(Y,A,ij)
+    
+    ##mise à jour selon le pseudo code fourni par Huber##
+    
+    if((u[i] > lambda/(1+lambda)) | (N1>0)){
+      
+      if(ij <= length(Y[[1]])){Y[[1]][ij] = 0}else{Y[[2]][ij - length(Y[[1]])] = 0}
+      
+    }else if(N01 == 0){
+      
+      if(ij <= length(Y[[1]])){Y[[1]][ij] = 1}else{Y[[2]][ij - length(Y[[1]])] = 1}
+      
+    }else{
+      
+      if(ij <= length(Y[[1]])){Y[[1]][ij] = 2}else{Y[[2]][ij - length(Y[[1]])] = 2}
+      
+    }
+  }
+  
+  return(Y)
+  
+}
+
+
+
+Bounding_chain_HCGM_Bipartite <- function(t,A,lV1,lV2,lambda){ ##t = nombre de pas effectués, A = matrice d'adjacence du graphe biparti, V1 = ensemble des noeuds d'un côté du graphe biparti, V2 = ensemble des noeuds de l'autre côté du graphe biparti
+  
+  #compteur d'uniformes utilisées##
+  a = 1
+  
+  ##Initialisation du graphe##
+  V1 = matrix(2,1,lV1)
+  V2 = matrix(2,1,lV2)
+  
+  ##tirage des aléatoires##
+  u = runif(t)
+  
+  ##on représente le graphe par une liste de 2 vecteurs##
+  Y = list(V1,V2)
+  
+  ##On met à jour le graphe selon les choix aléatoires##
+  Y = Bounding_chain_update_HCGM_bipartite(Y,A,u,lambda)
+  
+  
+  if (sum(Y[[1]]==2)>=1 | sum(Y[[2]]==2)>=1){ ##s'il existe encore au moins un noeud de label inconnu##
+    
+    ##la récursion s'opère##
+    X = Bounding_chain_HCGM_Bipartite(2*t,A,lV1,lV2,lambda)
+    
+    ##On met à jour le compteur##
+    a = 2*X[[3]]
+    
+    ##On met à jour la chaîne résultant de la récursion selon les choix aléatoires effectués##
+    Y = Bounding_chain_update_HCGM_bipartite(X[1:2],A,u,lambda)
+  }
+  
+  ##On rend le résultat##
+  return(c(Y,a))
+  
+}
+
+##permet l'obtention des histogrammes obtenus pour la comparaison de modèles##
+A1bcomptage2 = c()
+for (i in 1:10^4){A1bcomptage2 = c(A1bcomptage2,Bounding_chain_HCGM_Bipartite(t,A1,lV1,lV2,2)[[3]])
+print(i)}
+mean(A1bcomptage2)
+table(A1bcomptage2)
+hist(A1bcomptage2)
+
+\end{lstlisting}
+
+\newpage
+\section{Bibliographie}
+
+\begin{itemize}
+\item Mark L. Huber, \textit{Perfect Simulation}, CRC Monographs on Statistics $\&$ Applied Probability, ISBN:  978-1482232448, 2016
+\item François Baccelli et Pierre Brémaud, \textit{Elements of queuing theory}, Ed. Springer Verlag (1994, seconde édition en 2003)
+\item \url{http://lmrs.math.cnrs.fr/Persopage/Chagny/AgregTP3ScilabCorrection2016_2017.pdf}, exercice 11, preuve du théorème 7.
+\item \url{https://math.unice.fr/~rcatelli/Cours_2018/Integration/DM2_20172018_correction.pdf}, volume de la boule unité en dimension $d$
+\end{itemize}
+
+
+\end{document}

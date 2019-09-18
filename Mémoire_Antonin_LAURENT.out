@@ -1,0 +1,47 @@
+\BOOKMARK [1][-]{section.1}{Chapitre 1 : Introduction}{}% 1
+\BOOKMARK [2][-]{subsection.1.1}{D\351finitions et th\351or\350mes}{section.1}% 2
+\BOOKMARK [2][-]{subsection.1.2}{Mod\350les \351tudi\351s}{section.1}% 3
+\BOOKMARK [3][-]{subsubsection.1.2.1}{Champs al\351atoires de Markov}{subsection.1.2}% 4
+\BOOKMARK [3][-]{subsubsection.1.2.2}{Permutations}{subsection.1.2}% 5
+\BOOKMARK [2][-]{subsection.1.3}{Cha\356nes de Markov et simulation approch\351e}{section.1}% 6
+\BOOKMARK [2][-]{subsection.1.4}{Cr\351ation de cha\356nes de Markov}{section.1}% 7
+\BOOKMARK [3][-]{subsubsection.1.4.1}{\311chantillonnage de Gibbs}{subsection.1.4}% 8
+\BOOKMARK [3][-]{subsubsection.1.4.2}{Metropolis-Hastings}{subsection.1.4}% 9
+\BOOKMARK [3][-]{subsubsection.1.4.3}{Variables al\351atoires auxiliaires / Auxiliary random variables}{subsection.1.4}% 10
+\BOOKMARK [3][-]{subsubsection.1.4.4}{Shift Chains}{subsection.1.4}% 11
+\BOOKMARK [1][-]{section.2}{Chapitre 2 : Proc\351dures de rejet}{}% 12
+\BOOKMARK [2][-]{subsection.2.1}{Th\351or\350me et exemple simple}{section.2}% 13
+\BOOKMARK [2][-]{subsection.2.2}{M\351thode de rejet pour variables al\351atoires \340 densit\351}{section.2}% 14
+\BOOKMARK [3][-]{subsubsection.2.2.1}{Exemple : D'une Cauchy vers une Normale}{subsection.2.2}% 15
+\BOOKMARK [2][-]{subsection.2.3}{Union d'ensembles}{section.2}% 16
+\BOOKMARK [2][-]{subsection.2.4}{Simulation \340 l'aide des in\351galit\351s de Markov et Chernoff}{section.2}% 17
+\BOOKMARK [3][-]{subsubsection.2.4.1}{L'in\351galit\351 de Markov en tant que proc\351dure de rejet}{subsection.2.4}% 18
+\BOOKMARK [3][-]{subsubsection.2.4.2}{Les in\351galit\351s de Chernoff en tant que proc\351dure de rejet}{subsection.2.4}% 19
+\BOOKMARK [2][-]{subsection.2.5}{D\351faut des m\351thodes de rejet}{section.2}% 20
+\BOOKMARK [1][-]{section.3}{Chapitre 3 : Coupling From The Past}{}% 21
+\BOOKMARK [2][-]{subsection.3.1}{CFTP : approche trajectorielle \(Baccelli / Br\351maud\)}{section.3}% 22
+\BOOKMARK [2][-]{subsection.3.2}{CFTP : approche par blocs \(Huber\)}{section.3}% 23
+\BOOKMARK [2][-]{subsection.3.3}{CFTP monotone}{section.3}% 24
+\BOOKMARK [3][-]{subsubsection.3.3.1}{Mod\350le D'Ising}{subsection.3.3}% 25
+\BOOKMARK [3][-]{subsubsection.3.3.2}{Mod\350le gas Hard-core sur graphe biparti}{subsection.3.3}% 26
+\BOOKMARK [3][-]{subsubsection.3.3.3}{Monotonie et temps de m\351lange}{subsection.3.3}% 27
+\BOOKMARK [2][-]{subsection.3.4}{Inconv\351nients du CFTP}{section.3}% 28
+\BOOKMARK [3][-]{subsubsection.3.4.1}{Non-interruptibilit\351}{subsection.3.4}% 29
+\BOOKMARK [3][-]{subsubsection.3.4.2}{Lecture double}{subsection.3.4}% 30
+\BOOKMARK [1][-]{section.4}{Chapitre 4 : Bounding chains}{}% 31
+\BOOKMARK [2][-]{subsection.4.1}{Qu'est-ce qu'une bounding chain ?}{section.4}% 32
+\BOOKMARK [2][-]{subsection.4.2}{Mod\350le hard-core gas}{section.4}% 33
+\BOOKMARK [2][-]{subsection.4.3}{Mod\350le d'Ising}{section.4}% 34
+\BOOKMARK [2][-]{subsection.4.4}{Probl\350me d'initialisation}{section.4}% 35
+\BOOKMARK [1][-]{section.5}{Chapitre 5 : Comparaison de m\351thodes}{}% 36
+\BOOKMARK [2][-]{subsection.5.1}{CFTP : Comparaison entre la m\351thode de Baccelli/Br\351maud et Huber}{section.5}% 37
+\BOOKMARK [2][-]{subsection.5.2}{Comparaison entre CFTP monotone et bounding chains}{section.5}% 38
+\BOOKMARK [3][-]{subsubsection.5.2.1}{Mod\350le HCGM sur graphe biparti}{subsection.5.2}% 39
+\BOOKMARK [3][-]{subsubsection.5.2.2}{Mod\350le d'Ising}{subsection.5.2}% 40
+\BOOKMARK [1][-]{section.6}{Annexe : programmes}{}% 41
+\BOOKMARK [2][-]{subsection.6.1}{Chapitre 1}{section.6}% 42
+\BOOKMARK [2][-]{subsection.6.2}{Chapitre 2}{section.6}% 43
+\BOOKMARK [2][-]{subsection.6.3}{Chapitre 3}{section.6}% 44
+\BOOKMARK [2][-]{subsection.6.4}{Chapitre 4}{section.6}% 45
+\BOOKMARK [2][-]{subsection.6.5}{Chapitre 5}{section.6}% 46
+\BOOKMARK [1][-]{section.7}{Bibliographie}{}% 47
